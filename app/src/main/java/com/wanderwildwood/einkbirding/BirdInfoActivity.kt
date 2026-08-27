@@ -80,8 +80,11 @@ class BirdInfoActivity : BaseActivity() {
             RecyclerItemClickListener(baseContext, binding.recyclerObservations, object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
                     val url = if ( assetList[adapter.getSpeciesID(position)] != "NO_ASSET") {
-                        "https://macaulaylibrary.org/asset/" + assetList[adapter.getSpeciesID(position)] + "/embed"
-                        //"https://cdn.download.ams.birds.cornell.edu/api/v2/asset/" + assetList[adapter.getSpeciesID(position)] + "/320"
+                        // The embed page is behind a proof-of-work bot check that answers
+                        // "Making sure you're not a bot!" instead of a bird, so the photo
+                        // is fetched straight from the library's image host: one request
+                        // for one jpeg, no page, no scripts, nothing to solve.
+                        "https://cdn.download.ams.birds.cornell.edu/api/v2/asset/" + assetList[adapter.getSpeciesID(position)] + "/320"
                     } else {
                         "about:blank"
                     }

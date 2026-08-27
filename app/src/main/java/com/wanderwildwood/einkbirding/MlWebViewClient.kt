@@ -29,11 +29,19 @@ open class MlWebViewClient(activity: AppCompatActivity) : WebViewClient() {
         }
     }
 
+    /**
+     * Only the page itself failing counts. This fires for every request the page makes,
+     * and a photo page that pulls a tracker or a font that does not answer would
+     * otherwise be marked failed - which leaves the panel blank for good, because
+     * [onPageFinished] is what makes the view visible again and it declines to do so
+     * after an error. The image itself may have arrived perfectly well.
+     */
     override fun onReceivedError(
         view: WebView?,
         request: WebResourceRequest?,
         error: WebResourceError
     ) {
+        if (request?.isForMainFrame != true) return
         Toast.makeText(mActivity, mActivity.resources.getString(R.string.error_download), Toast.LENGTH_SHORT).show()
         mError = true
     }
