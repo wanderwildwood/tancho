@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'org.jetbrains.kotlin.plugin.compose'
 }
 
 // A real keystore in signing/ signs every build type when it is present, so the very first
@@ -16,7 +17,7 @@ if (realSigningPropsFile.isFile()) {
 }
 
 android {
-    compileSdk 35
+    compileSdk 36
     android.buildFeatures.buildConfig true
     defaultConfig {
         applicationId "com.wanderwildwood.einkbirding"
@@ -36,10 +37,11 @@ android {
 
     buildFeatures {
         viewBinding true
+        compose true
     }
 
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
 
     signingConfigs {
@@ -64,8 +66,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     namespace 'com.wanderwildwood.einkbirding'
     androidResources {
@@ -85,4 +87,16 @@ dependencies {
     implementation "net.lingala.zip4j:zip4j:2.9.1"
     implementation 'uk.me.berndporr:iirj:1.7'
     implementation 'com.github.woheller69:preferences:1.2'
+
+    // Compose and Mudita's own design system, pinned to the combination the other
+    // Kompakt apps are built against rather than to the newest published.
+    implementation 'androidx.activity:activity-compose:1.12.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-compose:2.10.0'
+    implementation 'androidx.compose.ui:ui:1.9.5'
+    implementation 'androidx.compose.foundation:foundation:1.9.5'
+    implementation 'androidx.compose.material3:material3:1.4.0'
+    implementation 'androidx.compose.ui:ui-tooling-preview:1.9.5'
+    debugImplementation 'androidx.compose.ui:ui-tooling:1.9.5'
+    implementation 'com.mudita:MMD:1.0.2'
 }

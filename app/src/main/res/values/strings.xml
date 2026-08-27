@@ -36,5 +36,18 @@
     <string name="bluetooth_connection">Use Bluetooth</string>
     <string name="manual_location">Set location</string>
     <string name="error_invalid_GPS">Invalid GPS format</string>
+    <string name="listening">Listening</string>
+    <string name="stopped">Stopped</string>
+    <string name="start_listening">Start listening</string>
+    <string name="stop_listening">Stop listening</string>
+    <string name="nothing_heard_yet">Nothing heard yet.</string>
+    <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
+    <string name="place_and_date">Place and date</string>
+    <string name="place_and_date_off">Ignored</string>
+    <string name="place_and_date_some">Weighed</string>
+    <string name="place_and_date_full">Decisive</string>
+    <string name="destination_observations">Heard</string>
+    <string name="destination_species">Species</string>
+    <string name="destination_settings">Settings</string>
 </resources>
 

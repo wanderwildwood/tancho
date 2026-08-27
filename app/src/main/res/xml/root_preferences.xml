@@ -11,17 +11,6 @@
         android:defaultValue="false"
         />
 
-    <SwitchPreferenceCompat
-        android:title="@string/show_spectrogram"
-        android:key="show_spectrogram"
-        android:summary="@string/summary_show_spectrogram"
-        android:defaultValue="false"/>
-
-    <SwitchPreferenceCompat
-        android:title="@string/show_images"
-        android:key="show_images"
-        android:defaultValue="false"/>
-
     <ListPreference
         app:defaultValue="9"
         app:entries="@array/audio_source_entries"

@@ -1,26 +1,29 @@
 <resources>
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents">
-        <item name="colorPrimary">@color/orange</item>
-        <item name="colorPrimaryDark">@color/dark_blue_gray700</item>
-        <item name="colorAccent">@color/orange</item>
-        <item name="colorOnSurface">@color/gray700</item>
-        <item name="colorSecondary">@color/gray400</item>
-        <item name="colorSurface">@color/gray800</item>
-        <item name="popupMenuBackground">@color/gray800</item>
-        <item name="colorSurfaceVariant">@color/dark_blue_gray700</item>
+    <!-- The panel is grey, so the app is black and white and nothing else. Colour on
+         e-ink is a set of greys the reader has to decode; anything that matters here is
+         said with weight, size or a filled shape instead. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+        <item name="colorAccent">@android:color/black</item>
+        <item name="colorOnPrimary">@android:color/white</item>
+        <item name="colorSurface">@android:color/white</item>
+        <item name="colorOnSurface">@android:color/black</item>
+        <item name="colorSecondary">@android:color/black</item>
+        <item name="colorOnSecondary">@android:color/white</item>
+        <item name="colorSurfaceVariant">@android:color/white</item>
+        <item name="popupMenuBackground">@android:color/white</item>
+        <item name="android:windowBackground">@android:color/white</item>
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Primary</item>
     </style>
 
-    <style name="AppThemeHighContrast" parent="Theme.MaterialComponents">
-        <item name="colorPrimary">@color/green</item>
-        <item name="colorPrimaryDark">@color/dark_blue_gray700</item>
-        <item name="colorAccent">@color/green</item>
-        <item name="colorOnSurface">@color/gray700</item>
-        <item name="colorSecondary">@color/gray400</item>
-        <item name="colorSurface">@color/gray800</item>
-        <item name="popupMenuBackground">@color/gray800</item>
-        <item name="colorSurfaceVariant">@color/black</item>
-        <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Primary</item>
+    <!-- The listening screen draws its own bar with MMD. -->
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
+
+    <!-- Kept because a preference still refers to it. Both are black and white now; the
+         difference upstream drew with colour is not available on this display. -->
+    <style name="AppThemeHighContrast" parent="AppTheme" />
 </resources>
