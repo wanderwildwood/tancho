@@ -42,6 +42,7 @@ class ViewActivity : BaseActivity() {
     private lateinit var labelList: List<String>
     private lateinit var eBirdList: List<String>
     private lateinit var mContext: Context
+    private var rowTapsWired = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,7 +94,12 @@ class ViewActivity : BaseActivity() {
         adapter = RecyclerOverviewListAdapterObservations(applicationContext, birdObservations)
         binding.recyclerObservations.setAdapter(adapter)
         binding.recyclerObservations.setFocusable(false)
-        binding.recyclerObservations.addOnItemTouchListener(
+        // Once only. Added on every resume, this stacks another listener on the same
+        // list each time the screen is opened, and one tap then runs the handler as many
+        // times as the screen has been visited.
+        if (!rowTapsWired) {
+            rowTapsWired = true
+            binding.recyclerObservations.addOnItemTouchListener(
             RecyclerItemClickListener(baseContext, binding.recyclerObservations, object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
                     WavUtils.playWaveFile(mContext, adapter.getMillis(position))
@@ -120,7 +126,7 @@ class ViewActivity : BaseActivity() {
                         binding.webviewEbird.setVisibility(View.GONE)
                         binding.webviewShare.setVisibility(View.GONE)
                     } else {
-                        if (binding.webviewUrl.toString() != url) {
+                        if (binding.webviewUrl.text.toString() != url) {
                             binding.webview.setVisibility(View.INVISIBLE)
                             // Normal caching, not cache-first. Cache-first never expires an entry, so one
                             // failed fetch that got stored is served for good and the photo is
@@ -146,7 +152,8 @@ class ViewActivity : BaseActivity() {
 
                 override fun onLongItemClick(view: View?, position: Int) {}
             })
-        )
+            )
+        }
     }
 
 
