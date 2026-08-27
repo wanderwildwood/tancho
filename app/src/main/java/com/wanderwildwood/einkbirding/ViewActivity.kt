@@ -13,7 +13,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebSettings
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -43,6 +43,7 @@ class ViewActivity : BaseActivity() {
     private lateinit var eBirdList: List<String>
     private lateinit var mContext: Context
     private var rowTapsWired = false
+    private var photoUrl: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +53,7 @@ class ViewActivity : BaseActivity() {
         setContentView(binding.root)
 
         wireDestinations(Destination.HEARD)
-        //Set aspect ratio for webview and icon
+        //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
             windowMetrics.bounds.width()
@@ -61,16 +62,8 @@ class ViewActivity : BaseActivity() {
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             displayMetrics.widthPixels
         }
-        val paramsWebview: ViewGroup.LayoutParams = binding.webview.getLayoutParams() as ViewGroup.LayoutParams
-        paramsWebview.height = (width / 1.8f).toInt()
-        val paramsIcon: ViewGroup.LayoutParams = binding.icon.getLayoutParams() as ViewGroup.LayoutParams
-        paramsIcon.height = (width / 1.8f).toInt()
-
-        binding.webview.setWebViewClient(object : MlWebViewClient(this) {})
-        binding.webview.settings.setDomStorageEnabled(true)
-        binding.webview.settings.setJavaScriptEnabled(true)
-        binding.webview.settings.setBuiltInZoomControls(true);
-        binding.webview.settings.setDisplayZoomControls(false);
+        val paramsPhoto: ViewGroup.LayoutParams = binding.photo.getLayoutParams() as ViewGroup.LayoutParams
+        paramsPhoto.height = (width / 1.8f).toInt()
 
         val linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerObservations.setLayoutManager(linearLayoutManager)
@@ -103,51 +96,28 @@ class ViewActivity : BaseActivity() {
             RecyclerItemClickListener(baseContext, binding.recyclerObservations, object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
                     WavUtils.playWaveFile(mContext, adapter.getMillis(position))
-                    val url = if ( assetList[adapter.getSpeciesID(position)] != "NO_ASSET") {
-                        // The embed page is behind a proof-of-work bot check that answers
-                        // "Making sure you're not a bot!" instead of a bird, so the photo
-                        // is fetched straight from the library's image host: one request
-                        // for one jpeg, no page, no scripts, nothing to solve.
-                        "https://cdn.download.ams.birds.cornell.edu/api/v2/asset/" + assetList[adapter.getSpeciesID(position)] + "/320"
-                    } else {
-                        "about:blank"
+                    val assetId = assetList[adapter.getSpeciesID(position)]
+                    if (assetId == "NO_ASSET") {
+                        clearPhoto()
+                        return
                     }
-                    if (url == "about:blank"){
-                        binding.webview.setVisibility(View.GONE)
-                        binding.webview.loadUrl(url)
-                        binding.icon.setVisibility(View.VISIBLE)
-                        binding.webviewUrl.setText("")
-                        binding.webviewUrl.setVisibility(View.GONE)
-                        binding.webviewName.setText("")
-                        binding.webviewName.setVisibility(View.GONE)
-                        binding.webviewLatinname.setText("")
-                        binding.webviewLatinname.setVisibility(View.GONE)
-                        binding.webviewReload.setVisibility(View.GONE)
-                        binding.webviewEbird.setVisibility(View.GONE)
-                        binding.webviewShare.setVisibility(View.GONE)
-                    } else {
-                        if (binding.webviewUrl.text.toString() != url) {
-                            binding.webview.setVisibility(View.INVISIBLE)
-                            // Normal caching, not cache-first. Cache-first never expires an entry, so one
-                            // failed fetch that got stored is served for good and the photo is
-                            // blank until the app's data is cleared.
-                            binding.webview.settings.setCacheMode(WebSettings.LOAD_DEFAULT)
-                            binding.webview.loadUrl("javascript:document.open();document.close();") //clear view
-                            binding.webview.loadUrl(url)
-                            binding.webviewUrl.setText(url)
-                            binding.webviewUrl.setVisibility(View.VISIBLE)
-                            binding.webviewName.setText(labelList[adapter.getSpeciesID(position)].split("_").last())
-                            binding.webviewName.setVisibility(View.VISIBLE)
-                            binding.webviewLatinname.setText(labelList[adapter.getSpeciesID(position)].split("_").first())
-                            binding.webviewLatinname.setVisibility(View.VISIBLE)
-                            binding.webviewReload.setVisibility(View.VISIBLE)
-                            binding.webviewEbird.setVisibility(View.VISIBLE)
-                            binding.webviewEbird.setTag(position)
-                            binding.webviewShare.setVisibility(View.VISIBLE)
-                            binding.webviewShare.setTag(position)
-                            binding.icon.setVisibility(View.GONE)
-                        }
-                    }
+                    // The library's embed page is behind a proof-of-work bot check that
+                    // answers "Making sure you're not a bot!" instead of a bird, so the
+                    // photo comes straight from its image host: one request, one jpeg.
+                    val url = BirdPhoto.url(assetId)
+                    if (url == photoUrl) return
+                    photoUrl = url
+                    val label = labelList[adapter.getSpeciesID(position)]
+                    binding.photoName.setText(label.split("_").last())
+                    binding.photoName.setVisibility(View.VISIBLE)
+                    binding.photoLatinname.setText(label.split("_").first())
+                    binding.photoLatinname.setVisibility(View.VISIBLE)
+                    binding.photoReload.setVisibility(View.VISIBLE)
+                    binding.photoEbird.setVisibility(View.VISIBLE)
+                    binding.photoEbird.setTag(position)
+                    binding.photoShare.setVisibility(View.VISIBLE)
+                    binding.photoShare.setTag(position)
+                    showPhoto(url, false)
                 }
 
                 override fun onLongItemClick(view: View?, position: Int) {}
@@ -253,13 +223,43 @@ class ViewActivity : BaseActivity() {
             .joinToString("_")
             .trim()
 
+    /**
+     * Puts the photo on screen, and the app's own mark there if it cannot be had. The
+     * panel keeps its height either way: on e-ink a layout jump repaints the whole panel,
+     * and a photo that quietly never arrives is the bug this replaced.
+     */
+    private fun showPhoto(url: String, refresh: Boolean) {
+        BirdPhoto.load(cacheDir, url, refresh) { bitmap ->
+            if (bitmap == null) {
+                binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
+                binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
+                Toast.makeText(applicationContext, getString(R.string.error_download), Toast.LENGTH_SHORT).show()
+            } else {
+                binding.photo.setScaleType(ImageView.ScaleType.CENTER_CROP)
+                binding.photo.setImageBitmap(bitmap)
+            }
+        }
+    }
+
+    private fun clearPhoto() {
+        photoUrl = null
+        binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
+        binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
+        binding.photoName.setText("")
+        binding.photoName.setVisibility(View.GONE)
+        binding.photoLatinname.setText("")
+        binding.photoLatinname.setVisibility(View.GONE)
+        binding.photoReload.setVisibility(View.GONE)
+        binding.photoEbird.setVisibility(View.GONE)
+        binding.photoShare.setVisibility(View.GONE)
+    }
+
     fun reload(view: View) {
-        binding.webview.settings.setCacheMode(WebSettings.LOAD_DEFAULT)
-        binding.webview.loadUrl(binding.webviewUrl.text.toString())
+        photoUrl?.let { showPhoto(it, true) }
     }
 
     fun share(view: View) {
-        val position = binding.webviewShare.tag as Int
+        val position = binding.photoShare.tag as Int
 
         val id = adapter.getSpeciesID(position)
 
@@ -286,7 +286,7 @@ class ViewActivity : BaseActivity() {
     }
 
     fun ebird(view: View) {
-        val position = binding.webviewEbird.tag as Int
+        val position = binding.photoEbird.tag as Int
         val id = adapter.getSpeciesID(position)
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
     }
@@ -317,18 +317,7 @@ class ViewActivity : BaseActivity() {
                         Toast.makeText(this, getString(R.string.clear_db),Toast.LENGTH_SHORT).show()
                         birdObservations.clear()
                         adapter.notifyDataSetChanged()
-                        binding.webview.setVisibility(View.GONE)
-                        binding.webview.loadUrl("about:blank")
-                        binding.icon.setVisibility(View.VISIBLE)
-                        binding.webviewUrl.setText("")
-                        binding.webviewUrl.setVisibility(View.GONE)
-                        binding.webviewName.setText("")
-                        binding.webviewName.setVisibility(View.GONE)
-                        binding.webviewLatinname.setText("")
-                        binding.webviewLatinname.setVisibility(View.GONE)
-                        binding.webviewReload.setVisibility(View.GONE)
-                        binding.webviewEbird.setVisibility(View.GONE)
-                        binding.webviewShare.setVisibility(View.GONE)
+                        clearPhoto()
                     })
                     .setNegativeButton(this.getString(android.R.string.cancel), { _, _ -> })
                     .create().show()
