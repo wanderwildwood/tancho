@@ -122,7 +122,10 @@ class ViewActivity : BaseActivity() {
                     } else {
                         if (binding.webviewUrl.toString() != url) {
                             binding.webview.setVisibility(View.INVISIBLE)
-                            binding.webview.settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK)
+                            // Normal caching, not cache-first. Cache-first never expires an entry, so one
+                            // failed fetch that got stored is served for good and the photo is
+                            // blank until the app's data is cleared.
+                            binding.webview.settings.setCacheMode(WebSettings.LOAD_DEFAULT)
                             binding.webview.loadUrl("javascript:document.open();document.close();") //clear view
                             binding.webview.loadUrl(url)
                             binding.webviewUrl.setText(url)
