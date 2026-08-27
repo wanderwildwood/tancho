@@ -88,17 +88,6 @@
                     tools:progress="0" />
 
             </LinearLayout>
-
-            <Button
-                android:id="@+id/button_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/start"
-                android:textColor="?colorSurfaceVariant"
-                android:visibility="gone"
-                android:onClick="startMain"/>
         </LinearLayout>
 
     </LinearLayout>

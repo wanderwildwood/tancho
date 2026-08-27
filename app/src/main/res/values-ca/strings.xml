@@ -3,7 +3,6 @@
     <string name="samples_zero">No hi ha cap entrada d\'audio: Totes les mostres són nul·les!</string>
     <string name="download_model">Descarregar el model</string>
     <string name="download_model_text">eInk Birding necesita descargar el model de BirdNET (~ 39MB). \n No es permet l\'ús comercial \n(llicència CC-BY-NC-SA 4.0)</string>
-    <string name="start">Comença</string>
     <string name="error_download">Error de descàrrega</string>
     <string name="error_audio_permission">Permís al micròfon no concedit</string>
     <string name="error_location_permission">Permís d\'ubicació no concedit</string>

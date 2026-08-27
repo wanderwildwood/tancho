@@ -3,7 +3,6 @@
     <string name="samples_zero">Відсутність аудіосигналу: всі аудіосигнали дорівнюють нулю!</string>
     <string name="download_model">Завантажити модель</string>
     <string name="download_model_text">eInk Birding потрібно завантажити BirdNET модель (~ 39MB). \n Дозволено для не комерційного використання\n(ліцензія CC-BY-NC-SA 4.0)</string>
-    <string name="start">Почнімо</string>
     <string name="error_download">Помилка завантаження</string>
     <string name="error_audio_permission">Дозвіл на доступ до мікрофона не надано</string>
     <string name="error_location_permission">Доступ до місцеперебування не надано</string>

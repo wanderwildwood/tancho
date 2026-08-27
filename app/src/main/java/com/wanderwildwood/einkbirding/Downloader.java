@@ -2,8 +2,8 @@ package com.wanderwildwood.einkbirding;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.wanderwildwood.einkbirding.databinding.ActivityDownloadBinding;
@@ -41,6 +41,23 @@ public class Downloader {
     static boolean downloadModelFinished = false;
     static boolean downloadMetaModelFinished = false;
     static long modelSize;
+
+    /**
+     * Both models are down, so this screen has nothing left to do: go straight to the app.
+     * Upstream showed a "let's go" button here, but the screen is seen exactly once and the
+     * button's only job was to say "continue" - and on a 480x800 panel it was laid out below
+     * the bottom of the glass, where it could be neither seen nor tapped.
+     *
+     * Both download threads reach this, and either may be the one that sees the pair
+     * finished, so the finishing activity is the guard against starting the app twice: the
+     * calls arrive on the main looper one after the other, and the second finds it closing.
+     */
+    private static void modelsReady(final Activity activity) {
+        if (!(downloadModelFinished && downloadMetaModelFinished)) return;
+        if (activity.isFinishing()) return;
+        activity.startActivity(new Intent(activity, MainActivity.class));
+        activity.finish();
+    }
 
     public static boolean checkModels(final Activity activity) {
         File modelFile = new File(activity.getDir("filesdir", Context.MODE_PRIVATE) + "/" + modelFILE);
@@ -134,7 +151,7 @@ public class Downloader {
                     } else {
                         downloadModelFinished = true;
                         activity.runOnUiThread(() -> {
-                            if (downloadModelFinished && downloadMetaModelFinished) binding.buttonStart.setVisibility(View.VISIBLE);
+                            modelsReady(activity);
                         });
                     }
                 } catch (NoSuchAlgorithmException | IOException i) {
@@ -149,7 +166,7 @@ public class Downloader {
             downloadModelSize = modelSize;
             downloadModelFinished = true;
             activity.runOnUiThread(() -> {
-                if (downloadModelFinished && downloadMetaModelFinished) binding.buttonStart.setVisibility(View.VISIBLE);
+                modelsReady(activity);
             });
         }
 
@@ -203,7 +220,7 @@ public class Downloader {
                     } else {
                         downloadMetaModelFinished = true;
                         activity.runOnUiThread(() -> {
-                            if (downloadModelFinished && downloadMetaModelFinished) binding.buttonStart.setVisibility(View.VISIBLE);
+                            modelsReady(activity);
                         });
                     }
                 } catch (NoSuchAlgorithmException | IOException i) {
@@ -218,7 +235,7 @@ public class Downloader {
             downloadMetaModelSize = metaModelSize;
             downloadMetaModelFinished = true;
             activity.runOnUiThread(() -> {
-                if (downloadModelFinished && downloadMetaModelFinished) binding.buttonStart.setVisibility(View.VISIBLE);
+                modelsReady(activity);
             });
         }
 

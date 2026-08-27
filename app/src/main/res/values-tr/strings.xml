@@ -3,7 +3,6 @@
     <string name="samples_zero">Ses girişi yok: Tüm ses örnekleri sıfır!</string>
     <string name="download_model">Model İndir</string>
     <string name="download_model_text">eInk Birding\'ün BirdNET modelini indirmesi gerekiyor (yaklaşık 39MB). \n Ticari kullanıma izin verilmez \n(CC-BY-NC-SA 4.0 lisansı)</string>
-    <string name="start">BAŞLAYALIM</string>
     <string name="error_download">İndirme hatası</string>
     <string name="error_audio_permission">Mikrofon izni verilmedi</string>
     <string name="error_location_permission">Konum izni verilmedi</string>

@@ -2,7 +2,6 @@
 <resources>
     <string name="samples_zero">لا يوجد إدخال صوتي: جميع عينات الصوت تساوي صفرًا!</string>
     <string name="download_model">تنزيل النموذج</string>
-    <string name="start">لنبدأ</string>
     <string name="error_download">خطأ في التنزيل</string>
     <string name="error_audio_permission">لم يتم منح إذن الميكروفون</string>
     <string name="error_location_permission">لم يتم منح إذن الموقع</string>

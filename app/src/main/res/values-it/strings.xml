@@ -3,7 +3,6 @@
     <string name="samples_zero">Nessun ingresso audio: Tutti i campioni audio sono vuoti!</string>
     <string name="download_model">Scarica modello</string>
     <string name="download_model_text">eInk Birding ha bisogno di scaricare il modello BirdNET (~ 39MB). \n Uso commerciale non consentito \n(licenza CC-BY-NC-SA 4.0)</string>
-    <string name="start">SI PARTE</string>
     <string name="error_download">Errore durante il download</string>
     <string name="error_audio_permission">Accesso al microfono non autorizzato</string>
     <string name="error_location_permission">Accesso alla posizione non autorizzato</string>

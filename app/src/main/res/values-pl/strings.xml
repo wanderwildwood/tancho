@@ -3,7 +3,6 @@
     <string name="samples_zero">Brak wejścia audio: Wyzerowano próbki dźwięku!</string>
     <string name="download_model">Pobierz model</string>
     <string name="download_model_text">Należy pobrać model BirdNET (~39MB). \n Wykorzystanie komercyjne wzbronione. \n(licencja CC-BY-NC-SA 4.0)</string>
-    <string name="start">ZACZYNAJMY</string>
     <string name="error_download">Błąd pobierania</string>
     <string name="error_audio_permission">Nie udzielono dostępu do mikrofonu</string>
     <string name="error_location_permission">Nie udzielono dostępu do lokalizacji</string>
