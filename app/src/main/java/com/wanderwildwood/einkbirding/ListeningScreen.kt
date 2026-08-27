@@ -158,6 +158,10 @@ private fun StatusLine(isListening: Boolean, location: ListeningState.Location?)
  * The where-and-when model's say in the answer, as three taps rather than a dragged
  * slider: a drag on e-ink repaints the whole track for every pixel of movement, and the
  * value was never that precise to begin with.
+ *
+ * The value is boxed. Everything else on this screen is a label or a log line, so a bare
+ * word here reads as a readout of something rather than a control you can change - and
+ * this is the one control on the screen that decides which birds are allowed to appear.
  */
 @Composable
 private fun PlaceAndDateRow(placeAndDate: PlaceAndDate, onCycle: () -> Unit) {
@@ -165,18 +169,25 @@ private fun PlaceAndDateRow(placeAndDate: PlaceAndDate, onCycle: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onCycle)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         TextMMD(
             text = stringResource(R.string.place_and_date),
             style = MaterialTheme.typography.bodyMedium,
         )
-        TextMMD(
-            text = stringResource(placeAndDate.label),
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Bold,
-        )
+        Box(
+            modifier = Modifier
+                .border(1.dp, MaterialTheme.colorScheme.onSurface)
+                .padding(horizontal = 10.dp, vertical = 4.dp),
+        ) {
+            TextMMD(
+                text = stringResource(placeAndDate.label),
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+            )
+        }
     }
 }
 
