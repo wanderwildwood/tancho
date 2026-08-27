@@ -86,7 +86,6 @@ dependencies {
     implementation "androidx.preference:preference:1.2.1"
     implementation "net.lingala.zip4j:zip4j:2.9.1"
     implementation 'uk.me.berndporr:iirj:1.7'
-    implementation 'com.github.woheller69:preferences:1.2'
 
     // Compose and Mudita's own design system, pinned to the combination the other
     // Kompakt apps are built against rather than to the newest published.
