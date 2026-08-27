@@ -38,11 +38,13 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
         holder.name.setText(birdObservations.get(position).getName());
         holder.probability.setText((int) Math.round(birdObservations.get(position).getProbability()*100.0)+ " %");
 
-        if (birdObservations.get(position).getProbability() < 0.3 )  holder.holder.setBackgroundResource(R.drawable.oval_red_thin_dotted);
-        else if (birdObservations.get(position).getProbability() < 0.5 )  holder.holder.setBackgroundResource(R.drawable.oval_red_thin);
-        else if (birdObservations.get(position).getProbability() < 0.65 )  holder.holder.setBackgroundResource(R.drawable.oval_orange_thin);
-        else if (birdObservations.get(position).getProbability() < 0.8 )  holder.holder.setBackgroundResource(R.drawable.oval_yellow_thin);
-        else holder.holder.setBackgroundResource(R.drawable.oval_green_thin);
+        // Upstream graded confidence red to green across five bands. The panel renders all
+        // five as much the same grey, so this says it with the border instead, and in three
+        // bands rather than five, which is as many as a border weight can be told apart at.
+        double probability = birdObservations.get(position).getProbability();
+        if (probability < 0.5) holder.holder.setBackgroundResource(R.drawable.oval_uncertain);
+        else if (probability < 0.8) holder.holder.setBackgroundResource(R.drawable.oval_likely);
+        else holder.holder.setBackgroundResource(R.drawable.oval_confident);
 
         SimpleDateFormat sdf;
         Date date = new Date(birdObservations.get(position).getMillis());
