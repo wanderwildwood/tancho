@@ -42,6 +42,15 @@ class MainActivity : BaseActivity() {
   private lateinit var soundClassifier: SoundClassifier
   private val state = ListeningState()
 
+  /**
+   * BaseActivity sets the theme in onCreate, which replaces whatever the manifest asked
+   * for. This screen draws its own bar with MMD, so letting it be given the theme with an
+   * ActionBar puts the app's name on the screen twice, once in each bar.
+   */
+  override fun applyTheme() {
+    setTheme(R.style.AppTheme_NoActionBar)
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
