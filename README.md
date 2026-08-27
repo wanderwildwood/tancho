@@ -16,7 +16,7 @@ it is, so a bird that cannot be here now is not offered. That is what the locati
 is for, and it can be turned off in settings.
 
 Detections are kept in a database on the phone, viewable, exportable and deletable from the
-app.
+app. What the app records, stores and sends is set out in [PRIVACY.md](PRIVACY.md).
 
 ## Building
 

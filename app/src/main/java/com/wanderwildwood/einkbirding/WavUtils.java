@@ -20,7 +20,7 @@ public class WavUtils {
     public static final String TAG = "WavUtils";
 
     public static void playWaveFile(Context context, long timestamp) {
-        File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/whoBIRD/" + timestamp +".wav");
+        File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/eInk Birding/" + timestamp +".wav");
         Log.d(TAG,"Play "+path.getAbsolutePath());
         if (path.exists()){
             Log.d(TAG,"Play "+path.getAbsolutePath());
@@ -44,7 +44,7 @@ public class WavUtils {
                 Log.e(TAG, "External Storage not writeable ");
                 return;
             }
-            File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/whoBIRD");
+            File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/eInk Birding");
             if (!path.exists() && !path.mkdirs()) {
                 Log.e(TAG, "Failed to make directory: " + path);
                 return;
