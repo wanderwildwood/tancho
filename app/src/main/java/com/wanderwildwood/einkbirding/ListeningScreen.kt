@@ -19,6 +19,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,6 +34,7 @@ import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
+import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -105,8 +111,32 @@ fun ListeningScreen(
     }
 }
 
+/**
+ * While the recorder is running, the word is followed by one dot, then two, then three,
+ * and round again. It is the only thing on the screen that moves, which is the whole of
+ * why it is there: a log that has said nothing for ten minutes looks exactly the same
+ * whether the microphone is open or the app died quietly an hour ago.
+ *
+ * The dots are appended here rather than written into the string, so no translation has
+ * to know about them.
+ */
+private const val ELLIPSIS_PERIOD_MS = 700L
+
 @Composable
 private fun StatusLine(isListening: Boolean, location: ListeningState.Location?) {
+    var dots by remember { mutableIntStateOf(1) }
+
+    // Keyed on isListening so that stopping cancels it rather than leaving a loop running
+    // against a screen that is no longer saying anything.
+    LaunchedEffect(isListening) {
+        if (!isListening) return@LaunchedEffect
+        dots = 1
+        while (true) {
+            delay(ELLIPSIS_PERIOD_MS)
+            dots = dots % 3 + 1
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -115,7 +145,11 @@ private fun StatusLine(isListening: Boolean, location: ListeningState.Location?)
         verticalAlignment = Alignment.CenterVertically,
     ) {
         TextMMD(
-            text = stringResource(if (isListening) R.string.listening else R.string.stopped),
+            text = if (isListening) {
+                stringResource(R.string.listening) + ".".repeat(dots)
+            } else {
+                stringResource(R.string.stopped)
+            },
             style = MaterialTheme.typography.titleMedium,
         )
         if (location != null) {
