@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The theme paints colorPrimary and colorSecondary both black, so the default bar tinted
+     its fill and its track the same colour and read as full before it had downloaded
+     anything. The track is the page with a line around it, so an empty bar is still a
+     shape; the fill is solid and sits inside that line, so it can be told from it. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/white" />
+            <stroke android:color="@android:color/black" android:width="1dp" />
+        </shape>
+    </item>
+    <item
+        android:id="@android:id/progress"
+        android:left="2dp"
+        android:top="2dp"
+        android:right="2dp"
+        android:bottom="2dp">
+        <clip
+            android:clipOrientation="horizontal"
+            android:gravity="left">
+            <shape android:shape="rectangle">
+                <solid android:color="@android:color/black" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>
