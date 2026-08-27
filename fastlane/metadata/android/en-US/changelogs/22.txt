@@ -1,2 +1,0 @@
-Condensed list in view activity
-Reload button to fix network issues

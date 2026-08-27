@@ -3,15 +3,27 @@ plugins {
     id 'kotlin-android'
 }
 
+// A real keystore in signing/ signs every build type when it is present, so the very first
+// install is already release-signed and a later update can never hit
+// INSTALL_FAILED_UPDATE_INCOMPATIBLE. It is gitignored: a fresh clone falls back to the
+// default debug key rather than to a checked-in one, because a keystore committed to a
+// public repo is not a signing key, it is a formality.
+def realSigningProps = null
+def realSigningPropsFile = rootProject.file('signing/signing.properties')
+if (realSigningPropsFile.isFile()) {
+    realSigningProps = new Properties()
+    realSigningPropsFile.withInputStream { realSigningProps.load(it) }
+}
+
 android {
     compileSdk 35
     android.buildFeatures.buildConfig true
     defaultConfig {
-        applicationId "org.woheller69.whobird"
+        applicationId "com.wanderwildwood.einkbirding"
         minSdk 26
         targetSdk 35
-        versionCode 54
-        versionName "5.4"
+        versionCode 1
+        versionName "1.0.0"
     }
 
     lintOptions{
@@ -30,17 +42,32 @@ android {
         jvmTarget = "1.8"
     }
 
+    signingConfigs {
+        if (realSigningProps != null) {
+            real {
+                storeFile rootProject.file('signing/signing.keystore')
+                storePassword realSigningProps['STORE_PASSWORD']
+                keyAlias realSigningProps['KEY_ALIAS']
+                keyPassword realSigningProps['KEY_PASSWORD']
+            }
+        }
+    }
+
     buildTypes {
+        debug {
+            if (realSigningProps != null) signingConfig signingConfigs.real
+        }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (realSigningProps != null) signingConfig signingConfigs.real
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'org.tensorflow.lite.examples.soundclassifier'
+    namespace 'com.wanderwildwood.einkbirding'
     androidResources {
         generateLocaleConfig true
     }
@@ -59,5 +86,4 @@ dependencies {
     implementation "net.lingala.zip4j:zip4j:2.9.1"
     implementation 'uk.me.berndporr:iirj:1.7'
     implementation 'com.github.woheller69:preferences:1.2'
-    implementation 'com.github.woheller69:FreeDroidWarn:V1.+'
 }

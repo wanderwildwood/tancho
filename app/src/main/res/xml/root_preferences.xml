@@ -35,7 +35,7 @@
         android:title="@string/bluetooth_connection"
         android:defaultValue="false"/>
 
-    <org.tensorflow.lite.examples.soundclassifier.EditTextSeekBarPreference
+    <com.wanderwildwood.einkbirding.EditTextSeekBarPreference
         android:title="@string/settings_highpass"
         android:key="high_pass"
         android:max="1000"
@@ -43,7 +43,7 @@
         app:showSeekBarValue="true"
         />
 
-    <org.tensorflow.lite.examples.soundclassifier.EditTextSeekBarPreference
+    <com.wanderwildwood.einkbirding.EditTextSeekBarPreference
         android:title="@string/settings_threshold"
         android:key="model_threshold"
         android:max="100"

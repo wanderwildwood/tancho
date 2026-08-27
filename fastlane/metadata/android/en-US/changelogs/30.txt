@@ -1,3 +1,0 @@
-Add option to use fine location
-Add option to share single detection
-Bugfixes

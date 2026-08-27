@@ -1,3 +1,0 @@
-Select range from spectrogram
-Translations
-Bugfix

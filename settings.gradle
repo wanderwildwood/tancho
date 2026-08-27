@@ -15,5 +15,5 @@ dependencyResolutionManagement {
         }
     }
 }
-rootProject.name = "whoBIRD"
+rootProject.name = "eink-birding"
 include ':app'

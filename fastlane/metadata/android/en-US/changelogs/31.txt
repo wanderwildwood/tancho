@@ -1,2 +1,0 @@
-Add info button with link to eBird
-Update for Android 14 (SDK 34)
