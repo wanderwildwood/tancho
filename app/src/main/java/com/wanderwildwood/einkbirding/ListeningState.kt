@@ -155,9 +155,15 @@ class ListeningState {
 }
 
 /**
- * How much the where-and-when model is allowed to weigh in. Three named settings rather
- * than a continuous slider: the underlying number was never precise, and a tap is a
- * single repaint where a drag is dozens.
+ * How much the where-and-when model is allowed to weigh in.
+ *
+ * The three are named for what the reader gets, not for how much the model counts:
+ * "Weighed" and "Decisive" described the arithmetic, which tells you nothing about
+ * whether the bird you are looking for can still appear in the list. A filter that
+ * quietly rules out a rarity should say so in the words on the screen.
+ *
+ * Three named settings rather than a continuous slider: the underlying number was never
+ * precise, and a tap is a single repaint where a drag is dozens.
  */
 enum class PlaceAndDate(val influence: Float, val label: Int) {
     IGNORED(0f, R.string.place_and_date_off),

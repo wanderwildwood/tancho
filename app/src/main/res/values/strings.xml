@@ -4,7 +4,6 @@
     <string name="samples_zero">No audio input: All audio samples are zero!</string>
     <string name="download_model">Download Model</string>
     <string name="download_model_text">eInk Birding needs to download the BirdNET model (~ 39MB). \n No commercial use allowed \n(CC-BY-NC-SA 4.0 license)</string>
-    <string name="start">LET\'S GO</string>
     <string name="error_download">Download error</string>
     <string name="error_audio_permission">Microphone permission not granted</string>
     <string name="error_location_permission">Location permission not granted</string>
@@ -32,9 +31,9 @@
     <string name="nothing_heard_yet">Nothing heard yet.</string>
     <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
     <string name="place_and_date">Place and date</string>
-    <string name="place_and_date_off">Ignored</string>
-    <string name="place_and_date_some">Weighed</string>
-    <string name="place_and_date_full">Decisive</string>
+    <string name="place_and_date_off">Any bird</string>
+    <string name="place_and_date_some">Expected first</string>
+    <string name="place_and_date_full">Expected only</string>
     <string name="destination_listening">Listening</string>
     <string name="destination_observations">Heard</string>
     <string name="destination_species">Species</string>
