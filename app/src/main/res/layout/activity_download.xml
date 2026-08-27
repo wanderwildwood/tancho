@@ -73,12 +73,15 @@
                     android:onClick="download"
                     />
 
+                <!-- Invisible, not gone: the bar has to hold its place from the start, or
+                     the card grows the moment a download begins and the whole panel
+                     repaints to move everything above it. -->
                 <ProgressBar
                     android:id="@+id/download_progress"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
-                    android:visibility="gone"
+                    android:visibility="invisible"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
