@@ -74,6 +74,12 @@ fun SettingsScreen(
             HorizontalDividerMMD()
 
             SwitchRow(
+                label = stringResource(R.string.ignore_non_birds),
+                summary = stringResource(R.string.summary_ignore_non_birds),
+                checked = settings.ignoreNonBirds,
+                onCheckedChange = { settings.ignoreNonBirds = it },
+            )
+            SwitchRow(
                 label = stringResource(R.string.settings_notification_sound),
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },

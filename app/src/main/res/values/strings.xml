@@ -30,6 +30,8 @@
     <string name="stop_listening">Stop listening</string>
     <string name="nothing_heard_yet">Nothing heard yet.</string>
     <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
+    <string name="ignore_non_birds">Birds only</string>
+    <string name="summary_ignore_non_birds">Throw away the model\'s non-bird answers: people, dogs, engines, sirens, tools and plain noise.</string>
     <string name="place_and_date">Place and date</string>
     <string name="place_and_date_off">Any bird</string>
     <string name="place_and_date_some">Expected first</string>

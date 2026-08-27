@@ -50,6 +50,13 @@ class Settings(context: Context) {
     var manualLocation by boolPref(MANUAL_LOCATION)
 
     /**
+     * Whether BirdNET's non-bird classes are thrown away rather than written down. On by
+     * default: the model will happily report a passing car or someone talking, and a log
+     * of those is not a log of birds.
+     */
+    var ignoreNonBirds by boolPref(IGNORE_NON_BIRDS, default = true)
+
+    /**
      * Typing is allowed to be wrong on the way to being right, so what is typed is always
      * kept on screen and only a well-formed pair is written down. Upstream cleared the
      * field back to zeroes on a bad character, which loses the digits you had got right.
@@ -86,8 +93,8 @@ class Settings(context: Context) {
         reload.forEach { it() }
     }
 
-    private fun boolPref(key: String) = pref(
-        read = { prefs.getBoolean(key, false) },
+    private fun boolPref(key: String, default: Boolean = false) = pref(
+        read = { prefs.getBoolean(key, default) },
         write = { prefs.edit().putBoolean(key, it).apply() },
     )
 
@@ -119,6 +126,7 @@ class Settings(context: Context) {
         const val PLAY_SOUND = "play_sound"
         const val WRITE_WAV = "write_wav"
         const val BLUETOOTH = "bluetooth"
+        const val IGNORE_NON_BIRDS = "ignore_non_birds"
         const val MANUAL_LOCATION = "manual_location"
         const val MANUAL_LOCATION_VALUE = "manual_location_value"
         const val DEFAULT_LOCATION = "0.000/0.000"

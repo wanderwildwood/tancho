@@ -587,6 +587,8 @@ class SoundClassifier(
     val commonName = label.split("_").last()  //show in locale language
     val latinName = label.split("_").first()
 
+    if (latinName in NOT_BIRDS && sharedPref.getBoolean("ignore_non_birds", true)) return
+
     val currentLocation = LocationHelper.getPreciseLocation()
     database?.addEntry(
       commonName,
@@ -629,6 +631,22 @@ class SoundClassifier(
 
   companion object {
     private const val TAG = "SoundClassifier"
+
+    /**
+     * BirdNET answers with more than birds, and these eleven are the answers that are not
+     * an animal at all. They are matched on the first half of the label, which is the
+     * scientific name for a real species and stays in English in every locale - the
+     * second half is translated, so "Dog_Dog" is "Dog_Hund" in German.
+     *
+     * Matching instead on the two halves being equal would be shorter and wrong: it also
+     * catches Gryllus assimilis and Miogryllus saussurei, two crickets whose common name
+     * is their scientific one. They are things that were really heard, and they stay.
+     */
+    private val NOT_BIRDS = setOf(
+      "Dog", "Engine", "Environmental", "Fireworks", "Gun", "Human non-vocal",
+      "Human vocal", "Human whistle", "Noise", "Power tools", "Siren",
+    )
+
     var lat: Float = 0.0f
     var lon: Float = 0.0f
     /** Number of nanoseconds in a millisecond  */
