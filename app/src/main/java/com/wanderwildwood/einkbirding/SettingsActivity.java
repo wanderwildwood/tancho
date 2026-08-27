@@ -6,19 +6,13 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreferenceCompat;
-
-import com.google.android.material.bottomappbar.BottomAppBar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 import org.woheller69.preferences.EditTextSwitchPreference;
 
@@ -36,35 +30,13 @@ Context mContext;
                     .replace(R.id.settings, new SettingsFragment())
                     .commit();
         }
-        BottomAppBar bottomAppBar = findViewById(R.id.bottomAppBar);
-        bottomAppBar.setOnApplyWindowInsetsListener(null);
-        BottomNavigationView navigationView = findViewById(R.id.bottomNavigationView);
-        navigationView.setOnApplyWindowInsetsListener(null);
-        navigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (item.getItemId()==R.id.action_bird_info){
-                    Intent intent = new Intent(mContext, BirdInfoActivity.class);
-                    startActivity(intent);
-                } else if (item.getItemId()==R.id.action_mic){
-                    Intent intent = new Intent(mContext, MainActivity.class);
-                    startActivity(intent);
-                } else if (item.getItemId()==R.id.action_view){
-                    Intent intent = new Intent(mContext, ViewActivity.class);
-                    startActivity(intent);
-                }
-                return true;
-            }
-        });
-
+        DestinationsKt.wireDestinations(this, Destination.SETTINGS);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
     }
-
-
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override

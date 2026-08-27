@@ -20,7 +20,6 @@ package com.wanderwildwood.einkbirding
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Build
@@ -80,9 +79,6 @@ class MainActivity : BaseActivity() {
               .putFloat("meta_model_influence", placeAndDate.influence * 100f)
               .apply()
           },
-          onOpenObservations = { startActivity(Intent(this, ViewActivity::class.java)) },
-          onOpenSpecies = { startActivity(Intent(this, BirdInfoActivity::class.java)) },
-          onOpenSettings = { startActivity(Intent(this, SettingsActivity::class.java)) },
         )
       }
     }

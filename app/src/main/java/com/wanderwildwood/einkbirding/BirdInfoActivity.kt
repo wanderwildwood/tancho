@@ -37,8 +37,7 @@ class BirdInfoActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.bottomAppBar.setOnApplyWindowInsetsListener(null)
-        binding.bottomNavigationView.setOnApplyWindowInsetsListener(null)
+        wireDestinations(Destination.SPECIES)
         //Set aspect ratio for webview and icon
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -62,23 +61,6 @@ class BirdInfoActivity : BaseActivity() {
         val linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerObservations.setLayoutManager(linearLayoutManager)
 
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.action_mic -> {
-                    intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.action_view -> {
-                    intent = Intent(this, ViewActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.action_settings -> {
-                    intent = Intent(this, SettingsActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-            true
-        }
         loadLabels(this)
         loadAssetList(this)
         loadEbirdList(this)

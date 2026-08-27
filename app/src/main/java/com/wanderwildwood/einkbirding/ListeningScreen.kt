@@ -56,9 +56,6 @@ fun ListeningScreen(
     placeAndDate: PlaceAndDate,
     onToggleListening: () -> Unit,
     onCyclePlaceAndDate: () -> Unit,
-    onOpenObservations: () -> Unit,
-    onOpenSpecies: () -> Unit,
-    onOpenSettings: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppBarMMD(
@@ -103,11 +100,7 @@ fun ListeningScreen(
                 stringResource(if (isListening) R.string.stop_listening else R.string.start_listening)
             )
         }
-        DestinationRow(
-            onOpenObservations = onOpenObservations,
-            onOpenSpecies = onOpenSpecies,
-            onOpenSettings = onOpenSettings,
-        )
+        DestinationRowCompose(current = Destination.LISTENING)
     }
 }
 
@@ -246,39 +239,6 @@ private fun ConfidenceBlocks(percent: Int) {
                     )
             )
         }
-    }
-}
-
-/** Words, not icons: an icon on a grey panel is a guess, a word is not. */
-@Composable
-private fun DestinationRow(
-    onOpenObservations: () -> Unit,
-    onOpenSpecies: () -> Unit,
-    onOpenSettings: () -> Unit,
-) {
-    HorizontalDividerMMD()
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        Destination(R.string.destination_observations, onOpenObservations, Modifier.weight(1f))
-        Destination(R.string.destination_species, onOpenSpecies, Modifier.weight(1f))
-        Destination(R.string.destination_settings, onOpenSettings, Modifier.weight(1f))
-    }
-}
-
-@Composable
-private fun Destination(labelRes: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clickable(onClick = onClick)
-            .padding(vertical = 16.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        TextMMD(
-            text = stringResource(labelRes),
-            style = MaterialTheme.typography.labelLarge,
-        )
     }
 }
 

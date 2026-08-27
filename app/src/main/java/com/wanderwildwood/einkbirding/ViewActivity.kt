@@ -51,8 +51,7 @@ class ViewActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.bottomAppBar.setOnApplyWindowInsetsListener(null)
-        binding.bottomNavigationView.setOnApplyWindowInsetsListener(null)
+        wireDestinations(Destination.HEARD)
         //Set aspect ratio for webview and icon
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -95,23 +94,6 @@ class ViewActivity : BaseActivity() {
             adapter.notifyDataSetChanged()
         }
 
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.action_mic -> {
-                    intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.action_bird_info -> {
-                    intent = Intent(this, BirdInfoActivity::class.java)
-                    startActivity(intent)
-                }
-                R.id.action_settings -> {
-                    intent = Intent(this, SettingsActivity::class.java)
-                    startActivity(intent)
-                }
-            }
-            true
-        }
         loadLabels(this)
         loadAssetList(this)
         loadEbirdList(this)
@@ -277,10 +259,6 @@ class ViewActivity : BaseActivity() {
             .map { it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() } }
             .joinToString("_")
             .trim()
-
-    companion object {
-
-    }
 
     fun reload(view: View) {
         binding.webview.settings.setCacheMode(WebSettings.LOAD_DEFAULT)
