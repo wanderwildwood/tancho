@@ -11,7 +11,6 @@
     <string name="error_download">Latausvirhe</string>
     <string name="error_audio_permission">Mikrofonin käyttöoikeutta ei ole myönnetty</string>
     <string name="error_location_permission">Sijainnin käyttöoikeutta ei ole myönnetty</string>
-    <string name="show_images">Näytä kuvat</string>
     <string name="clear_db">Havainnot poistettu</string>
     <string name="detailed_list">Yksityiskohtaiset tiedot</string>
     <string name="delete">Poistetaanko kaikki havainnot?</string>
@@ -29,8 +28,6 @@
     <string name="high_contrast_theme">Suuri kontrasti</string>
     <string name="settings_meta_extended">Painotettu metamalli</string>
     <string name="summary_meta_extended">Tämä menetelmä vaatii hetkellisesti enemmän prosessoritehoa sijainnin vaihtuessa</string>
-    <string name="show_spectrogram">Näytä spektrogrammi</string>
-    <string name="summary_show_spectrogram">Suuri prosessorin kuormitus, ei suositella hitaille laitteille</string>
     <string name="meta_influence">Sijainnin/Päivämäärän vaikutus</string>
     <string name="bluetooth_connection">Käytä Bluetoothia</string>
 </resources>

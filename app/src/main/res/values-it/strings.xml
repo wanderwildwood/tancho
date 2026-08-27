@@ -11,7 +11,6 @@
     <string name="error_download">Errore durante il download</string>
     <string name="error_audio_permission">Accesso al microfono non autorizzato</string>
     <string name="error_location_permission">Accesso alla posizione non autorizzato</string>
-    <string name="show_images">Mostra immagini</string>
     <string name="clear_db">Osservazioni eliminate</string>
     <string name="detailed_list">Elenco dettagliato</string>
     <string name="delete">Eliminare tutte le osservazioni?</string>
@@ -29,8 +28,6 @@
     <string name="high_contrast_theme">Contrasto Alto</string>
     <string name="settings_meta_extended">Metamodello ponderato</string>
     <string name="summary_meta_extended">Questo metodo richiede temporaneamente più risorse della CPU quando la posizione cambia</string>
-    <string name="show_spectrogram">Mostra spettrogramma</string>
-    <string name="summary_show_spectrogram">Elevato utilizzo della CPU, non consigliato su dispositivi lenti</string>
     <string name="meta_influence">Influenza di luogo e data</string>
     <string name="bluetooth_connection">Usa Bluetooth</string>
 </resources>

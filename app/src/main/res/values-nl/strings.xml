@@ -11,7 +11,6 @@
     <string name="error_download">Download fout</string>
     <string name="error_audio_permission">Microfoon toegang niet verleend</string>
     <string name="error_location_permission">Locatie toegang niet verleend</string>
-    <string name="show_images">Toon afbeeldingen</string>
     <string name="clear_db">Waarnemingen verwijderd</string>
     <string name="detailed_list">Gedetailleerde lijst</string>
     <string name="delete">Alle observaties verwijderen?</string>
@@ -29,8 +28,6 @@
     <string name="high_contrast_theme">Hoog contrast</string>
     <string name="settings_meta_extended">Gewogen metamodel</string>
     <string name="summary_meta_extended">Deze methode heeft tijdelijk meer CPU-capaciteit nodig wanneer de locatie veranderd</string>
-    <string name="show_spectrogram">Toon spectogram</string>
-    <string name="summary_show_spectrogram">Hoge CPU-belasting, niet aangeraden op langzame apparaten</string>
     <string name="meta_influence">Locatie/datum-invloed</string>
     <string name="bluetooth_connection">Gebruik bluetooth</string>
     <string name="error_invalid_GPS">Ongeldig GPS-formaat</string>

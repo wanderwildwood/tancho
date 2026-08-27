@@ -12,7 +12,6 @@
     <string name="error_download">Erro no download</string>
     <string name="error_audio_permission">Permissão para microfone não foi concedida</string>
     <string name="error_location_permission">Permissão de localização não foi concedida</string>
-    <string name="show_images">Mostrar imagens</string>
     <string name="clear_db">Observações foram apagadas</string>
     <string name="detailed_list">Lista detalhada</string>
     <string name="delete">Apagar todas as observações?</string>
@@ -30,8 +29,6 @@
     <string name="high_contrast_theme">Alto contraste</string>
     <string name="settings_meta_extended">Meta modelo com pesos</string>
     <string name="summary_meta_extended">Este modelo exige mais recurso de CPU durante um curto período de tempo quando a sua localização muda</string>
-    <string name="show_spectrogram">Mostrar espectrograma</string>
-    <string name="summary_show_spectrogram">Alto carga de CPU, não é recomendado para dispositivos mais lentos</string>
     <string name="meta_influence">Influência do local e da data</string>
 </resources>
 

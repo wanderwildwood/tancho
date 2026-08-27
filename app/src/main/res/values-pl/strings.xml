@@ -11,7 +11,6 @@
     <string name="error_download">Błąd pobierania</string>
     <string name="error_audio_permission">Nie udzielono dostępu do mikrofonu</string>
     <string name="error_location_permission">Nie udzielono dostępu do lokalizacji</string>
-    <string name="show_images">Pokazuj obrazy</string>
     <string name="clear_db">Obserwacje usunięte</string>
     <string name="detailed_list">Szczegółowa lista</string>
     <string name="delete">Usunąć wszystkie obserwacje?</string>
@@ -29,8 +28,6 @@
     <string name="high_contrast_theme">Wysoki kontrast</string>
     <string name="settings_meta_extended">Ważony metamodel</string>
     <string name="summary_meta_extended">Ta metoda chwilowo wymaga zwiększonych zasobów procesora, podczas zmiany lokalizacji</string>
-    <string name="show_spectrogram">Wyświetlaj spektrogram</string>
-    <string name="summary_show_spectrogram">Wysokie obciążenie procesora, niezalecane na wolnych urządzeniach</string>
     <string name="meta_influence">Wpływ lokalizacji/daty</string>
     <string name="bluetooth_connection">Używaj Bluetooth</string>
     <string name="manual_location">Ustaw lokalizację</string>

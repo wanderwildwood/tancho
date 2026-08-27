@@ -11,7 +11,6 @@
     <string name="error_download">Fazi pellgargañ</string>
     <string name="error_audio_permission">N\'eo ket bet roet aotre d\'ar mikro</string>
     <string name="error_location_permission">N\'eo ket bet roet aotre d\'al lec\'hiadur</string>
-    <string name="show_images">Diskouez ar skeudennoù</string>
     <string name="clear_db">Diverket eo bet an arselladennoù</string>
     <string name="detailed_list">Listenn munudet</string>
     <string name="delete">Dilemel an holl arselladennoù?</string>
@@ -29,8 +28,6 @@
     <string name="high_contrast_theme">Dargemm uhel</string>
     <string name="settings_meta_extended">Meta-model ponderet</string>
     <string name="summary_meta_extended">An hentenn-mañ a implij muioc\'h a vammennoù CPU pa cheñch al lec\'hiadur</string>
-    <string name="show_spectrogram">Diskouez ar spektrogram</string>
-    <string name="summary_show_spectrogram">Karg CPU uhel, dizaliet evit an aparailhoù gorrek</string>
     <string name="meta_influence">Levezon al lec\'h/deiziad</string>
     <string name="bluetooth_connection">Implijit ar Bluetooth</string>
 </resources>

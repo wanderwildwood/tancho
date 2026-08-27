@@ -11,7 +11,6 @@
     <string name="error_download">İndirme hatası</string>
     <string name="error_audio_permission">Mikrofon izni verilmedi</string>
     <string name="error_location_permission">Konum izni verilmedi</string>
-    <string name="show_images">Resimleri göster</string>
     <string name="clear_db">Gözlemler silindi</string>
     <string name="detailed_list">Ayrıntılı liste</string>
     <string name="delete">Tüm gözlemler silinsin mi?</string>

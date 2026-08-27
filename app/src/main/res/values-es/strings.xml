@@ -11,7 +11,6 @@
     <string name="start">ADELANTE</string>
     <string name="error_audio_permission">Permiso de micrófono no concedido</string>
     <string name="error_location_permission">Permiso de ubicación no concedido</string>
-    <string name="show_images">Mostrar imágenes</string>
     <string name="clear_db">Observaciones eliminadas</string>
     <string name="detailed_list">Lista detallada</string>
     <string name="delete">¿Eliminar todas las observaciones?</string>
@@ -30,7 +29,5 @@
     <string name="language">Idioma</string>
     <string name="settings_meta_extended">Meta-Modelo Ponderado</string>
     <string name="summary_meta_extended">Este método aumenta brevemente el uso de CPU cuando la ubicación cambia</string>
-    <string name="show_spectrogram">Mostrar espectrograma</string>
-    <string name="summary_show_spectrogram">Uso elevado de CPU, no recomendado en dispositivos lentos</string>
     <string name="meta_influence">Influencia de Ubicación/Fecha</string>
 </resources>

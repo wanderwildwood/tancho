@@ -11,7 +11,6 @@
     <string name="error_download">Chybné stahování</string>
     <string name="error_audio_permission">Oprávnění k mikrofonu nebylo uděleno</string>
     <string name="error_location_permission">Oprávnění k umístění nebylo uděleno</string>
-    <string name="show_images">Zobrazit obrázky</string>
     <string name="clear_db">Pozorování smazána</string>
     <string name="detailed_list">Podrobný seznam</string>
     <string name="delete">Smazat všechna pozorování?</string>
@@ -27,8 +26,6 @@
     <string name="summary_save_wav">Pro každé rozpoznání uloží do adresáře Music soubor .wav. Vyžaduje Android 12+</string>
     <string name="language">Jazyk</string>
     <string name="high_contrast_theme">Vysoký kontrast</string>
-    <string name="show_spectrogram">Zobrazit spektrogram</string>
-    <string name="summary_show_spectrogram">Vysoké zatížení CPU, nedoporučeno na pomalých zařízeních</string>
     <string name="meta_influence">Vliv polohy/data</string>
     <string name="settings_meta_extended">Vážený meta model</string>
     <string name="summary_meta_extended">Tato metoda krátce vyžaduje více prostředků CPU, když se změní poloha</string>

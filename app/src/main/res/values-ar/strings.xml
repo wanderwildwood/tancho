@@ -9,7 +9,6 @@
     <string name="error_download">خطأ في التنزيل</string>
     <string name="error_audio_permission">لم يتم منح إذن الميكروفون</string>
     <string name="error_location_permission">لم يتم منح إذن الموقع</string>
-    <string name="show_images">عرض الصور</string>
     <string name="clear_db">تم حذف الملاحظات</string>
     <string name="detailed_list">قائمة مفصلة</string>
     <string name="delete">حذف جميع الملاحظات؟</string>
