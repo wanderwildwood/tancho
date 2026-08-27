@@ -1,10 +1,8 @@
 package com.wanderwildwood.einkbirding;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.PreferenceManager;
 
 public class BaseActivity extends AppCompatActivity {
     @Override
@@ -13,14 +11,12 @@ public class BaseActivity extends AppCompatActivity {
         applyTheme();
     }
 
+    /**
+     * Called before anything is drawn, and after the manifest's theme has been applied, so
+     * this is what an activity overrides to choose its own. Whatever android:theme says is
+     * replaced by what happens here.
+     */
     protected void applyTheme() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean highContrastTheme = sharedPreferences.getBoolean("theme", false);
-
-        if (highContrastTheme) {
-            setTheme(R.style.AppThemeHighContrast);
-        } else {
-            setTheme(R.style.AppTheme);
-        }
+        setTheme(R.style.AppTheme);
     }
 }

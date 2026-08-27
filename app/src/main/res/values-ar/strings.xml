@@ -24,6 +24,5 @@
     <string name="download_model_text">يحتاج \"eInk Birding\"من هذا الطائر إلى تنزيل نموذج BirdNET (~39 ميجابايت).\nلا يُسمح بالاستخدام التجاري\n(ترخيص CC-BY-NC-SA 4.0)</string>
     <string name="save_wav">حفظ ملفات wav.</string>
     <string name="summary_save_wav">يتم حفظ ملف wav. لكل عملية كشف في دليل الموسيقى. يتطلب Android 12+</string>
-    <string name="high_contrast_theme">تباين عالٍ</string>
     <string name="language">اللغة</string>
 </resources>

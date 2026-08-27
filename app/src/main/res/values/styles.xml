@@ -22,8 +22,4 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
-
-    <!-- Kept because a preference still refers to it. Both are black and white now; the
-         difference upstream drew with colour is not available on this display. -->
-    <style name="AppThemeHighContrast" parent="AppTheme" />
 </resources>

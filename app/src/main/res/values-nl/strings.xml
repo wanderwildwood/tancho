@@ -25,7 +25,6 @@
     <string name="save_wav">Bewaar .wav bestanden</string>
     <string name="summary_save_wav">Bewaar een .wav bestand voor elke detectie in de Muziek map. Vanaf Android 12+</string>
     <string name="language">Taal</string>
-    <string name="high_contrast_theme">Hoog contrast</string>
     <string name="settings_meta_extended">Gewogen metamodel</string>
     <string name="summary_meta_extended">Deze methode heeft tijdelijk meer CPU-capaciteit nodig wanneer de locatie veranderd</string>
     <string name="meta_influence">Locatie/datum-invloed</string>

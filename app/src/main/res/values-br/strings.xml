@@ -25,7 +25,6 @@
     <string name="save_wav">Enrollañ restroù .wav</string>
     <string name="summary_save_wav">Enrollañ ur restr .wav evit pep diguzhadenn er renkell sonerezh. Android 12+ zo rekis</string>
     <string name="language">Yezh</string>
-    <string name="high_contrast_theme">Dargemm uhel</string>
     <string name="settings_meta_extended">Meta-model ponderet</string>
     <string name="summary_meta_extended">An hentenn-mañ a implij muioc\'h a vammennoù CPU pa cheñch al lec\'hiadur</string>
     <string name="meta_influence">Levezon al lec\'h/deiziad</string>

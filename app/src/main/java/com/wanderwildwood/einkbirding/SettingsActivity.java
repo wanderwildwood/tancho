@@ -84,21 +84,12 @@ Context mContext;
                 sharedPreferences.edit().remove("model_threshold").apply();
                 sharedPreferences.edit().remove("play_sound").apply();
                 sharedPreferences.edit().remove("write_wav").apply();
-                sharedPreferences.edit().remove("theme").apply();
                 sharedPreferences.edit().remove("bluetooth").apply();
 
                 onCreatePreferences(savedInstanceState,rootKey);
                 return false;
             });
 
-            Preference theme = findPreference("theme");
-            theme.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
-                    requireActivity().recreate();
-                    return true;
-                }
-            });
             Preference language = getPreferenceManager().findPreference("language");
             if (language != null) language.setOnPreferenceClickListener(preference -> {
                 // Create an intent to open the app's settings

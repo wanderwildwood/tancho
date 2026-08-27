@@ -25,7 +25,6 @@
     <string name="save_wav">Zapisuj pliki .wav</string>
     <string name="summary_save_wav">Zapisuje plik .wav dla każdego wykrycia w katalogu Muzyka. Wymaga systemu Android 12+</string>
     <string name="language">Język</string>
-    <string name="high_contrast_theme">Wysoki kontrast</string>
     <string name="settings_meta_extended">Ważony metamodel</string>
     <string name="summary_meta_extended">Ta metoda chwilowo wymaga zwiększonych zasobów procesora, podczas zmiany lokalizacji</string>
     <string name="meta_influence">Wpływ lokalizacji/daty</string>

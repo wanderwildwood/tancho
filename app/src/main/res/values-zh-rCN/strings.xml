@@ -22,7 +22,6 @@
     <string name="settings_notification_sound">提示声</string>
     <string name="save_wav">保存 .wav 文件</string>
     <string name="language">语言</string>
-    <string name="high_contrast_theme">高对比度</string>
     <string name="settings_meta_extended">加权元模型</string>
     <string name="meta_influence">位置/日期影响</string>
     <string name="settings_threshold">阈值 [%]</string>

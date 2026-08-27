@@ -25,7 +25,6 @@
     <string name="save_wav">.wav fájlok elmentése</string>
     <string name="summary_save_wav">Elment egy .wav fájlt minden egyes észleléskor a Music könyvtárba. Android 12+ szükséges hozzá</string>
     <string name="language">Nyelv</string>
-    <string name="high_contrast_theme">Nagy kontraszt</string>
     <string name="settings_meta_extended">Súlyozott metamodell</string>
     <string name="summary_meta_extended">Ez a módszer a helyváltozáskor rövid ideig több CPU-erőforrást igényel</string>
     <string name="meta_influence">Hely/Dátum befolyása</string>

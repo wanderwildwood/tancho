@@ -20,7 +20,6 @@
     <string name="settings_notification_sound">Son da notificación</string>
     <string name="save_wav">Gardar ficheiros .wav</string>
     <string name="language">Idioma</string>
-    <string name="high_contrast_theme">Alto contraste</string>
     <string name="settings_meta_extended">Meta Modelo Ponderado</string>
     <string name="summary_meta_extended">Este método require por un tempo curto máis recursos de CPU cando cambia a localización</string>
     <string name="meta_influence">Influencia da Localización/Data</string>
