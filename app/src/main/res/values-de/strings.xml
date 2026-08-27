@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Berechtigung für Mikrofon fehlt</string>
     <string name="error_location_permission">Berechtigung für Standort fehlt</string>
     <string name="clear_db">Beobachtungen gelöscht</string>
-    <string name="detailed_list">Detaillierte Liste</string>
     <string name="delete">Alle Beobachtungen löschen?</string>
     <string name="settings_threshold">Schwellwert [%]</string>
     <string name="settings_highpass">Hochpassfilter [Hz]</string>

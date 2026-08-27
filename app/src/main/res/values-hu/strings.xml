@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Mikrofon hozzáférés nem engedélyezett</string>
     <string name="error_location_permission">Helymeghatározási engedély nincs megadva</string>
     <string name="clear_db">Megfigyelések törölve</string>
-    <string name="detailed_list">Részletes lista</string>
     <string name="delete">Törlöd az összes megfigyelést?</string>
     <string name="settings_threshold">Küszöbérték [%]</string>
     <string name="settings_highpass">Felüláteresztő szűrő [Hz]</string>

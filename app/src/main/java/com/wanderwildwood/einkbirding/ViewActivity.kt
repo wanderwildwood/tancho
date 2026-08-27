@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebSettings
-import android.widget.CompoundButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -74,25 +73,6 @@ class ViewActivity : BaseActivity() {
 
         val linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerObservations.setLayoutManager(linearLayoutManager)
-
-        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-        val isDetailedFilterActive = sharedPref.getBoolean("view_detailed", false)
-        binding.checkDetailed.isChecked = isDetailedFilterActive
-        binding.checkDetailed.setOnClickListener { view ->
-            val editor=sharedPref.edit()
-            if ((view as CompoundButton).isChecked) {
-                birdObservations.clear()
-                birdObservations.addAll(database.getAllBirdObservations(true).sortedByDescending { it.millis })
-                editor.putBoolean("view_detailed", true)
-                editor.apply()
-            } else {
-                birdObservations.clear()
-                birdObservations.addAll(database.getAllBirdObservations(false).sortedByDescending { it.millis })
-                editor.putBoolean("view_detailed", false)
-                editor.apply()
-            }
-            adapter.notifyDataSetChanged()
-        }
 
         loadLabels(this)
         loadAssetList(this)

@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Дозвіл на доступ до мікрофона не надано</string>
     <string name="error_location_permission">Доступ до місцеперебування не надано</string>
     <string name="clear_db">Спостереження вилучено</string>
-    <string name="detailed_list">Деталізований список</string>
     <string name="delete">Вилучити всі спостереження?</string>
     <string name="settings_threshold">Поріг [%]</string>
     <string name="settings_highpass">Фільтр високих частот [Гц]</string>

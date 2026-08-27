@@ -7,7 +7,6 @@
     <string name="error_audio_permission">未授予麦克风权限</string>
     <string name="error_location_permission">未授予位置权限</string>
     <string name="clear_db">观察记录已删除</string>
-    <string name="detailed_list">详细列表</string>
     <string name="delete">删除所有观察记录？</string>
     <string name="settings_highpass">高通滤波器 [Hz]</string>
     <string name="source_unprocessed">未处理</string>

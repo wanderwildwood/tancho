@@ -80,6 +80,12 @@ fun SettingsScreen(
                 onCheckedChange = { settings.ignoreNonBirds = it },
             )
             SwitchRow(
+                label = stringResource(R.string.list_repeats),
+                summary = stringResource(R.string.summary_list_repeats),
+                checked = settings.listRepeats,
+                onCheckedChange = { settings.listRepeats = it },
+            )
+            SwitchRow(
                 label = stringResource(R.string.settings_notification_sound),
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },

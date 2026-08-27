@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Oprávnění k mikrofonu nebylo uděleno</string>
     <string name="error_location_permission">Oprávnění k umístění nebylo uděleno</string>
     <string name="clear_db">Pozorování smazána</string>
-    <string name="detailed_list">Podrobný seznam</string>
     <string name="delete">Smazat všechna pozorování?</string>
     <string name="settings_threshold">Hranice [%]</string>
     <string name="settings_highpass">Horní propust [Hz]</string>

@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Permís al micròfon no concedit</string>
     <string name="error_location_permission">Permís d\'ubicació no concedit</string>
     <string name="clear_db">Observacions eliminades</string>
-    <string name="detailed_list">Llista detallada</string>
     <string name="delete">Suprimeix totes les observacions?</string>
     <string name="settings_threshold">Llindar [%]</string>
     <string name="settings_highpass">Filtre passaalt [Hz]</string>

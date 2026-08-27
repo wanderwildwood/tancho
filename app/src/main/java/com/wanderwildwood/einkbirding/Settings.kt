@@ -57,6 +57,14 @@ class Settings(context: Context) {
     var ignoreNonBirds by boolPref(IGNORE_NON_BIRDS, default = true)
 
     /**
+     * Whether a bird that calls twenty times in a row is twenty lines in the log or one.
+     * Off, a run of the same species collapses to its best reading; on, every hearing is
+     * kept with its own time. Upstream put this on the log screen itself, where it was a
+     * box across the top of a list it was only read once to set.
+     */
+    var listRepeats by boolPref(VIEW_DETAILED)
+
+    /**
      * Typing is allowed to be wrong on the way to being right, so what is typed is always
      * kept on screen and only a well-formed pair is written down. Upstream cleared the
      * field back to zeroes on a bad character, which loses the digits you had got right.
@@ -127,6 +135,7 @@ class Settings(context: Context) {
         const val WRITE_WAV = "write_wav"
         const val BLUETOOTH = "bluetooth"
         const val IGNORE_NON_BIRDS = "ignore_non_birds"
+        const val VIEW_DETAILED = "view_detailed"
         const val MANUAL_LOCATION = "manual_location"
         const val MANUAL_LOCATION_VALUE = "manual_location_value"
         const val DEFAULT_LOCATION = "0.000/0.000"

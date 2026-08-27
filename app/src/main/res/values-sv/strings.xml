@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Behörighet till mikrofon inte beviljad</string>
     <string name="error_location_permission">Behörighet till platsdata inte beviljad</string>
     <string name="clear_db">Observationer borttagna</string>
-    <string name="detailed_list">Detaljerad lista</string>
     <string name="delete">Ta bort alla observationer?</string>
     <string name="settings_threshold">Tröskel [%]</string>
     <string name="settings_highpass">Högpassfilter [Hz]</string>

@@ -7,7 +7,6 @@
     <string name="error_audio_permission">L\'accès au micro n\'est pas autorisé</string>
     <string name="error_location_permission">L\'accès à la position n\'est pas autorisé</string>
     <string name="clear_db">Les observations ont été supprimées</string>
-    <string name="detailed_list">Liste détaillée</string>
     <string name="delete">Supprimer toutes les observations ?</string>
     <string name="settings_threshold">Seuil [%]</string>
     <string name="settings_highpass">High-Pass Filter [Hz]</string>

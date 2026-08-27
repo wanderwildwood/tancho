@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Nie udzielono dostępu do mikrofonu</string>
     <string name="error_location_permission">Nie udzielono dostępu do lokalizacji</string>
     <string name="clear_db">Obserwacje usunięte</string>
-    <string name="detailed_list">Szczegółowa lista</string>
     <string name="delete">Usunąć wszystkie obserwacje?</string>
     <string name="settings_threshold">Wartość progowa [%]</string>
     <string name="settings_highpass">Filtr górnoprzepustowy [Hz]</string>

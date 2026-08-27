@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Mikrofonin käyttöoikeutta ei ole myönnetty</string>
     <string name="error_location_permission">Sijainnin käyttöoikeutta ei ole myönnetty</string>
     <string name="clear_db">Havainnot poistettu</string>
-    <string name="detailed_list">Yksityiskohtaiset tiedot</string>
     <string name="delete">Poistetaanko kaikki havainnot?</string>
     <string name="settings_threshold">Raja-arvo [%]</string>
     <string name="settings_highpass">Ylipäästösuodin [Hz]</string>

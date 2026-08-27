@@ -6,7 +6,6 @@
     <string name="error_audio_permission">لم يتم منح إذن الميكروفون</string>
     <string name="error_location_permission">لم يتم منح إذن الموقع</string>
     <string name="clear_db">تم حذف الملاحظات</string>
-    <string name="detailed_list">قائمة مفصلة</string>
     <string name="delete">حذف جميع الملاحظات؟</string>
     <string name="settings_threshold">الحد الأدنى [%]</string>
     <string name="settings_highpass">مرشح التمرير العالي [Hz]</string>

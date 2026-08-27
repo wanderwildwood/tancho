@@ -7,7 +7,6 @@
     <string name="error_audio_permission">N\'eo ket bet roet aotre d\'ar mikro</string>
     <string name="error_location_permission">N\'eo ket bet roet aotre d\'al lec\'hiadur</string>
     <string name="clear_db">Diverket eo bet an arselladennoù</string>
-    <string name="detailed_list">Listenn munudet</string>
     <string name="delete">Dilemel an holl arselladennoù?</string>
     <string name="settings_threshold">Treuz [%]</string>
     <string name="settings_highpass">High-Pass Filter [Hz]</string>

@@ -6,7 +6,6 @@
     <string name="error_audio_permission">Non se concedeu acceso ao micrófono</string>
     <string name="error_location_permission">Non se concedeu acceso á localización</string>
     <string name="clear_db">Borráronse as observacións</string>
-    <string name="detailed_list">Lista polo miúdo</string>
     <string name="delete">Borrar todas as observacións?</string>
     <string name="settings_threshold">Limiar [%]</string>
     <string name="source_unprocessed">Sen procesar</string>

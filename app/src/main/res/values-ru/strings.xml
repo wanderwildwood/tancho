@@ -7,7 +7,6 @@
     <string name="error_audio_permission">Разрешение на микрофон не предоставлено</string>
     <string name="error_location_permission">Разрешение на определение местоположения не предоставлено</string>
     <string name="clear_db">Замечания удалены</string>
-    <string name="detailed_list">Подробный список</string>
     <string name="delete">Удалить все наблюдения?</string>
     <string name="settings_threshold">Порог [%]</string>
     <string name="source_unprocessed">Необработано</string>
