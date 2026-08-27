@@ -27,9 +27,7 @@ import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import org.tensorflow.lite.Interpreter
 import uk.me.berndporr.iirj.Butterworth
@@ -49,7 +47,6 @@ import kotlin.concurrent.scheduleAtFixedRate
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.exp
-import kotlin.math.round
 import kotlin.math.sin
 
 /**
@@ -332,30 +329,29 @@ class SoundClassifier(
 
     val metaOutputBuffer = FloatBuffer.allocate(metaModelNumClasses)
 
-    val sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext)
-    val metaExtended= sharedPref.getBoolean("meta_extended", true)
+    // Every week of the year, always. Upstream made this a setting; it was the second
+    // control over the same thing as the listening screen's "Place and date", in different
+    // words, and the cost it guarded against is 48 runs of a small model when the location
+    // changes - not per detection. It was on by default, so this is what it always did.
+    metaPredictionProbsMax = FloatArray(metaModelNumClasses) { 0f }
+    for (weekindex in 1..48) {
+      val weekMeta = cos(Math.toRadians(weekindex * 7.5)) + 1.0
 
-    if (metaExtended) { // Only run for all 48 weeks if option is set
-      metaPredictionProbsMax = FloatArray(metaModelNumClasses) { 0f }
-      for (weekindex in 1..48) {
-        val weekMeta = cos(Math.toRadians(weekindex * 7.5)) + 1.0
+      // Prepare input buffer
+      metaInputBuffer.put(0, lat)
+      metaInputBuffer.put(1, lon)
+      metaInputBuffer.put(2, weekMeta.toFloat())
+      metaInputBuffer.rewind()
 
-        // Prepare input buffer
-        metaInputBuffer.put(0, lat)
-        metaInputBuffer.put(1, lon)
-        metaInputBuffer.put(2, weekMeta.toFloat())
-        metaInputBuffer.rewind()
-
-        // Run interpreter
-        metaOutputBuffer.clear()
-        meta_interpreter.run(metaInputBuffer, metaOutputBuffer)
-        metaOutputBuffer.rewind()
-        // Update max values
-        for (i in 0 until metaModelNumClasses) {
-          val value = metaOutputBuffer.get(i)
-          if (value > metaPredictionProbsMax[i]) {
-            metaPredictionProbsMax[i] = value
-          }
+      // Run interpreter
+      metaOutputBuffer.clear()
+      meta_interpreter.run(metaInputBuffer, metaOutputBuffer)
+      metaOutputBuffer.rewind()
+      // Update max values
+      for (i in 0 until metaModelNumClasses) {
+        val value = metaOutputBuffer.get(i)
+        if (value > metaPredictionProbsMax[i]) {
+          metaPredictionProbsMax[i] = value
         }
       }
     }
@@ -372,17 +368,11 @@ class SoundClassifier(
     metaOutputBuffer.rewind()
     metaOutputBuffer.get(metaPredictionProbs)
 
-    // If extended, run threshold logic for both current and max arrays
-    if (metaExtended) {
-      for (i in metaPredictionProbs.indices) {
-        val blended = 0.5f * applyMetaThreshold(metaPredictionProbs[i]) +
-                0.5f * applyMetaThreshold(metaPredictionProbsMax[i])
-        metaPredictionProbs[i] = blended
-      }
-    } else {
-      for (i in metaPredictionProbs.indices) {
-        metaPredictionProbs[i] = applyMetaThreshold(metaPredictionProbs[i])
-      }
+    // Blend this week against the best any week manages, so a bird that is here but out of
+    // season is still allowed to be the answer.
+    for (i in metaPredictionProbs.indices) {
+      metaPredictionProbs[i] = 0.5f * applyMetaThreshold(metaPredictionProbs[i]) +
+              0.5f * applyMetaThreshold(metaPredictionProbsMax[i])
     }
   }
 

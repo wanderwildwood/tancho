@@ -26,8 +26,6 @@
     <string name="summary_save_wav">Pro každé rozpoznání uloží do adresáře Music soubor .wav. Vyžaduje Android 12+</string>
     <string name="language">Jazyk</string>
     <string name="meta_influence">Vliv polohy/data</string>
-    <string name="settings_meta_extended">Vážený meta model</string>
-    <string name="summary_meta_extended">Tato metoda krátce vyžaduje více prostředků CPU, když se změní poloha</string>
     <string name="bluetooth_connection">Použít Bluetooth</string>
     <string name="manual_location">Nastavit lokaci</string>
     <string name="error_invalid_GPS">Neplatný formát GPS</string>

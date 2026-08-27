@@ -26,7 +26,5 @@
     <string name="summary_save_wav">Guarda un archivo .wav por cada detección en la carpeta Music. Requiere Android 12 o superior.</string>
     <string name="bluetooth_connection">Usar Bluetooth</string>
     <string name="language">Idioma</string>
-    <string name="settings_meta_extended">Meta-Modelo Ponderado</string>
-    <string name="summary_meta_extended">Este método aumenta brevemente el uso de CPU cuando la ubicación cambia</string>
     <string name="meta_influence">Influencia de Ubicación/Fecha</string>
 </resources>

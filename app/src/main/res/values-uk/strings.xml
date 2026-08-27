@@ -25,7 +25,5 @@
     <string name="save_wav">Зберегти .wav файли</string>
     <string name="summary_save_wav">Зберігати .wav файл для кожного розпізнавання у каталог Музика. Потребує Android 12+</string>
     <string name="language">Мова</string>
-    <string name="summary_meta_extended">Цей метод короткочасно вимагає більше ресурсів процесора, коли змінюється розташування</string>
     <string name="meta_influence">Вплив місця/дати</string>
-    <string name="settings_meta_extended">Зважена метамодель</string>
 </resources>

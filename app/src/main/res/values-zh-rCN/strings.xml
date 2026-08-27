@@ -22,11 +22,9 @@
     <string name="settings_notification_sound">提示声</string>
     <string name="save_wav">保存 .wav 文件</string>
     <string name="language">语言</string>
-    <string name="settings_meta_extended">加权元模型</string>
     <string name="meta_influence">位置/日期影响</string>
     <string name="settings_threshold">阈值 [%]</string>
     <string name="dialog_StarOnGitHub">您喜欢这个应用吗？请在 GitHub 上给它一个星标，或者通过 PayPal 为开发者买杯咖啡。</string>
     <string name="summary_save_wav">在 Music 文件夹中为每个检测保存一个.wav 文件。需要 Android 12及以上系统</string>
-    <string name="summary_meta_extended">当位置发生变化时，此方法会短暂地消耗更多的CPU资源</string>
     <string name="bluetooth_connection">使用蓝牙</string>
 </resources>

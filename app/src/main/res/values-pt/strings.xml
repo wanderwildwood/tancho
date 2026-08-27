@@ -26,8 +26,6 @@
     <string name="save_wav">Salvar arquivos .wav</string>
     <string name="summary_save_wav">Salva um arquivo .wav para cada deteção, no seu diretório de Música. Necessita de versão do Android pelo menos 12.</string>
     <string name="language">Idioma</string>
-    <string name="settings_meta_extended">Meta modelo com pesos</string>
-    <string name="summary_meta_extended">Este modelo exige mais recurso de CPU durante um curto período de tempo quando a sua localização muda</string>
     <string name="meta_influence">Influência do local e da data</string>
 </resources>
 
