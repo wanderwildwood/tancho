@@ -67,6 +67,9 @@
                     android:layout_marginBottom="10dp"
                     android:background="?colorPrimary"
                     android:src="@drawable/ic_download_48dp"
+                    android:tint="@android:color/white"
+                    android:padding="12dp"
+                    android:contentDescription="@string/download_the_model"
                     android:onClick="download"
                     />
 
