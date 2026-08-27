@@ -2,10 +2,6 @@
 <resources>
     <string name="app_name" translatable="false">eInk Birding</string>
     <string name="samples_zero">No audio input: All audio samples are zero!</string>
-    <string name="latitude">Lat</string>
-    <string name="longitude">Lon</string>
-    <string name="dialog_Later_button">Maybe later</string>
-    <string name="dialog_StarOnGitHub">Do you like this app? Please give a star on GitHub or buy the developer a coffee via PayPal.</string>
     <string name="download_model">Download Model</string>
     <string name="download_model_text">eInk Birding needs to download the BirdNET model (~ 39MB). \n No commercial use allowed \n(CC-BY-NC-SA 4.0 license)</string>
     <string name="start">LET\'S GO</string>
@@ -15,7 +11,6 @@
     <string name="clear_db">Observations deleted</string>
     <string name="detailed_list">Detailed list</string>
     <string name="delete">Delete all observations?</string>
-    <string name="share_app">Share app</string>
     <string name="settings_threshold">Threshold [%]</string>
     <string name="settings_highpass">High-Pass Filter [Hz]</string>
     <string name="source_unprocessed">Unprocessed</string>
@@ -27,7 +22,6 @@
     <string name="summary_save_wav">Saves a .wav file for each detection in Music directory. Requires Android 12+</string>
     <string name="language">Language</string>
     <string name="settings_reset">Reset settings</string>
-    <string name="meta_influence">Location/Date influence</string>
     <string name="bluetooth_connection">Use Bluetooth</string>
     <string name="manual_location">Set location</string>
     <string name="error_invalid_GPS">Invalid GPS format</string>

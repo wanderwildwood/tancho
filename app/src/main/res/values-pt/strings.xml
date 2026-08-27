@@ -2,10 +2,6 @@
 <resources>
     <string name="app_name" translatable="false">eInk Birding</string>
     <string name="samples_zero">Sem entrada de áudio: No audio input: todas as amostras estão zeradas!</string>
-    <string name="latitude">Lat</string>
-    <string name="longitude">Lon</string>
-    <string name="dialog_Later_button">Talvez depois</string>
-    <string name="dialog_StarOnGitHub">Você gostou deste app? Considere marcá-lo com uma estrela no GitHub or comprar um cafézinho para o desenvolvedor, através do PayPal.</string>
     <string name="download_model">Fazer download do modelo</string>
     <string name="download_model_text">eInk Birding precisa fazer download do modelo do BirdNET (~ 39MB). \n Não é permitido usar o modelo para fins comerciais \n(Licença CC-BY-NC-SA 4.0)</string>
     <string name="start">VAMOS!</string>
@@ -15,7 +11,6 @@
     <string name="clear_db">Observações foram apagadas</string>
     <string name="detailed_list">Lista detalhada</string>
     <string name="delete">Apagar todas as observações?</string>
-    <string name="share_app">Compartilhar este app</string>
     <string name="settings_threshold">Limiar sonoro [%]</string>
     <string name="settings_highpass">Filtro passa-alta [Hz]</string>
     <string name="source_unprocessed">Não processada</string>
@@ -26,6 +21,5 @@
     <string name="save_wav">Salvar arquivos .wav</string>
     <string name="summary_save_wav">Salva um arquivo .wav para cada deteção, no seu diretório de Música. Necessita de versão do Android pelo menos 12.</string>
     <string name="language">Idioma</string>
-    <string name="meta_influence">Influência do local e da data</string>
 </resources>
 

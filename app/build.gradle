@@ -79,9 +79,10 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "androidx.core:core-ktx:1.13.0"
     implementation "androidx.appcompat:appcompat:1.7.1"
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.9.2"
-    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
     implementation "com.google.android.material:material:1.12.0"
+    // Not used directly: Material drags ConstraintLayout in behind it, and this pins that
+    // to a version newer than the 2.0.1 it would otherwise settle on.
+    implementation "androidx.constraintlayout:constraintlayout:2.2.1"
     implementation 'com.google.ai.edge.litert:litert:1.2.0'
     implementation "androidx.preference:preference:1.2.1"
     implementation "net.lingala.zip4j:zip4j:2.9.1"
@@ -95,7 +96,6 @@ dependencies {
     implementation 'androidx.compose.ui:ui:1.9.5'
     implementation 'androidx.compose.foundation:foundation:1.9.5'
     implementation 'androidx.compose.material3:material3:1.4.0'
-    implementation 'androidx.compose.ui:ui-tooling-preview:1.9.5'
     debugImplementation 'androidx.compose.ui:ui-tooling:1.9.5'
     implementation 'com.mudita:MMD:1.0.2'
 }

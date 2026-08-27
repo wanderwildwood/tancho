@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="samples_zero">Відсутність аудіосигналу: всі аудіосигнали дорівнюють нулю!</string>
-    <string name="latitude">Широта</string>
-    <string name="longitude">Довгота</string>
-    <string name="dialog_Later_button">Можливо пізніше</string>
-    <string name="dialog_StarOnGitHub">Вам подобається цей застосунок? Будь ласка, поставте зірочку на GitHub, або купіть каву розробнику через PayPal.</string>
     <string name="download_model">Завантажити модель</string>
     <string name="download_model_text">eInk Birding потрібно завантажити BirdNET модель (~ 39MB). \n Дозволено для не комерційного використання\n(ліцензія CC-BY-NC-SA 4.0)</string>
     <string name="start">Почнімо</string>
@@ -14,7 +10,6 @@
     <string name="clear_db">Спостереження вилучено</string>
     <string name="detailed_list">Деталізований список</string>
     <string name="delete">Вилучити всі спостереження?</string>
-    <string name="share_app">Поширити додаток</string>
     <string name="settings_threshold">Поріг [%]</string>
     <string name="settings_highpass">Фільтр високих частот [Гц]</string>
     <string name="source_unprocessed">Необроблений</string>
@@ -25,5 +20,4 @@
     <string name="save_wav">Зберегти .wav файли</string>
     <string name="summary_save_wav">Зберігати .wav файл для кожного розпізнавання у каталог Музика. Потребує Android 12+</string>
     <string name="language">Мова</string>
-    <string name="meta_influence">Вплив місця/дати</string>
 </resources>

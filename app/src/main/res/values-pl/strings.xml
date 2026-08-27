@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="samples_zero">Brak wejścia audio: Wyzerowano próbki dźwięku!</string>
-    <string name="latitude">Szer.</string>
-    <string name="longitude">Dł.</string>
-    <string name="dialog_Later_button">Może później</string>
-    <string name="dialog_StarOnGitHub">Lubisz tę aplikację? Oznacz projekt gwiazdką na GitHub lub kup programiście kawę poprzez PayPal.</string>
     <string name="download_model">Pobierz model</string>
     <string name="download_model_text">Należy pobrać model BirdNET (~39MB). \n Wykorzystanie komercyjne wzbronione. \n(licencja CC-BY-NC-SA 4.0)</string>
     <string name="start">ZACZYNAJMY</string>
@@ -14,7 +10,6 @@
     <string name="clear_db">Obserwacje usunięte</string>
     <string name="detailed_list">Szczegółowa lista</string>
     <string name="delete">Usunąć wszystkie obserwacje?</string>
-    <string name="share_app">Udostępnij aplikację</string>
     <string name="settings_threshold">Wartość progowa [%]</string>
     <string name="settings_highpass">Filtr górnoprzepustowy [Hz]</string>
     <string name="source_unprocessed">Nieprzetworzone</string>
@@ -25,7 +20,6 @@
     <string name="save_wav">Zapisuj pliki .wav</string>
     <string name="summary_save_wav">Zapisuje plik .wav dla każdego wykrycia w katalogu Muzyka. Wymaga systemu Android 12+</string>
     <string name="language">Język</string>
-    <string name="meta_influence">Wpływ lokalizacji/daty</string>
     <string name="bluetooth_connection">Używaj Bluetooth</string>
     <string name="manual_location">Ustaw lokalizację</string>
     <string name="error_invalid_GPS">Niewłaściwy format GPS</string>
