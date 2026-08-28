@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="samples_zero">Нет звукового входа: все образцы звука равны нулю!</string>
-    <string name="download_model_text">eInk Birding необходимо загрузить модель BirdNET (~ 39MB).\nКоммерческое использование запрещено.\n(CC-BY-NC-SA 4.0 license)</string>
+    <string name="download_model_text">Birding необходимо загрузить модель BirdNET (~ 39MB).\nКоммерческое использование запрещено.\n(CC-BY-NC-SA 4.0 license)</string>
     <string name="download_model">Скачать модель</string>
     <string name="error_download">Ошибка при скачивании</string>
     <string name="error_audio_permission">Разрешение на микрофон не предоставлено</string>

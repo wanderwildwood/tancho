@@ -77,7 +77,7 @@ class SettingsActivity : BaseActivity() {
     private fun saveBackup() {
         // A plain sortable stamp, not the reader's locale date. Upstream offered the name
         // through ofLocalizedDate(SHORT), which in most of the world contains slashes or
-        // dots - "eInk Birding_8/27/26_8:30 PM" is not a filename, and a colon is no
+        // dots - "Birding_8/27/26_8:30 PM" is not a filename, and a colon is no
         // better. This also puts a folder of backups in the order they were made.
         val stamp = LocalDateTime.now()
             .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm", Locale.ROOT))

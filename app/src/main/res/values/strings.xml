@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">eInk Birding</string>
+    <string name="app_name" translatable="false">Birding</string>
     <string name="samples_zero">No audio input: All audio samples are zero!</string>
     <string name="download_model">Download the model</string>
-    <string name="download_model_text">eInk Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
+    <string name="download_model_text">Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="error_download">Download error</string>
     <string name="error_audio_permission">Microphone permission not granted</string>
     <string name="error_location_permission">Location permission not granted</string>

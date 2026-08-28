@@ -2,7 +2,7 @@
 <resources>
     <string name="samples_zero">Keine Audiodaten: Alle Werte sind Null!</string>
     <string name="download_model">Modell herunterladen</string>
-    <string name="download_model_text">eInk Birding muss das BirdNET-Modell herunterladen (~ 39MB). \n Keine kommerzielle Nutzung erlaubt \n(CC-BY-NC-SA 4.0 Lizenz)</string>
+    <string name="download_model_text">Birding muss das BirdNET-Modell herunterladen (~ 39MB). \n Keine kommerzielle Nutzung erlaubt \n(CC-BY-NC-SA 4.0 Lizenz)</string>
     <string name="error_download">Fehler beim Herunterladen</string>
     <string name="error_audio_permission">Berechtigung für Mikrofon fehlt</string>
     <string name="error_location_permission">Berechtigung für Standort fehlt</string>

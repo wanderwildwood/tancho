@@ -2,7 +2,7 @@
 <resources>
     <string name="samples_zero">Geen audio-ingang: Alle audiosamples zijn leeg!</string>
     <string name="download_model">Download model</string>
-    <string name="download_model_text">eInk Birding moet het BirdNET model downloaden (~ 39MB). \n Commercieel gebruik niet toegestaan \n(CC-BY-NC-SA 4.0 licentie)</string>
+    <string name="download_model_text">Birding moet het BirdNET model downloaden (~ 39MB). \n Commercieel gebruik niet toegestaan \n(CC-BY-NC-SA 4.0 licentie)</string>
     <string name="error_download">Download fout</string>
     <string name="error_audio_permission">Microfoon toegang niet verleend</string>
     <string name="error_location_permission">Locatie toegang niet verleend</string>

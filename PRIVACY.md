@@ -14,8 +14,14 @@ model runs on it in `SoundClassifier.kt`, and the buffer is overwritten by the n
 seconds. Nothing is uploaded, because there is no code that could upload it.
 
 Audio is written to disk only if you turn on **Save .wav files** in settings, which is off
-by default. Those files go to `Music/eInk Birding/`, where they are yours: the app never
-deletes them, and neither does uninstalling it.
+by default. Those files go to the app's own folder on external storage, not into your music.
+A morning outdoors can write hundreds of megabytes — the recogniser runs every 800ms and every
+detection above the threshold writes a file — and a music library is the wrong place for that:
+every player, scanner and backup would find them and offer them as songs.
+
+Being the app's own folder has a consequence worth stating plainly: **uninstalling takes the
+recordings with it**, and the "keep recordings for one session only" setting deletes them too.
+Copy anything you want to keep somewhere else first.
 
 ## Location
 
@@ -54,7 +60,7 @@ carried but never called has been removed.
 | `databases/BirdDatabase.db` | Your detections: time, species, probability, and coordinates if you granted location. App-private. |
 | `files/` | The downloaded model files. App-private. |
 | Shared preferences | Your settings. App-private. |
-| `Music/eInk Birding/*.wav` | Recordings, only if you turned that on. Yours, not deleted by the app. |
+| `files/Music/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
 
 App-private means other apps cannot read it and it goes away when you uninstall. The
 database can be exported or deleted from inside the app, in the observations list.

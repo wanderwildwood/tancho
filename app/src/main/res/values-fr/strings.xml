@@ -2,7 +2,7 @@
 <resources>
     <string name="samples_zero">Pas d\'entrée audio : Tous les échantillons sonores sont vides !</string>
     <string name="download_model">Télécharger le modèle</string>
-    <string name="download_model_text">eInk Birding a besoin de télécharger le modèle BirdNET (~ 39MB). \n Usage commercial non autorisé \n(licence CC-BY-NC-SA 4.0)</string>
+    <string name="download_model_text">Birding a besoin de télécharger le modèle BirdNET (~ 39MB). \n Usage commercial non autorisé \n(licence CC-BY-NC-SA 4.0)</string>
     <string name="error_download">Erreur pendant le téléchargement</string>
     <string name="error_audio_permission">L\'accès au micro n\'est pas autorisé</string>
     <string name="error_location_permission">L\'accès à la position n\'est pas autorisé</string>

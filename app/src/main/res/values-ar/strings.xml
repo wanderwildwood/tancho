@@ -14,7 +14,7 @@
     <string name="source_voicerecognition">التعرف على الصوت</string>
     <string name="settings_audiosource">مصدر الصوت</string>
     <string name="settings_notification_sound">صوت الإشعارات</string>
-    <string name="download_model_text">يحتاج \"eInk Birding\"من هذا الطائر إلى تنزيل نموذج BirdNET (~39 ميجابايت).\nلا يُسمح بالاستخدام التجاري\n(ترخيص CC-BY-NC-SA 4.0)</string>
+    <string name="download_model_text">يحتاج \"Birding\"من هذا الطائر إلى تنزيل نموذج BirdNET (~39 ميجابايت).\nلا يُسمح بالاستخدام التجاري\n(ترخيص CC-BY-NC-SA 4.0)</string>
     <string name="save_wav">حفظ ملفات wav.</string>
     <string name="summary_save_wav">يتم حفظ ملف wav. لكل عملية كشف في دليل الموسيقى. يتطلب Android 12+</string>
     <string name="language">اللغة</string>
