@@ -47,9 +47,6 @@ class ListeningState {
     private val _isListening = MutableStateFlow(true)
     val isListening: StateFlow<Boolean> = _isListening.asStateFlow()
 
-    private val _location = MutableStateFlow<Location?>(null)
-    val location: StateFlow<Location?> = _location.asStateFlow()
-
     private val _heard = MutableStateFlow<List<Heard>>(emptyList())
     val heard: StateFlow<List<Heard>> = _heard.asStateFlow()
 
@@ -59,17 +56,11 @@ class ListeningState {
     /** How much the where-and-when model is allowed to weigh in, 0f..1f. */
     val metaInfluence = MutableStateFlow(0.6f)
 
-    data class Location(val latitude: Float, val longitude: Float)
-
     /** The bird whose picture the listening screen is showing, if it is showing one. */
     data class Photo(val speciesIndex: Int, val assetId: String)
 
     fun setListening(listening: Boolean) {
         _isListening.value = listening
-    }
-
-    fun setLocation(latitude: Float, longitude: Float) {
-        _location.value = Location(latitude, longitude)
     }
 
     @Synchronized

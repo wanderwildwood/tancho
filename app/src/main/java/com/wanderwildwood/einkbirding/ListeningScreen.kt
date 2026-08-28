@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -38,7 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mudita.mmd.components.buttons.ButtonMMD
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.text.TextMMD
@@ -60,7 +60,6 @@ import java.util.Locale
 fun ListeningScreen(
     isListening: Boolean,
     heard: List<Heard>,
-    location: ListeningState.Location?,
     placeAndDate: PlaceAndDate,
     showPhoto: Boolean,
     photoAssetId: String?,
@@ -68,10 +67,32 @@ fun ListeningScreen(
     onCyclePlaceAndDate: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
+        // The two controls share one row under the picture. They used to have a row each -
+        // 118px of a 800px panel to say a word that never changes, print a location that
+        // never changes, and hold a setting touched once a session - which with the
+        // photograph on left the log a row and a half.
+        //
+        // They sat over the photograph for a while, which cost nothing but was a mistake:
+        // anything opaque enough to read over a picture is opaque enough to hide it, so the
+        // strip took the bottom of every bird with it and clipped the mark that stands in
+        // when there is no bird. Below it they cover nothing, and one row instead of two is
+        // most of the space back anyway.
         if (showPhoto) PhotoBand(assetId = photoAssetId)
-
-        StatusLine(isListening = isListening, location = location)
-        PlaceAndDateRow(placeAndDate = placeAndDate, onCycle = onCyclePlaceAndDate)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            ListeningChip(isListening = isListening, onToggle = onToggleListening)
+            ControlChip(
+                text = stringResource(placeAndDate.label),
+                widest = PlaceAndDate.entries.map { stringResource(it.label) }.maxBy { it.length },
+                anchor = Alignment.CenterEnd,
+                onClick = onCyclePlaceAndDate,
+            )
+        }
         HorizontalDividerMMD()
 
         Box(modifier = Modifier.weight(1f)) {
@@ -110,17 +131,6 @@ fun ListeningScreen(
             }
         }
 
-        HorizontalDividerMMD()
-        ButtonMMD(
-            onClick = onToggleListening,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-        ) {
-            TextMMD(
-                stringResource(if (isListening) R.string.stop_listening else R.string.start_listening)
-            )
-        }
         DestinationRowCompose(current = Destination.LISTENING)
     }
 }
@@ -173,18 +183,24 @@ private fun PhotoBand(assetId: String?) {
 }
 
 /**
- * While the recorder is running, the word is followed by one dot, then two, then three,
- * and round again. It is the only thing on the screen that moves, which is the whole of
- * why it is there: a log that has said nothing for ten minutes looks exactly the same
- * whether the microphone is open or the app died quietly an hour ago.
+ * The one thing on the screen that moves, and the switch that stops it.
  *
- * The dots are appended here rather than written into the string, so no translation has
- * to know about them.
+ * While the recorder is running the word is followed by one dot, then two, then three, and
+ * round again. That is the whole of why it is there: a log that has said nothing for ten
+ * minutes looks exactly the same whether the microphone is open or the app died quietly an
+ * hour ago. The dots are appended here rather than written into the string, so no
+ * translation has to know about them.
+ *
+ * Tapping it stops and starts the recorder, which is what the button across the bottom of
+ * the screen used to do. Putting it here costs no height at all and gives the log the
+ * button's, and the state and the control saying the same thing in the same place is
+ * honest: the word tells you whether it is listening, and it is the thing you press to
+ * change that.
  */
 private const val ELLIPSIS_PERIOD_MS = 700L
 
 @Composable
-private fun StatusLine(isListening: Boolean, location: ListeningState.Location?) {
+private fun ListeningChip(isListening: Boolean, onToggle: () -> Unit) {
     var dots by remember { mutableIntStateOf(1) }
 
     // Keyed on isListening so that stopping cancels it rather than leaving a loop running
@@ -198,64 +214,61 @@ private fun StatusLine(isListening: Boolean, location: ListeningState.Location?)
         }
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextMMD(
-            text = if (isListening) {
-                stringResource(R.string.listening) + ".".repeat(dots)
-            } else {
-                stringResource(R.string.stopped)
-            },
-            style = MaterialTheme.typography.titleMedium,
-        )
-        if (location != null) {
-            TextMMD(
-                text = "%.2f, %.2f".format(location.latitude, location.longitude),
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
-    }
+    ControlChip(
+        text = if (isListening) {
+            stringResource(R.string.listening) + ".".repeat(dots)
+        } else {
+            stringResource(R.string.stopped)
+        },
+        // Sized to the widest thing it will ever say, so the dots do not push the box
+        // wider and let it fall back three times a second.
+        widest = stringResource(R.string.listening) + "...",
+        anchor = Alignment.CenterStart,
+        onClick = onToggle,
+    )
 }
 
 /**
- * The where-and-when model's say in the answer, as three taps rather than a dragged
- * slider: a drag on e-ink repaints the whole track for every pixel of movement, and the
- * value was never that precise to begin with.
+ * A word you can press. Nothing behind it and no rule around it: it sits on the surface
+ * like everything else on this screen, and the only thing marking it out is that it is the
+ * one line of it that answers to a tap.
  *
- * The value is boxed. Everything else on this screen is a label or a log line, so a bare
- * word here reads as a readout of something rather than a control you can change - and
- * this is the one control on the screen that decides which birds are allowed to appear.
+ * [widest] is the longest thing this will ever say, laid out unseen behind the real text
+ * to fix the width, and [anchor] is the edge that stays put inside it: the listening word
+ * grows dots to the right of itself, so it is held to the left; the filter is read against
+ * the right margin, so it is held to the right. Without that they slide sideways as they
+ * change, which is worse than the box was. Both of these change what they say - one cycles through
+ * three filters, the other gains and loses dots every 700ms - and a box that resizes
+ * redraws its border every time. On e-ink that is a twitch, three times a second, on the
+ * one part of the screen whose whole job is to sit still and be glanced at.
+ *
+ * Three taps rather than a dragged slider for the filter: a drag on e-ink repaints the
+ * whole track for every pixel of movement, and the value was never that precise.
  */
 @Composable
-private fun PlaceAndDateRow(placeAndDate: PlaceAndDate, onCycle: () -> Unit) {
-    Row(
+private fun ControlChip(
+    text: String,
+    widest: String,
+    anchor: Alignment,
+    onClick: () -> Unit,
+) {
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onCycle)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
+            .clickable(onClick = onClick)
+            .padding(vertical = 4.dp),
+        contentAlignment = anchor,
     ) {
         TextMMD(
-            text = stringResource(R.string.place_and_date),
+            text = widest,
             style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.alpha(0f),
         )
-        Box(
-            modifier = Modifier
-                .border(1.dp, MaterialTheme.colorScheme.onSurface)
-                .padding(horizontal = 10.dp, vertical = 4.dp),
-        ) {
-            TextMMD(
-                text = stringResource(placeAndDate.label),
-                style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Bold,
-            )
-        }
+        TextMMD(
+            text = text,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Bold,
+        )
     }
 }
 

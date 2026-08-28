@@ -325,7 +325,6 @@ class SoundClassifier(
     lat = location.latitude.toFloat()
     lon = location.longitude.toFloat()
 
-    state.setLocation(lat, lon)
 
     val metaOutputBuffer = FloatBuffer.allocate(metaModelNumClasses)
 

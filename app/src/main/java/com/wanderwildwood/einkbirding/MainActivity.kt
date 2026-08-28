@@ -84,14 +84,12 @@ class MainActivity : BaseActivity() {
       ThemeMMD {
         val isListening by state.isListening.collectAsStateWithLifecycle()
         val heard by state.heard.collectAsStateWithLifecycle()
-        val location by state.location.collectAsStateWithLifecycle()
         val photo by state.photo.collectAsStateWithLifecycle()
         var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
 
         ListeningScreen(
           isListening = isListening,
           heard = heard,
-          location = location,
           placeAndDate = placeAndDate,
           showPhoto = photoWhileListening,
           photoAssetId = photo?.assetId,
