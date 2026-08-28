@@ -64,10 +64,7 @@ class MainActivity : BaseActivity() {
     val storedInfluence = sharedPref.getFloat("meta_model_influence", 60.0f) / 100.0f
     state.metaInfluence.value = storedInfluence
 
-    // Recordings used to be written into the reader's Music folder. Anything still there
-    // is carried across, once, so a row recorded before that change still plays.
     Thread {
-      WavUtils.migrateLegacyRecordings(this)
       // "Cleared after closing" is done on the way in rather than on the way out. An app
       // is not always given a chance to run anything when it goes: the process can simply
       // be killed. Clearing at the start of the next session is the same promise kept in

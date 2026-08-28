@@ -20,7 +20,6 @@ public class WavUtils {
     public static final String TAG = "WavUtils";
 
     /** Where the shared-storage version of this used to put them. Emptied on first run. */
-    private static final String LEGACY_DIR = "/eInk Birding";
 
     /**
      * Where a detection's audio is kept: the app's own directory on external storage.
@@ -52,31 +51,6 @@ public class WavUtils {
             if (file.delete()) deleted++;
         }
         return deleted;
-    }
-
-    /**
-     * Carry anything left in the old shared-storage folder across, once, so that a row
-     * recorded before this change still plays. The old folder is then removed, because
-     * leaving an empty "eInk Birding" in someone's Music is its own small rudeness.
-     */
-    public static void migrateLegacyRecordings(Context context) {
-        File legacy = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath() + LEGACY_DIR);
-        if (!legacy.isDirectory()) return;
-        File target = recordingsDir(context);
-        if (target == null) return;
-        if (!target.exists() && !target.mkdirs()) return;
-        File[] files = legacy.listFiles();
-        if (files != null) {
-            for (File file : files) {
-                File moved = new File(target, file.getName());
-                if (!moved.exists() && !file.renameTo(moved)) {
-                    Log.w(TAG, "Could not move " + file.getName() + " out of Music");
-                    continue;
-                }
-                file.delete();
-            }
-        }
-        if (!legacy.delete()) Log.w(TAG, "Old recordings folder not removed: " + legacy);
     }
 
     public static void playWaveFile(Context context, long timestamp) {
