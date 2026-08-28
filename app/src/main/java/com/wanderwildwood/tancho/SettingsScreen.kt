@@ -122,7 +122,6 @@ fun SettingsScreen(
             )
             SwitchRow(
                 label = stringResource(R.string.settings_notification_sound),
-                summary = stringResource(R.string.summary_settings_notification_sound),
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },
             )
@@ -143,7 +142,6 @@ fun SettingsScreen(
                 )
                 SwitchRow(
                     label = stringResource(R.string.clear_recordings),
-                    summary = stringResource(R.string.summary_clear_recordings),
                     checked = settings.clearRecordings,
                     onCheckedChange = { settings.clearRecordings = it },
                 )

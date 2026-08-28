@@ -15,7 +15,7 @@
     <string name="source_microphone">Microphone</string>
     <string name="source_voicerecognition">Voice recognition</string>
     <string name="settings_audiosource">Audio source</string>
-    <string name="settings_notification_sound">Notification sound</string>
+    <string name="settings_notification_sound">Sound on each identification</string>
     <string name="save_wav">Save recordings</string>
     <string name="summary_save_wav">Keep the sound of each detection, so tapping its row plays back what was heard. About 288KB each, in the app\'s own storage rather than in your music.</string>
     <string name="language">Language</string>
@@ -35,7 +35,6 @@
     <string name="summary_settings_audiosource">Which microphone input to record from. Unprocessed is the rawest, and the one the recogniser expects.</string>
     <string name="summary_settings_threshold">How sure the recogniser has to be before a bird is written down. Lower catches more, and is wrong more often.</string>
     <string name="summary_settings_highpass">Throw away everything below this pitch before listening, against traffic or wind. 0 leaves the sound alone.</string>
-    <string name="summary_settings_notification_sound">Play a short sound whenever a bird is identified.</string>
     <string name="summary_bluetooth_connection">Take the audio from a connected Bluetooth microphone rather than from the phone itself.</string>
     <string name="summary_manual_location">Give a fixed latitude and longitude instead of using GPS. With this on the app never asks for location permission at all.</string>
     <string name="photo_while_listening">Photo while listening</string>
@@ -64,7 +63,6 @@
     <string name="show_spectrogram">Show the sound</string>
     <string name="summary_show_spectrogram">Draw the shape of the recording under the photograph when a row is opened: time across, pitch up, loud dark.</string>
     <string name="clear_recordings">Keep recordings for this session only</string>
-    <string name="summary_clear_recordings">Throw the recordings away the next time the app starts, rather than letting them build up.</string>
     <string name="about">About</string>
     <string name="close">Close</string>
     <string name="about_body">Identification happens on this phone. The only thing fetched is a bird\'s photograph, and only for a row you open.\n\nA fork of whoBIRD by woheller69. GNU General Public Licence v3.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. Models CC BY-NC-SA 4.0, not for commercial use.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.\n\ngithub.com/wanderwildwood/tancho</string>
