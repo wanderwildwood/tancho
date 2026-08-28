@@ -60,7 +60,7 @@ carried but never called has been removed.
 | `databases/BirdDatabase.db` | Your detections: time, species, probability, and coordinates if you granted location. App-private. |
 | `files/` | The downloaded model files. App-private. |
 | Shared preferences | Your settings. App-private. |
-| `files/Music/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
+| `files/Documents/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
 
 App-private means other apps cannot read it and it goes away when you uninstall. The
 database can be exported or deleted from inside the app, in the observations list.
