@@ -15,6 +15,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,7 +32,7 @@ import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
-import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
+import kotlinx.coroutines.delay
 
 /**
  * Settings.
@@ -44,12 +49,11 @@ import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 fun SettingsScreen(
     settings: Settings,
     onChooseLanguage: () -> Unit,
+    onExportLog: () -> Unit,
+    onSaveBackup: () -> Unit,
+    onDeleteLog: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBarMMD(
-            title = { TextMMD(stringResource(R.string.destination_settings)) },
-        )
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -148,6 +152,14 @@ fun SettingsScreen(
                 ActionRow(label = stringResource(R.string.language), onClick = onChooseLanguage)
             }
 
+            HorizontalDividerMMD()
+
+            ActionRow(label = stringResource(R.string.export_log), onClick = onExportLog)
+            ActionRow(label = stringResource(R.string.save_backup), onClick = onSaveBackup)
+            DeleteRow(onConfirmed = onDeleteLog)
+
+            HorizontalDividerMMD()
+
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedButtonMMD(
                 onClick = settings::reset,
@@ -157,6 +169,8 @@ fun SettingsScreen(
             ) {
                 TextMMD(stringResource(R.string.settings_reset))
             }
+            Spacer(modifier = Modifier.height(24.dp))
+            AboutSection()
             Spacer(modifier = Modifier.height(24.dp))
         }
 
@@ -210,6 +224,80 @@ private fun SwitchRow(
             }
         }
         SwitchMMD(checked = checked, onCheckedChange = onCheckedChange)
+    }
+}
+
+/**
+ * Clearing the log cannot be undone, so it asks first - but on the row itself rather than
+ * in a dialog. A dialog is two full-panel repaints to ask one question; this is one row
+ * changing what it says. The question withdraws itself after a few seconds, so a row armed
+ * by a stray tap is not left armed for the next person to walk into.
+ */
+@Composable
+private fun DeleteRow(onConfirmed: () -> Unit) {
+    var armed by remember { mutableStateOf(false) }
+
+    LaunchedEffect(armed) {
+        if (!armed) return@LaunchedEffect
+        delay(ARMED_MS)
+        armed = false
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                if (armed) {
+                    armed = false
+                    onConfirmed()
+                } else {
+                    armed = true
+                }
+            }
+            .padding(horizontal = 16.dp, vertical = 16.dp),
+    ) {
+        TextMMD(
+            text = stringResource(if (armed) R.string.delete_log_confirm else R.string.delete_log),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = if (armed) FontWeight.Bold else FontWeight.Normal,
+        )
+    }
+}
+
+/** How long a tap on the delete row stays armed before it forgets it was asked. */
+private const val ARMED_MS = 5000L
+
+/**
+ * What this is, what it was built from, and who the parts belong to. Folded away because
+ * it is read once; a row that opens in place rather than a screen that has to be left.
+ */
+@Composable
+private fun AboutSection() {
+    var open by remember { mutableStateOf(false) }
+
+    ActionRow(label = stringResource(R.string.about), onClick = { open = !open })
+    if (open) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
+        ) {
+            TextMMD(
+                text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+            )
+            TextMMD(
+                text = BuildConfig.APPLICATION_ID,
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            TextMMD(
+                text = stringResource(R.string.about_body),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
     }
 }
 

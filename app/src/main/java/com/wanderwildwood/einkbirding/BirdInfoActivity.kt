@@ -33,6 +33,15 @@ class BirdInfoActivity : BaseActivity() {
     private var photoUrl: String? = null
     private lateinit var allBirdsList: ArrayList<Pair<Int, String>>
 
+    /**
+     * No ActionBar. It carried the app's name and nothing else - the row along the bottom
+     * already says which screen this is - and on a 480x800 panel that is a row of the log
+     * given up to be told what you are already running.
+     */
+    override fun applyTheme() {
+        setTheme(R.style.AppTheme_NoActionBar)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBirdInfoBinding.inflate(layoutInflater)

@@ -5,29 +5,20 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import net.lingala.zip4j.ZipFile
 import com.wanderwildwood.einkbirding.databinding.ActivityViewBinding
 import java.io.BufferedReader
-import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -44,6 +35,15 @@ class ViewActivity : BaseActivity() {
     private lateinit var mContext: Context
     private var rowTapsWired = false
     private var photoUrl: String? = null
+
+    /**
+     * No ActionBar. It carried the app's name and nothing else - the row along the bottom
+     * already says which screen this is - and on a 480x800 panel that is a row of the log
+     * given up to be told what you are already running.
+     */
+    override fun applyTheme() {
+        setTheme(R.style.AppTheme_NoActionBar)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -289,95 +289,5 @@ class ViewActivity : BaseActivity() {
         val position = binding.photoEbird.tag as Int
         val id = adapter.getSpeciesID(position)
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.view, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_share_db -> {
-                val database = BirdDBHelper.getInstance(this)
-                val intent = Intent(Intent.ACTION_SEND)
-                val shareBody = database.exportAllEntriesAsCSV().joinToString("\n")
-                intent.setType("text/plain")
-                intent.putExtra(Intent.EXTRA_TEXT, shareBody)
-                startActivity(Intent.createChooser(intent, ""))
-                return true
-            }
-            R.id.action_delete_db -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle(getString(R.string.delete))
-                    .setPositiveButton(this.getString(android.R.string.ok), { _, _ ->
-                        val database = BirdDBHelper.getInstance(this)
-                        database.clearAllEntries()
-                        Toast.makeText(this, getString(R.string.clear_db),Toast.LENGTH_SHORT).show()
-                        birdObservations.clear()
-                        adapter.notifyDataSetChanged()
-                        clearPhoto()
-                    })
-                    .setNegativeButton(this.getString(android.R.string.cancel), { _, _ -> })
-                    .create().show()
-                return true
-            }
-            R.id.action_save_db -> {
-
-                val currentDateTime = LocalDateTime.now()
-                val dateFormat = DateTimeFormatter.ofLocalizedDate(java.time.format.FormatStyle.SHORT).withLocale(Locale.getDefault())
-                val timeFormat = if (DateFormat.is24HourFormat(this)) {
-                    DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
-                } else {
-                    DateTimeFormatter.ofPattern("hh:mm a", Locale.getDefault())
-                }
-
-                val formattedDate = currentDateTime.format(dateFormat)
-                val formattedTime = currentDateTime.format(timeFormat)
-
-                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
-                intent.addCategory(Intent.CATEGORY_OPENABLE)
-                intent.setType("application/zip")
-                intent.putExtra(Intent.EXTRA_TITLE, resources.getString(R.string.app_name) + "_" + formattedDate + "_" + formattedTime)
-                resultLauncher.launch(intent)
-                return true
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
-    }
-
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK && result.data != null) {
-            result.data?.data?.let {
-                performBackup(it)
-            }
-        }
-    }
-
-    private fun performBackup(uri: Uri) {
-        val intData: File = File(
-            Environment.getDataDirectory().toString() + "//data//" + this.packageName + "//databases//"
-        )
-        try {
-            val tmpFile = File(cacheDir, "backup.zip")
-            if (tmpFile.exists()) {
-                tmpFile.delete()
-            }
-            ZipFile(tmpFile).addFolder(intData)
-            val srcStream = tmpFile.inputStream()
-            val dstStream = contentResolver.openOutputStream(uri)!!
-            val buffer = ByteArray(1024)
-            var read: Int
-            while ((srcStream.read(buffer).also { read = it }) != -1) {
-                dstStream.write(buffer, 0, read)
-            }
-            srcStream.close()
-            dstStream.close()
-            tmpFile.delete()
-        } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
-            e.printStackTrace()
-        }
     }
 }

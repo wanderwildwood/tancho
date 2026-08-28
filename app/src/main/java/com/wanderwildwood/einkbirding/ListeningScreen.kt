@@ -42,7 +42,6 @@ import com.mudita.mmd.components.buttons.ButtonMMD
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.text.TextMMD
-import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -69,10 +68,6 @@ fun ListeningScreen(
     onCyclePlaceAndDate: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBarMMD(
-            title = { TextMMD(stringResource(R.string.app_name)) },
-        )
-
         if (showPhoto) PhotoBand(assetId = photoAssetId)
 
         StatusLine(isListening = isListening, location = location)
