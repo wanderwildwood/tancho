@@ -26,8 +26,11 @@ app. What the app records, stores and sends is set out in [PRIVACY.md](PRIVACY.m
 
     ./gradlew assembleRelease
 
-Release builds are signed with a key in `signing/`, which is not in this repository. Without
-it the build falls back to the default debug key and still works.
+Release builds are signed with a keystore in `signing/`, which is gitignored. There is no
+fallback: without it `assembleRelease` produces an *unsigned* APK, which will not install
+anywhere. That is deliberate — a signing key committed to a public repo is not a signing key,
+it is a formality, and a missing one should stop you rather than quietly hand you something
+installable. (`assembleDebug` still works, signed with the usual Android debug key.)
 
 ## Getting it, and keeping it
 
