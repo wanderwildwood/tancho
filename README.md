@@ -29,6 +29,20 @@ app. What the app records, stores and sends is set out in [PRIVACY.md](PRIVACY.m
 Release builds are signed with a key in `signing/`, which is not in this repository. Without
 it the build falls back to the default debug key and still works.
 
+## Getting it, and keeping it
+
+Download <https://github.com/wanderwildwood/tancho/releases/latest/download/tancho.apk> and
+sideload it. That address always points at the newest release, and every release publishes a
+`.sha256` beside the APK if you would rather check than trust.
+
+For updates without doing this by hand, add this repository to
+[Obtainium](https://github.com/ImranR98/Obtainium):
+
+    https://github.com/wanderwildwood/tancho
+
+It will offer each new release as it appears. **The application id is settled** — updates
+install over what you have, keeping your settings and anything the app has stored.
+
 ## License
 
 GPLv3. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
