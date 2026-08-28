@@ -67,6 +67,6 @@
     <string name="summary_clear_recordings">Throw the recordings away the next time the app starts, rather than letting them build up.</string>
     <string name="about">About</string>
     <string name="close">Close</string>
-    <string name="about_body">A fork of whoBIRD by woheller69. GNU General Public Licence v3.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. Models CC BY-NC-SA 4.0, not for commercial use.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.\n\nIdentification happens on this phone. The only thing fetched is a bird\'s photograph, and only for a row you open.\n\ngithub.com/wanderwildwood/tancho</string>
+    <string name="about_body">Identification happens on this phone. The only thing fetched is a bird\'s photograph, and only for a row you open.\n\nA fork of whoBIRD by woheller69. GNU General Public Licence v3.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. Models CC BY-NC-SA 4.0, not for commercial use.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.\n\ngithub.com/wanderwildwood/tancho</string>
 </resources>
 
