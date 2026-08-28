@@ -205,15 +205,43 @@ public class WavUtils {
         return Environment.MEDIA_MOUNTED.equals(state);
     }
 
+    /** Loud enough to hear, short of the ceiling so that nothing clips. */
+    private static final float TARGET_PEAK = 29000f;
+
+    /** ...but not so much lift that a nearly empty clip becomes a wall of hiss. */
+    private static final float MAX_GAIN = 100f;
+
     public static byte[] convertFloatBufferToWavBytes(FloatBuffer floatBuffer) {
         // Ensure the FloatBuffer is in the correct position
         floatBuffer.rewind();
         int bufferLength = floatBuffer.remaining();
-        short[] shortArray = new short[bufferLength];
+        float[] samples = new float[bufferLength];
+        float peak = 0f;
 
         // Step 1: Extract float values
         for (int i = 0; i < bufferLength; i++) {
-            float value = floatBuffer.get();
+            samples[i] = floatBuffer.get();
+            float magnitude = Math.abs(samples[i]);
+            if (magnitude > peak) peak = magnitude;
+        }
+
+        // The recorder takes UNPROCESSED audio, which is the point - no automatic gain
+        // fighting the model - and the cost is that a detection lands around -57dBFS. A
+        // measured one peaked at 43 out of 32768. Written at that level the file is real
+        // and the spectrogram drawn from it is right, but playing the row back is silence,
+        // which reads as broken. Lifted here, where the absolute level matters to nothing
+        // else: the spectrogram normalises for itself, and nothing else reads these.
+        float gain = 1f;
+        if (peak > 0f) {
+            gain = Math.min(TARGET_PEAK / peak, MAX_GAIN);
+            if (gain < 1f) gain = 1f;
+        }
+
+        short[] shortArray = new short[bufferLength];
+        for (int i = 0; i < bufferLength; i++) {
+            float value = samples[i] * gain;
+            if (value > Short.MAX_VALUE) value = Short.MAX_VALUE;
+            if (value < Short.MIN_VALUE) value = Short.MIN_VALUE;
             shortArray[i] = (short) value;
         }
 
