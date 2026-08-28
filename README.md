@@ -1,4 +1,4 @@
-# 探鳥 tanchō — eInk Birding
+# 探鳥 tanchō — Birding
 
 Identifies birds by their song, on the [Mudita Kompakt](https://mudita.com/products/kompakt/).
 Listens through the microphone and names what it hears, offline.
