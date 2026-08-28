@@ -2,21 +2,21 @@
 <resources>
     <string name="app_name" translatable="false">eInk Birding</string>
     <string name="samples_zero">No audio input: All audio samples are zero!</string>
-    <string name="download_model">Download Model</string>
-    <string name="download_model_text">eInk Birding needs to download the BirdNET model (~ 39MB). \n No commercial use allowed \n(CC-BY-NC-SA 4.0 license)</string>
+    <string name="download_model">Download the model</string>
+    <string name="download_model_text">eInk Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="error_download">Download error</string>
     <string name="error_audio_permission">Microphone permission not granted</string>
     <string name="error_location_permission">Location permission not granted</string>
     <string name="clear_db">Observations deleted</string>
     <string name="delete">Delete all observations?</string>
-    <string name="settings_threshold">Threshold [%]</string>
-    <string name="settings_highpass">High-Pass Filter [Hz]</string>
+    <string name="settings_threshold">Threshold</string>
+    <string name="settings_highpass">High-pass filter</string>
     <string name="source_unprocessed">Unprocessed</string>
     <string name="source_microphone">Microphone</string>
     <string name="source_voicerecognition">Voice recognition</string>
-    <string name="settings_audiosource">Audio Source</string>
+    <string name="settings_audiosource">Audio source</string>
     <string name="settings_notification_sound">Notification sound</string>
-    <string name="save_wav">Save .wav files</string>
+    <string name="save_wav">Save recordings</string>
     <string name="summary_save_wav">Keep the sound of each detection, so tapping its row plays back what was heard. About 288KB each, in the app\'s own storage rather than in your music.</string>
     <string name="language">Language</string>
     <string name="settings_reset">Reset settings</string>
@@ -31,6 +31,12 @@
     <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
     <string name="list_repeats">Every repeat</string>
     <string name="summary_list_repeats">List a bird heard over and over as one line for the run, or as every hearing with its own time.</string>
+    <string name="summary_settings_audiosource">Which microphone input to record from. Unprocessed is the rawest, and the one the recogniser expects.</string>
+    <string name="summary_settings_threshold">How sure the recogniser has to be before a bird is written down. Lower catches more, and is wrong more often.</string>
+    <string name="summary_settings_highpass">Throw away everything below this pitch before listening, against traffic or wind. 0 leaves the sound alone.</string>
+    <string name="summary_settings_notification_sound">Play a short sound whenever a bird is identified.</string>
+    <string name="summary_bluetooth_connection">Take the audio from a connected Bluetooth microphone rather than from the phone itself.</string>
+    <string name="summary_manual_location">Give a fixed latitude and longitude instead of using GPS. With this on the app never asks for location permission at all.</string>
     <string name="photo_while_listening">Photo while listening</string>
     <string name="summary_photo_while_listening">Put the picture of the last bird heard clearly at the top of the listening screen. It stays there until a different bird is heard as clearly.</string>
     <string name="ignore_non_birds">Birds only</string>

@@ -6,6 +6,15 @@ import android.view.View
 import com.wanderwildwood.einkbirding.databinding.ActivityDownloadBinding
 
 class DownloadActivity  : BaseActivity() {
+
+    /**
+     * No ActionBar, like everywhere else. This is the first screen anyone sees, so it was
+     * the most visible place left still carrying the app's name in a bar.
+     */
+    override fun applyTheme() {
+        setTheme(R.style.AppTheme_NoActionBar)
+    }
+
     private var binding: ActivityDownloadBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

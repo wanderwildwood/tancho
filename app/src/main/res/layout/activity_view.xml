@@ -99,6 +99,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Shown when there is no log yet. Without it a new installer who opens
+                 this screen before hearing anything gets a blank panel, which reads as
+                 broken rather than as empty. -->
+            <TextView
+                android:id="@+id/empty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="24dp"
+                android:textColor="?colorOnSurface"
+                android:textSize="16sp"
+                android:text="@string/nothing_heard_yet" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerObservations"
                 android:layout_width="match_parent"

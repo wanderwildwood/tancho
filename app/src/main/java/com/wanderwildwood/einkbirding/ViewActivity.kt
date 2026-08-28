@@ -89,6 +89,7 @@ class ViewActivity : BaseActivity() {
             birdObservation.name = labelList.get(birdObservation.speciesId).split("_").last()
         }
 
+        binding.empty.visibility = if (birdObservations.isEmpty()) View.VISIBLE else View.GONE
         adapter = RecyclerOverviewListAdapterObservations(applicationContext, birdObservations)
         binding.recyclerObservations.setAdapter(adapter)
         binding.recyclerObservations.setFocusable(false)

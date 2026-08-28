@@ -62,16 +62,22 @@ fun SettingsScreen(
             ChoiceRow(
                 label = stringResource(R.string.settings_audiosource),
                 value = stringResource(settings.audioSource.label),
+                summary = stringResource(R.string.summary_settings_audiosource),
                 onCycle = settings::cycleAudioSource,
             )
+            // The unit travels with the number rather than sitting in brackets after the
+            // label. "Threshold [%] ... 30" was the only place on the screen that read
+            // like an instrument panel.
             ChoiceRow(
                 label = stringResource(R.string.settings_threshold),
-                value = settings.threshold.toString(),
+                value = "${settings.threshold}%",
+                summary = stringResource(R.string.summary_settings_threshold),
                 onCycle = settings::cycleThreshold,
             )
             ChoiceRow(
                 label = stringResource(R.string.settings_highpass),
-                value = settings.highPass.toString(),
+                value = "${settings.highPass} Hz",
+                summary = stringResource(R.string.summary_settings_highpass),
                 onCycle = settings::cycleHighPass,
             )
 
@@ -97,6 +103,7 @@ fun SettingsScreen(
             )
             SwitchRow(
                 label = stringResource(R.string.settings_notification_sound),
+                summary = stringResource(R.string.summary_settings_notification_sound),
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },
             )
@@ -124,6 +131,7 @@ fun SettingsScreen(
             }
             SwitchRow(
                 label = stringResource(R.string.bluetooth_connection),
+                summary = stringResource(R.string.summary_bluetooth_connection),
                 checked = settings.bluetooth,
                 onCheckedChange = { settings.bluetooth = it },
             )
@@ -132,6 +140,7 @@ fun SettingsScreen(
 
             SwitchRow(
                 label = stringResource(R.string.manual_location),
+                summary = stringResource(R.string.summary_manual_location),
                 checked = settings.manualLocation,
                 onCheckedChange = { settings.manualLocation = it },
             )
@@ -198,16 +207,21 @@ fun SettingsScreen(
  * one repaint per tap.
  */
 @Composable
-private fun ChoiceRow(label: String, value: String, onCycle: () -> Unit) {
+private fun ChoiceRow(label: String, value: String, summary: String? = null, onCycle: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onCycle)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
+        Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+            TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
+            if (summary != null) {
+                TextMMD(text = summary, style = MaterialTheme.typography.bodySmall)
+            }
+        }
         TextMMD(
             text = value,
             style = MaterialTheme.typography.bodyLarge,

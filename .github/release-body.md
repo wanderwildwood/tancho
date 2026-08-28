@@ -2,6 +2,13 @@ Identifies birds by their song on the Mudita Kompakt. Recognition is
 [BirdNET](https://birdnet.cornell.edu/), running on the phone — nothing is sent away to
 be identified.
 
+**1.1.1** — the first screens a new installation shows, tidied. The Heard screen said
+nothing at all when there was nothing in it, which reads as broken rather than as empty.
+The download screen was the last one still carrying a bar with the app's name. And the
+settings screen was two screens: three rows inherited from upstream were in Title Case
+with their units in brackets after the label, and half the rows explained themselves while
+the other half did not. Every row explains itself now, and the units sit with the numbers.
+
 **1.1.0** — the bird photographs load. If you have 1.0.5 or earlier, please update.
 
 The panel stayed blank because the phone would not let the app draw them, and that could
