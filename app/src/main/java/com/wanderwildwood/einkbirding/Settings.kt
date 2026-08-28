@@ -73,6 +73,20 @@ class Settings(context: Context) {
     var photoWhileListening by boolPref(SHOW_IMAGES)
 
     /**
+     * Whether a row opened on the Heard screen also shows the shape of what was heard.
+     * It can only be drawn where the recording still is, so it depends on [saveWav] and
+     * the screen says so rather than offering a switch that quietly does nothing.
+     */
+    var showSpectrogram by boolPref(SHOW_SPECTROGRAM)
+
+    /**
+     * Whether recordings are thrown away when the app is next started. They are 288KB
+     * each and one bird singing for thirteen seconds makes six, so keeping them for good
+     * is a decision rather than a default.
+     */
+    var clearRecordings by boolPref(CLEAR_RECORDINGS)
+
+    /**
      * Typing is allowed to be wrong on the way to being right, so what is typed is always
      * kept on screen and only a well-formed pair is written down. Upstream cleared the
      * field back to zeroes on a bad character, which loses the digits you had got right.
@@ -145,6 +159,8 @@ class Settings(context: Context) {
         const val IGNORE_NON_BIRDS = "ignore_non_birds"
         const val VIEW_DETAILED = "view_detailed"
         const val SHOW_IMAGES = "show_images"
+        const val SHOW_SPECTROGRAM = "show_spectrogram"
+        const val CLEAR_RECORDINGS = "clear_recordings"
         const val MANUAL_LOCATION = "manual_location"
         const val MANUAL_LOCATION_VALUE = "manual_location_value"
         const val DEFAULT_LOCATION = "0.000/0.000"

@@ -94,6 +94,41 @@ public class WavUtils {
         }
     }
 
+    /**
+     * Read a recording back as the writer left it: samples in short range held as floats,
+     * which is the scale [MelSpectrogram] divides down from. Returns null if there is no
+     * such recording, which is the normal answer for a row heard while the setting was off.
+     */
+    public static FloatBuffer readWaveFile(Context context, long timestamp) {
+        File path = new File(recordingsDir(context), timestamp + ".wav");
+        if (!path.exists()) return null;
+        try {
+            byte[] bytes = new byte[(int) path.length()];
+            try (java.io.FileInputStream in = new java.io.FileInputStream(path)) {
+                int read = 0;
+                while (read < bytes.length) {
+                    int n = in.read(bytes, read, bytes.length - read);
+                    if (n < 0) break;
+                    read += n;
+                }
+                if (read <= HEADER_BYTES) return null;
+                ByteBuffer buffer = ByteBuffer.wrap(bytes, HEADER_BYTES, read - HEADER_BYTES);
+                buffer.order(ByteOrder.LITTLE_ENDIAN);
+                java.nio.ShortBuffer shorts = buffer.asShortBuffer();
+                FloatBuffer samples = FloatBuffer.allocate(shorts.remaining());
+                while (shorts.hasRemaining()) samples.put(shorts.get());
+                samples.rewind();
+                return samples;
+            }
+        } catch (IOException e) {
+            Log.w(TAG, "Could not read " + path.getName() + ": " + e.getMessage());
+            return null;
+        }
+    }
+
+    /** The fixed-size header this class writes: RIFF/WAVE with a 16-byte PCM fmt chunk. */
+    private static final int HEADER_BYTES = 44;
+
     public static void createWaveFile(Context context, long timestamp, FloatBuffer samplesBuffer, int sampleRate, int numChannels, int bytesPerSample) {
         try {
             byte[] samples = convertFloatBufferToWavBytes(samplesBuffer);

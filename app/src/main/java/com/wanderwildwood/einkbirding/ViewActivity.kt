@@ -64,6 +64,10 @@ class ViewActivity : BaseActivity() {
         }
         val paramsPhoto: ViewGroup.LayoutParams = binding.photo.getLayoutParams() as ViewGroup.LayoutParams
         paramsPhoto.height = (width / 1.8f).toInt()
+        // A third of the photograph's height. Enough to read a shape against, not so much
+        // that opening a row leaves no log to go back to.
+        val paramsSpectrogram: ViewGroup.LayoutParams = binding.spectrogram.getLayoutParams() as ViewGroup.LayoutParams
+        paramsSpectrogram.height = (width / 5.4f).toInt()
 
         val linearLayoutManager = LinearLayoutManager(this)
         binding.recyclerObservations.setLayoutManager(linearLayoutManager)
@@ -118,6 +122,7 @@ class ViewActivity : BaseActivity() {
                     binding.photoShare.setVisibility(View.VISIBLE)
                     binding.photoShare.setTag(position)
                     showPhoto(url, false)
+                    showSpectrogram(adapter.getMillis(position))
                 }
 
                 override fun onLongItemClick(view: View?, position: Int) {}
@@ -241,8 +246,32 @@ class ViewActivity : BaseActivity() {
         }
     }
 
+    /**
+     * The sound of the detection, if it was recorded and the reader asked for it. Absent
+     * rows simply have no strip, rather than an empty one: most rows in an old log were
+     * heard before the setting was on, and a band of nothing on every one of them would
+     * be a permanent cost for an occasional picture.
+     */
+    private fun showSpectrogram(timestamp: Long) {
+        if (!PreferenceManager.getDefaultSharedPreferences(this).getBoolean("show_spectrogram", false)) {
+            binding.spectrogram.setVisibility(View.GONE)
+            return
+        }
+        BirdSpectrogram.load(this, timestamp) { bitmap ->
+            if (bitmap == null) {
+                binding.spectrogram.setImageDrawable(null)
+                binding.spectrogram.setVisibility(View.GONE)
+            } else {
+                binding.spectrogram.setImageBitmap(bitmap)
+                binding.spectrogram.setVisibility(View.VISIBLE)
+            }
+        }
+    }
+
     private fun clearPhoto() {
         photoUrl = null
+        binding.spectrogram.setImageDrawable(null)
+        binding.spectrogram.setVisibility(View.GONE)
         binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
         binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
         binding.photoName.setText("")

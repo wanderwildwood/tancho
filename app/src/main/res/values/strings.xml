@@ -49,6 +49,10 @@
     <string name="save_backup">Save a backup</string>
     <string name="delete_log">Delete the log</string>
     <string name="delete_log_confirm">Delete the log — tap again to confirm</string>
+    <string name="show_spectrogram">Show the sound</string>
+    <string name="summary_show_spectrogram">Draw the shape of the recording under the photograph when a row is opened: time across, pitch up, loud dark.</string>
+    <string name="clear_recordings">Keep recordings for this session only</string>
+    <string name="summary_clear_recordings">Throw the recordings away the next time the app starts, rather than letting them build up.</string>
     <string name="about">About</string>
     <string name="about_body">A fork of whoBIRD by woheller69, under the GNU General Public Licence, version 3.\n\nIdentification is BirdNET, by Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. The models are licensed CC BY-NC-SA 4.0 and may not be used commercially.\n\nPhotographs come from the Macaulay Library at the Cornell Lab of Ornithology.\n\nEvery recording is identified on this phone. Nothing is sent anywhere; the one thing this app fetches is a bird\'s photograph, and only for a bird whose row you open.</string>
 </resources>

@@ -24,6 +24,7 @@ import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
@@ -65,7 +66,17 @@ class MainActivity : BaseActivity() {
 
     // Recordings used to be written into the reader's Music folder. Anything still there
     // is carried across, once, so a row recorded before that change still plays.
-    Thread { WavUtils.migrateLegacyRecordings(this) }.start()
+    Thread {
+      WavUtils.migrateLegacyRecordings(this)
+      // "Cleared after closing" is done on the way in rather than on the way out. An app
+      // is not always given a chance to run anything when it goes: the process can simply
+      // be killed. Clearing at the start of the next session is the same promise kept in
+      // the one place it can actually be relied on.
+      if (sharedPref.getBoolean("clear_recordings", false)) {
+        val gone = WavUtils.clearRecordings(this)
+        if (gone > 0) Log.i("MainActivity", "Cleared $gone recordings from the last session")
+      }
+    }.start()
 
     soundClassifier = SoundClassifier(this, state, SoundClassifier.Options())
 

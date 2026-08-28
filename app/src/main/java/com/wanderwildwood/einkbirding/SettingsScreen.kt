@@ -106,6 +106,22 @@ fun SettingsScreen(
                 checked = settings.saveWav,
                 onCheckedChange = { settings.saveWav = it },
             )
+            // Both of these act on the recordings, so neither is offered when there are
+            // none to act on. A switch that is on and does nothing is worse than no switch.
+            if (settings.saveWav) {
+                SwitchRow(
+                    label = stringResource(R.string.show_spectrogram),
+                    summary = stringResource(R.string.summary_show_spectrogram),
+                    checked = settings.showSpectrogram,
+                    onCheckedChange = { settings.showSpectrogram = it },
+                )
+                SwitchRow(
+                    label = stringResource(R.string.clear_recordings),
+                    summary = stringResource(R.string.summary_clear_recordings),
+                    checked = settings.clearRecordings,
+                    onCheckedChange = { settings.clearRecordings = it },
+                )
+            }
             SwitchRow(
                 label = stringResource(R.string.bluetooth_connection),
                 checked = settings.bluetooth,

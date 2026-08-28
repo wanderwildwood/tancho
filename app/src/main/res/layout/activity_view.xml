@@ -83,6 +83,17 @@
                 android:textColor="?colorPrimary"
                 android:textSize="10sp" />
         </RelativeLayout>
+        <!-- The shape of what was heard, under the bird it was. Height is set in code so
+             it keeps a fixed slice of the panel; gone rather than invisible because unlike
+             the photograph this one is absent for most rows, and a permanent empty band
+             would cost the log a row to say nothing. -->
+        <ImageView
+            android:id="@+id/spectrogram"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:visibility="gone"
+            android:contentDescription="@string/show_spectrogram"
+            android:scaleType="fitXY" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
