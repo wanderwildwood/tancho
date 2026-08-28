@@ -28,14 +28,21 @@ import com.mudita.mmd.components.text.TextMMD
  * ways depending on where you were standing. This is the icon bar's replacement, and it
  * says what the listening screen says.
  */
-enum class Destination(val viewId: Int, val label: Int, val target: Class<out Activity>) {
-    LISTENING(R.id.destination_listening, R.string.destination_listening, MainActivity::class.java),
-    HEARD(R.id.destination_heard, R.string.destination_observations, ViewActivity::class.java),
-    SPECIES(R.id.destination_species, R.string.destination_species, BirdInfoActivity::class.java),
-    SETTINGS(R.id.destination_settings, R.string.destination_settings, SettingsActivity::class.java),
+enum class Destination(val label: Int, val target: Class<out Activity>) {
+    LISTENING(R.string.destination_listening, MainActivity::class.java),
+    HEARD(R.string.destination_observations, ViewActivity::class.java),
+    SPECIES(R.string.destination_species, BirdInfoActivity::class.java),
+    SETTINGS(R.string.destination_settings, SettingsActivity::class.java),
 }
 
-/** See [wireDestinations]; this is the same row, for the screens that are drawn in Compose. */
+/**
+ * The app's navigation, drawn once for every screen.
+ *
+ * There used to be two of these - this, and a LinearLayout of styled TextViews for the two
+ * screens that are not Compose - and they drifted, as two of anything does: the XML one was
+ * bold where this one is not. The other two screens host this in a ComposeView instead, so
+ * there is one row and it cannot go out of step with itself again.
+ */
 @Composable
 fun DestinationRowCompose(current: Destination) {
     val context = LocalContext.current
@@ -66,26 +73,3 @@ private fun Context.open(destination: Destination) =
     startActivity(
         Intent(this, destination.target).addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
     )
-
-/**
- * Wire the row up, leaving out the screen doing the wiring.
- *
- * Destinations are reordered to the front rather than started afresh. Four screens that can
- * each reach the other three will otherwise stack a new copy per tap, and the back button
- * then walks the whole history one screen at a time instead of leaving.
- */
-fun Activity.wireDestinations(current: Destination) {
-    for (destination in Destination.entries) {
-        val view: View = findViewById(destination.viewId) ?: continue
-        if (destination == current) {
-            view.visibility = View.GONE
-            continue
-        }
-        view.setOnClickListener {
-            startActivity(
-                Intent(this, destination.target)
-                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
-            )
-        }
-    }
-}

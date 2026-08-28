@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.mudita.mmd.ThemeMMD
 import com.wanderwildwood.einkbirding.databinding.ActivityBirdInfoBinding
 import java.io.BufferedReader
 import java.io.IOException
@@ -49,7 +50,7 @@ class BirdInfoActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        wireDestinations(Destination.SPECIES)
+        binding.destinationRow.setContent { ThemeMMD { DestinationRowCompose(Destination.SPECIES) } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
