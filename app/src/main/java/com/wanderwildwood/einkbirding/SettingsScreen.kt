@@ -86,6 +86,12 @@ fun SettingsScreen(
                 onCheckedChange = { settings.listRepeats = it },
             )
             SwitchRow(
+                label = stringResource(R.string.photo_while_listening),
+                summary = stringResource(R.string.summary_photo_while_listening),
+                checked = settings.photoWhileListening,
+                onCheckedChange = { settings.photoWhileListening = it },
+            )
+            SwitchRow(
                 label = stringResource(R.string.settings_notification_sound),
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },

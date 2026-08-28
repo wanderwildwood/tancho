@@ -600,6 +600,13 @@ class SoundClassifier(
     )
     if (showOnScreen) {
       state.record(element.index, commonName, latinName, element.value, timeInMillis)
+      // A picture is worth showing only for an answer worth trusting, which is a higher
+      // bar than the one for writing a line down. The screen decides whether it is
+      // wanted; this only says which bird it would be.
+      val assetId = assetList.getOrNull(element.index)
+      if (element.value > options.displayImageThreshold && assetId != null && assetId != "NO_ASSET") {
+        state.showPhotoOf(element.index, assetId)
+      }
     }
 
     if (sharedPref.getBoolean("write_wav", false)) {

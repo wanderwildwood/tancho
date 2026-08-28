@@ -42,6 +42,12 @@ class MainActivity : BaseActivity() {
   private val state = ListeningState()
 
   /**
+   * Read afresh on every resume rather than once: it is changed on the settings screen,
+   * and coming back from there does not rebuild this one.
+   */
+  private var photoWhileListening by mutableStateOf(false)
+
+  /**
    * BaseActivity sets the theme in onCreate, which replaces whatever the manifest asked
    * for. This screen draws its own bar with MMD, so letting it be given the theme with an
    * ActionBar puts the app's name on the screen twice, once in each bar.
@@ -64,6 +70,7 @@ class MainActivity : BaseActivity() {
         val isListening by state.isListening.collectAsStateWithLifecycle()
         val heard by state.heard.collectAsStateWithLifecycle()
         val location by state.location.collectAsStateWithLifecycle()
+        val photo by state.photo.collectAsStateWithLifecycle()
         var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
 
         ListeningScreen(
@@ -71,6 +78,8 @@ class MainActivity : BaseActivity() {
           heard = heard,
           location = location,
           placeAndDate = placeAndDate,
+          showPhoto = photoWhileListening,
+          photoAssetId = photo?.assetId,
           onToggleListening = { setListening(!isListening) },
           onCyclePlaceAndDate = {
             placeAndDate = placeAndDate.next()
@@ -105,6 +114,7 @@ class MainActivity : BaseActivity() {
     val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+    photoWhileListening = sharedPref.getBoolean("show_images", false)
     if (sharedPref.getBoolean("bluetooth", false)){
       audioManager.startBluetoothSco()
       audioManager.isBluetoothScoOn = true

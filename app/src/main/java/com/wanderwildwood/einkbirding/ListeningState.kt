@@ -53,10 +53,16 @@ class ListeningState {
     private val _heard = MutableStateFlow<List<Heard>>(emptyList())
     val heard: StateFlow<List<Heard>> = _heard.asStateFlow()
 
+    private val _photo = MutableStateFlow<Photo?>(null)
+    val photo: StateFlow<Photo?> = _photo.asStateFlow()
+
     /** How much the where-and-when model is allowed to weigh in, 0f..1f. */
     val metaInfluence = MutableStateFlow(0.6f)
 
     data class Location(val latitude: Float, val longitude: Float)
+
+    /** The bird whose picture the listening screen is showing, if it is showing one. */
+    data class Photo(val speciesIndex: Int, val assetId: String)
 
     fun setListening(listening: Boolean) {
         _isListening.value = listening
@@ -69,6 +75,21 @@ class ListeningState {
     @Synchronized
     fun clear() {
         _heard.value = emptyList()
+        _photo.value = null
+    }
+
+    /**
+     * The bird to show a picture of: the last one heard clearly enough to be worth
+     * looking at, which then stays until a different bird is heard that clearly.
+     *
+     * Only a change of species is published. The same bird calling again would fetch and
+     * paint the same photograph, and on e-ink that is a full repaint to show what is
+     * already there.
+     */
+    @Synchronized
+    fun showPhotoOf(speciesIndex: Int, assetId: String) {
+        if (_photo.value?.speciesIndex == speciesIndex) return
+        _photo.value = Photo(speciesIndex, assetId)
     }
 
     /**

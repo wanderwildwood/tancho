@@ -1,5 +1,6 @@
 package com.wanderwildwood.einkbirding
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,21 +12,29 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -54,6 +63,8 @@ fun ListeningScreen(
     heard: List<Heard>,
     location: ListeningState.Location?,
     placeAndDate: PlaceAndDate,
+    showPhoto: Boolean,
+    photoAssetId: String?,
     onToggleListening: () -> Unit,
     onCyclePlaceAndDate: () -> Unit,
 ) {
@@ -61,6 +72,8 @@ fun ListeningScreen(
         TopAppBarMMD(
             title = { TextMMD(stringResource(R.string.app_name)) },
         )
+
+        if (showPhoto) PhotoBand(assetId = photoAssetId)
 
         StatusLine(isListening = isListening, location = location)
         PlaceAndDateRow(placeAndDate = placeAndDate, onCycle = onCyclePlaceAndDate)
@@ -78,7 +91,20 @@ fun ListeningScreen(
                         .padding(horizontal = 16.dp, vertical = 24.dp),
                 )
             } else {
+                val listState = rememberLazyListState()
+
+                // A list keyed by row keeps whichever row was at the top of the window
+                // where it was, so a new bird arrives above the window and the screen
+                // goes on showing an older one - which reads as the app having stopped
+                // hearing anything. Follow it down only for a reader who was already at
+                // the top; one who has scrolled back through the log is reading it, and
+                // yanking them to the newest row would lose their place.
+                LaunchedEffect(heard.firstOrNull()?.firstHeard) {
+                    if (listState.firstVisibleItemIndex <= 1) listState.scrollToItem(0)
+                }
+
                 LazyColumnMMD(
+                    state = listState,
                     contentPadding = PaddingValues(vertical = 8.dp),
                     modifier = Modifier.fillMaxSize(),
                 ) {
@@ -101,6 +127,53 @@ fun ListeningScreen(
             )
         }
         DestinationRowCompose(current = Destination.LISTENING)
+    }
+}
+
+/**
+ * The picture of the last bird heard clearly, for the phone left on a windowsill rather
+ * than read as a list. Off unless asked for: on this panel it leaves about one row of the
+ * log showing.
+ *
+ * Once the setting is on the band is always there, carrying the app's own mark until a
+ * bird has been heard clearly enough to be worth a picture. It does not appear with the
+ * first bird and vanish with a clearing of the log: that would move everything below it
+ * twice, and on e-ink moving anything repaints all of it.
+ *
+ * A photograph that has arrived also stays until another replaces it, rather than
+ * blanking back to the mark while the next one loads.
+ */
+@Composable
+private fun PhotoBand(assetId: String?) {
+    val context = LocalContext.current
+    var bitmap by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    LaunchedEffect(assetId) {
+        if (assetId == null) return@LaunchedEffect
+        BirdPhoto.load(context.cacheDir, BirdPhoto.url(assetId), refresh = false) { loaded ->
+            if (loaded != null) bitmap = loaded.asImageBitmap()
+        }
+    }
+
+    val modifier = Modifier
+        .fillMaxWidth()
+        .aspectRatio(1.8f)
+
+    val current = bitmap
+    if (current == null) {
+        Image(
+            painter = painterResource(R.drawable.ic_launcher_monochrome),
+            contentDescription = null,
+            contentScale = ContentScale.Fit,
+            modifier = modifier,
+        )
+    } else {
+        Image(
+            bitmap = current,
+            contentDescription = stringResource(R.string.photo_description),
+            contentScale = ContentScale.Crop,
+            modifier = modifier,
+        )
     }
 }
 

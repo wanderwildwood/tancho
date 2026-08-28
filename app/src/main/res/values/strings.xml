@@ -31,6 +31,8 @@
     <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
     <string name="list_repeats">Every repeat</string>
     <string name="summary_list_repeats">List a bird heard over and over as one line for the run, or as every hearing with its own time.</string>
+    <string name="photo_while_listening">Photo while listening</string>
+    <string name="summary_photo_while_listening">Put the picture of the last bird heard clearly at the top of the listening screen. It stays there until a different bird is heard as clearly.</string>
     <string name="ignore_non_birds">Birds only</string>
     <string name="summary_ignore_non_birds">Throw away the model\'s non-bird answers: people, dogs, engines, sirens, tools and plain noise.</string>
     <string name="place_and_date">Place and date</string>

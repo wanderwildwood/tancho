@@ -65,6 +65,14 @@ class Settings(context: Context) {
     var listRepeats by boolPref(VIEW_DETAILED)
 
     /**
+     * Whether the listening screen carries the picture of the bird it last heard clearly.
+     * Off by default: on a 480x800 panel the band leaves about one row of the log, and the
+     * log is what that screen is for. The photo is for the phone propped on a windowsill,
+     * not for reading a list.
+     */
+    var photoWhileListening by boolPref(SHOW_IMAGES)
+
+    /**
      * Typing is allowed to be wrong on the way to being right, so what is typed is always
      * kept on screen and only a well-formed pair is written down. Upstream cleared the
      * field back to zeroes on a bad character, which loses the digits you had got right.
@@ -136,6 +144,7 @@ class Settings(context: Context) {
         const val BLUETOOTH = "bluetooth"
         const val IGNORE_NON_BIRDS = "ignore_non_birds"
         const val VIEW_DETAILED = "view_detailed"
+        const val SHOW_IMAGES = "show_images"
         const val MANUAL_LOCATION = "manual_location"
         const val MANUAL_LOCATION_VALUE = "manual_location_value"
         const val DEFAULT_LOCATION = "0.000/0.000"
