@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding
+package com.wanderwildwood.tancho
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,7 @@ import android.widget.Toast
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudita.mmd.ThemeMMD
-import com.wanderwildwood.einkbirding.databinding.ActivityViewBinding
+import com.wanderwildwood.tancho.databinding.ActivityViewBinding
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader

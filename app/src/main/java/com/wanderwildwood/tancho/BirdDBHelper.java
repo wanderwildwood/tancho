@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding;
+package com.wanderwildwood.tancho;
 
 import android.content.ContentValues;
 import android.content.Context;

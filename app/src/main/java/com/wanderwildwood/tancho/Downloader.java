@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding;
+package com.wanderwildwood.tancho;
 
 import android.app.Activity;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.wanderwildwood.einkbirding.databinding.ActivityDownloadBinding;
+import com.wanderwildwood.tancho.databinding.ActivityDownloadBinding;
 
 import java.io.BufferedInputStream;
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding;
+package com.wanderwildwood.tancho;
 
 public class BirdObservation {
     private int id;

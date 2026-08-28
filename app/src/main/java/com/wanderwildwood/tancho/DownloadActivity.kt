@@ -1,9 +1,9 @@
-package com.wanderwildwood.einkbirding
+package com.wanderwildwood.tancho
 
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import com.wanderwildwood.einkbirding.databinding.ActivityDownloadBinding
+import com.wanderwildwood.tancho.databinding.ActivityDownloadBinding
 
 class DownloadActivity  : BaseActivity() {
 

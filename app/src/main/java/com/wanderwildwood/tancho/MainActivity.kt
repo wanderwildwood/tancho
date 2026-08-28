@@ -16,7 +16,7 @@
 // Modifications by woheller69
 // Screen rewritten in Compose for the Kompakt's e-ink panel
 
-package com.wanderwildwood.einkbirding
+package com.wanderwildwood.tancho
 
 import android.Manifest
 import android.content.Context

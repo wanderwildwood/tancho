@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding;
+package com.wanderwildwood.tancho;
 
 // From whoBIRD by woheller69, GPL-3.0. The mel filter bank, the FFT and the windowing are
 // upstream's unchanged. What differs here is that the picture is drawn dark-on-light

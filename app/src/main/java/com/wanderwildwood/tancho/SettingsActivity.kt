@@ -1,4 +1,4 @@
-package com.wanderwildwood.einkbirding
+package com.wanderwildwood.tancho
 
 import android.content.Intent
 import android.net.Uri

@@ -15,7 +15,7 @@
  */
 // Modifications by woheller69
 
-package com.wanderwildwood.einkbirding
+package com.wanderwildwood.tancho
 
 import android.annotation.SuppressLint
 import android.content.Context

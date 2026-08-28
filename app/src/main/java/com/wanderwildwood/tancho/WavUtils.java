@@ -1,6 +1,5 @@
-package com.wanderwildwood.einkbirding;
+package com.wanderwildwood.tancho;
 
-import static android.os.Environment.DIRECTORY_DOCUMENTS;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -19,8 +18,8 @@ import java.nio.charset.StandardCharsets;
 public class WavUtils {
     public static final String TAG = "WavUtils";
 
-    /** The app's own folder these used to sit in, back when they were filed as music. */
-    private static final String FORMER_DIR = "Music";
+    /** Named for what is in it. The folder above is already named for the app. */
+    private static final String RECORDINGS_DIR = "Recordings";
 
     /**
      * Where a detection's audio is kept: the app's own directory on external storage.
@@ -34,28 +33,16 @@ public class WavUtils {
      * Here they belong to the app: no permission is needed on any Android version, nothing
      * scans them, and uninstalling takes them with it.
      *
-     * Filed under Documents rather than Music. They are not music, and were only ever kept
-     * there because that is where the shared-storage version had put them - a habit that
-     * outlived its reason.
+     * In a folder called Recordings rather than one called Music. They are not music, and
+     * were only ever kept there because that is where the shared-storage version had put
+     * them - a habit that outlived its reason.
      */
     public static File recordingsDir(Context context) {
-        File dir = context.getExternalFilesDir(DIRECTORY_DOCUMENTS);
-        if (dir != null) moveFromFormerDir(context, dir);
+        File files = context.getExternalFilesDir(null);
+        if (files == null) return null;
+        File dir = new File(files, RECORDINGS_DIR);
+        if (!dir.isDirectory() && !dir.mkdirs()) Log.w(TAG, "Could not make " + dir);
         return dir;
-    }
-
-    /**
-     * Renames the old folder to the new one, once.
-     *
-     * Both are inside the app's own storage, so this is housekeeping nobody sees rather
-     * than a migration - and it is a single rename, not a walk over the files. Without it
-     * the recordings already made would still exist but nothing would find them: no row
-     * would play, and the setting that clears recordings could not reach them either.
-     */
-    private static void moveFromFormerDir(Context context, File target) {
-        File former = new File(target.getParentFile(), FORMER_DIR);
-        if (!former.isDirectory() || target.exists()) return;
-        if (!former.renameTo(target)) Log.w(TAG, "Could not move recordings out of " + FORMER_DIR);
     }
 
     /** Every recording currently kept, newest first is not promised - order is the caller's. */
