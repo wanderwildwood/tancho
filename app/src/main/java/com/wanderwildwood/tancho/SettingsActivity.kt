@@ -42,6 +42,7 @@ class SettingsActivity : BaseActivity() {
                     onChooseLanguage = ::chooseLanguage,
                     onExportLog = ::exportLog,
                     onSaveBackup = ::saveBackup,
+                    onRestoreBackup = ::restoreBackup,
                     onDeleteLog = ::deleteLog,
                 )
             }
@@ -95,6 +96,57 @@ class SettingsActivity : BaseActivity() {
     private fun deleteLog() {
         BirdDBHelper.getInstance(this).clearAllEntries()
         Toast.makeText(this, getString(R.string.clear_db), Toast.LENGTH_SHORT).show()
+    }
+
+    /**
+     * Reads a backup back in.
+     *
+     * The zip holds the databases folder and nothing else, so this replaces the log rather
+     * than merging into it - there is no sensible way to reconcile two logs of the same
+     * mornings. Recordings are not in a backup and are not restored: a row whose recording
+     * is gone still reads, it just has nothing to play.
+     */
+    private fun restoreBackup() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.setType("application/zip")
+        restoreLauncher.launch(intent)
+    }
+
+    private val restoreLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) result.data?.data?.let { performRestore(it) }
+        }
+
+    private fun performRestore(uri: Uri) {
+        val databases = File(Environment.getDataDirectory(), "//data//$packageName//databases//")
+        val staged = File(cacheDir, "restore.zip")
+        try {
+            contentResolver.openInputStream(uri).use { input ->
+                staged.outputStream().use { output -> input!!.copyTo(output) }
+            }
+
+            // Refuse anything that is not one of ours before touching the live database.
+            val zip = ZipFile(staged)
+            val looksRight = zip.fileHeaders.any { it.fileName.endsWith(BirdDBHelper.DB_NAME) }
+            if (!looksRight) {
+                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
+                return
+            }
+
+            // Close the open handle first: extracting a database out from under SQLite
+            // leaves the process holding a file that no longer exists.
+            BirdDBHelper.getInstance(this).close()
+            databases.listFiles()?.forEach { it.delete() }
+            zip.extractAll(databases.parent)
+            BirdDBHelper.reopen(this)
+            Toast.makeText(this, getString(R.string.restore_done), Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            e.printStackTrace()
+        } finally {
+            staged.delete()
+        }
     }
 
     private val resultLauncher =

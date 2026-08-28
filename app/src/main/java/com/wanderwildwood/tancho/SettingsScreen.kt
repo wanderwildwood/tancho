@@ -51,6 +51,7 @@ fun SettingsScreen(
     onChooseLanguage: () -> Unit,
     onExportLog: () -> Unit,
     onSaveBackup: () -> Unit,
+    onRestoreBackup: () -> Unit,
     onDeleteLog: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -179,6 +180,13 @@ fun SettingsScreen(
 
             ActionRow(label = stringResource(R.string.export_log), onClick = onExportLog)
             ActionRow(label = stringResource(R.string.save_backup), onClick = onSaveBackup)
+            // Restoring replaces the log rather than merging into it, so it asks the same
+            // way deleting does: the row itself, not a dialog.
+            ConfirmingRow(
+                label = R.string.restore_backup,
+                armedLabel = R.string.restore_backup_confirm,
+                onConfirmed = onRestoreBackup,
+            )
             DeleteRow(onConfirmed = onDeleteLog)
 
             HorizontalDividerMMD()
@@ -262,7 +270,12 @@ private fun SwitchRow(
  * by a stray tap is not left armed for the next person to walk into.
  */
 @Composable
-private fun DeleteRow(onConfirmed: () -> Unit) {
+private fun DeleteRow(onConfirmed: () -> Unit) =
+    ConfirmingRow(R.string.delete_log, R.string.delete_log_confirm, onConfirmed)
+
+/** A row that asks once. See the note above DeleteRow for why this is not a dialog. */
+@Composable
+private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) {
     var armed by remember { mutableStateOf(false) }
 
     LaunchedEffect(armed) {
@@ -285,7 +298,7 @@ private fun DeleteRow(onConfirmed: () -> Unit) {
             .padding(horizontal = 16.dp, vertical = 16.dp),
     ) {
         TextMMD(
-            text = stringResource(if (armed) R.string.delete_log_confirm else R.string.delete_log),
+            text = stringResource(if (armed) armedLabel else label),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = if (armed) FontWeight.Bold else FontWeight.Normal,
         )

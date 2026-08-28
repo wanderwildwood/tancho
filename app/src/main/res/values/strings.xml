@@ -53,6 +53,10 @@
     <string name="photo_description">Photo of the bird</string>
     <string name="export_log">Export the log</string>
     <string name="save_backup">Save a backup</string>
+    <string name="restore_backup">Restore a backup</string>
+    <string name="restore_backup_confirm">Restore — this replaces the log; tap again</string>
+    <string name="restore_done">Log restored</string>
+    <string name="restore_failed">That file is not a backup this app wrote</string>
     <string name="delete_log">Delete the log</string>
     <string name="delete_log_confirm">Delete the log — tap again to confirm</string>
     <string name="show_spectrogram">Show the sound</string>

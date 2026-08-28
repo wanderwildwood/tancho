@@ -10,7 +10,7 @@ import java.util.*;
 public class BirdDBHelper extends SQLiteOpenHelper {
 
     // Database name and table columns
-    private static final String DB_NAME = "BirdDatabase.db";
+    static final String DB_NAME = "BirdDatabase.db";
     private static final int DATABASE_VERSION = 1;
     public static final String TABLE_NAME = "BirdObservations";
     private static final String COLUMN_ID = "ID";
@@ -135,6 +135,21 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return birdObservations;
+    }
+
+    /**
+     * Drops the open handle so the file underneath can be replaced, and opens a new one.
+     *
+     * Restoring a backup extracts a different database over this one. Without this the
+     * process would go on holding a handle to a file that no longer exists, and every read
+     * after the restore would still be answering from the log that was replaced.
+     */
+    public static synchronized void reopen(Context context) {
+        if (instance != null) {
+            instance.close();
+            instance = null;
+        }
+        getInstance(context);
     }
 
     public static BirdDBHelper getInstance(Context context) {
