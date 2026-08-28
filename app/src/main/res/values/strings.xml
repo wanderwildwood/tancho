@@ -17,7 +17,7 @@
     <string name="settings_audiosource">Audio Source</string>
     <string name="settings_notification_sound">Notification sound</string>
     <string name="save_wav">Save .wav files</string>
-    <string name="summary_save_wav">Saves a .wav file for each detection in Music directory. Requires Android 12+</string>
+    <string name="summary_save_wav">Keep the sound of each detection, so tapping its row plays back what was heard. About 288KB each, in the app\'s own storage rather than in your music.</string>
     <string name="language">Language</string>
     <string name="settings_reset">Reset settings</string>
     <string name="bluetooth_connection">Use Bluetooth</string>

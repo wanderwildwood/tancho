@@ -19,8 +19,68 @@ import java.nio.charset.StandardCharsets;
 public class WavUtils {
     public static final String TAG = "WavUtils";
 
+    /** Where the shared-storage version of this used to put them. Emptied on first run. */
+    private static final String LEGACY_DIR = "/eInk Birding";
+
+    /**
+     * Where a detection's audio is kept: the app's own directory on external storage.
+     *
+     * It used to be the reader's Music folder. Each of these is 288KB and one bird singing
+     * for thirteen seconds makes four of them - the recogniser runs every 800ms and every
+     * detection above the threshold writes one - so a morning outdoors would drop hundreds
+     * of megabytes into a music library, owned by media_rw, where every player, scanner and
+     * backup would find them and offer them as songs.
+     *
+     * Here they belong to the app: no permission is needed on any Android version, nothing
+     * scans them, and uninstalling takes them with it.
+     */
+    public static File recordingsDir(Context context) {
+        return context.getExternalFilesDir(DIRECTORY_MUSIC);
+    }
+
+    /** Every recording currently kept, newest first is not promised - order is the caller's. */
+    public static File[] recordings(Context context) {
+        File dir = recordingsDir(context);
+        File[] files = dir == null ? null : dir.listFiles();
+        return files == null ? new File[0] : files;
+    }
+
+    /** Throw them all away. Used by the setting that keeps recordings for one session only. */
+    public static int clearRecordings(Context context) {
+        int deleted = 0;
+        for (File file : recordings(context)) {
+            if (file.delete()) deleted++;
+        }
+        return deleted;
+    }
+
+    /**
+     * Carry anything left in the old shared-storage folder across, once, so that a row
+     * recorded before this change still plays. The old folder is then removed, because
+     * leaving an empty "eInk Birding" in someone's Music is its own small rudeness.
+     */
+    public static void migrateLegacyRecordings(Context context) {
+        File legacy = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath() + LEGACY_DIR);
+        if (!legacy.isDirectory()) return;
+        File target = recordingsDir(context);
+        if (target == null) return;
+        if (!target.exists() && !target.mkdirs()) return;
+        File[] files = legacy.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                File moved = new File(target, file.getName());
+                if (!moved.exists() && !file.renameTo(moved)) {
+                    Log.w(TAG, "Could not move " + file.getName() + " out of Music");
+                    continue;
+                }
+                file.delete();
+            }
+        }
+        if (!legacy.delete()) Log.w(TAG, "Old recordings folder not removed: " + legacy);
+    }
+
     public static void playWaveFile(Context context, long timestamp) {
-        File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/eInk Birding/" + timestamp +".wav");
+        File path = new File(recordingsDir(context), timestamp + ".wav");
         Log.d(TAG,"Play "+path.getAbsolutePath());
         if (path.exists()){
             Log.d(TAG,"Play "+path.getAbsolutePath());
@@ -34,7 +94,7 @@ public class WavUtils {
         }
     }
 
-    public static void createWaveFile(long timestamp, FloatBuffer samplesBuffer, int sampleRate, int numChannels, int bytesPerSample) {
+    public static void createWaveFile(Context context, long timestamp, FloatBuffer samplesBuffer, int sampleRate, int numChannels, int bytesPerSample) {
         try {
             byte[] samples = convertFloatBufferToWavBytes(samplesBuffer);
             int dataSize = samples.length; // actual data size in bytes
@@ -44,8 +104,8 @@ public class WavUtils {
                 Log.e(TAG, "External Storage not writeable ");
                 return;
             }
-            File path = new File(Environment.getExternalStoragePublicDirectory(DIRECTORY_MUSIC).getPath()+"/eInk Birding");
-            if (!path.exists() && !path.mkdirs()) {
+            File path = recordingsDir(context);
+            if (path == null || (!path.exists() && !path.mkdirs())) {
                 Log.e(TAG, "Failed to make directory: " + path);
                 return;
             }

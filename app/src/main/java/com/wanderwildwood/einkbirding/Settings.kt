@@ -151,9 +151,6 @@ class Settings(context: Context) {
     }
 }
 
-/** Whether the app can offer the .wav setting: the Music directory needs Android 12. */
-val canSaveWav: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-
 /** Whether the system keeps a per-app language for this device. Android 13 on. */
 val canChooseLanguage: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 

@@ -610,7 +610,7 @@ class SoundClassifier(
     }
 
     if (sharedPref.getBoolean("write_wav", false)) {
-      WavUtils.createWaveFile(timeInMillis, recognizerWorkingBuffer.duplicate(), options.sampleRate, 1, 2)
+      WavUtils.createWaveFile(mContext, timeInMillis, recognizerWorkingBuffer.duplicate(), options.sampleRate, 1, 2)
     }
     if (sharedPref.getBoolean("play_sound", false)) PlayNotification.playSound(mContext)
   }

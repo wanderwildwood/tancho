@@ -100,14 +100,12 @@ fun SettingsScreen(
                 checked = settings.notificationSound,
                 onCheckedChange = { settings.notificationSound = it },
             )
-            if (canSaveWav) {
-                SwitchRow(
-                    label = stringResource(R.string.save_wav),
-                    summary = stringResource(R.string.summary_save_wav),
-                    checked = settings.saveWav,
-                    onCheckedChange = { settings.saveWav = it },
-                )
-            }
+            SwitchRow(
+                label = stringResource(R.string.save_wav),
+                summary = stringResource(R.string.summary_save_wav),
+                checked = settings.saveWav,
+                onCheckedChange = { settings.saveWav = it },
+            )
             SwitchRow(
                 label = stringResource(R.string.bluetooth_connection),
                 checked = settings.bluetooth,
