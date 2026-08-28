@@ -51,7 +51,8 @@
     <string name="destination_settings">Settings</string>
     <string name="download_the_model">Download the model</string>
     <string name="photo_description">Photo of the bird</string>
-    <string name="export_log">Export the log</string>
+    <string name="log_heading">The log</string>
+    <string name="export_log">Send the log somewhere</string>
     <string name="save_backup">Save a backup</string>
     <string name="restore_backup">Restore a backup</string>
     <string name="restore_backup_confirm">Restore — this replaces the log; tap again</string>

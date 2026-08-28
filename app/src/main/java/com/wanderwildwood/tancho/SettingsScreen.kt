@@ -178,6 +178,9 @@ fun SettingsScreen(
 
             HorizontalDividerMMD()
 
+            // A heading groups them; the labels carry the rest. A row that needs a
+            // paragraph has the wrong label.
+            SectionHeading(stringResource(R.string.log_heading))
             ActionRow(label = stringResource(R.string.export_log), onClick = onExportLog)
             ActionRow(label = stringResource(R.string.save_backup), onClick = onSaveBackup)
             // Restoring replaces the log rather than merging into it, so it asks the same
@@ -192,6 +195,8 @@ fun SettingsScreen(
             HorizontalDividerMMD()
 
             Spacer(modifier = Modifier.height(16.dp))
+            AboutSection()
+            Spacer(modifier = Modifier.height(24.dp))
             OutlinedButtonMMD(
                 onClick = settings::reset,
                 modifier = Modifier
@@ -200,8 +205,6 @@ fun SettingsScreen(
             ) {
                 TextMMD(stringResource(R.string.settings_reset))
             }
-            Spacer(modifier = Modifier.height(24.dp))
-            AboutSection()
             Spacer(modifier = Modifier.height(24.dp))
         }
 
@@ -343,13 +346,27 @@ private fun AboutSection() {
 }
 
 @Composable
-private fun ActionRow(label: String, onClick: () -> Unit) {
-    Row(
+private fun ActionRow(label: String, onClick: () -> Unit, summary: String? = null) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 16.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
+        if (summary != null) {
+            TextMMD(text = summary, style = MaterialTheme.typography.bodySmall)
+        }
     }
+}
+
+/** A heading over a group of rows, so a list of verbs reads as being about one thing. */
+@Composable
+private fun SectionHeading(text: String) {
+    TextMMD(
+        text = text,
+        style = MaterialTheme.typography.bodySmall,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
+    )
 }
