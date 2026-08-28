@@ -1,7 +1,11 @@
-# eInk Birding
+# 探鳥 tanchō — eInk Birding
 
 Identifies birds by their song, on the [Mudita Kompakt](https://mudita.com/products/kompakt/).
 Listens through the microphone and names what it hears, offline.
+
+*Tanchō* is 探鳥 — bird-seeking, the ordinary word for going out to look for birds; 探鳥会 is a
+birdwatching outing. This is the seeking half of it: you stop walking, hold still, and it tells you
+what is singing.
 
 Fork of [whoBIRD](https://github.com/woheller69/whoBIRD) by woheller69.
 

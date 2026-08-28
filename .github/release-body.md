@@ -41,7 +41,7 @@ host; without a signal the rest of the app is unaffected.
 
 ## The download
 
-`eink-birding.apk` and `eink-birding-<version>.apk` are the same file. The unversioned one
+`tancho.apk` and `tancho-<version>.apk` are the same file. The unversioned one
 is there so a link to it keeps working after the next release. Verify either against the
 `.sha256` beside it if you like.
 

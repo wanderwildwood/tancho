@@ -94,24 +94,24 @@ jobs:
 
       # Two copies of the same APK go up. The versioned name is what people end up with in
       # their downloads folder; the unversioned one exists so that
-      #   .../releases/latest/download/eink-birding.apk
+      #   .../releases/latest/download/tancho.apk
       # keeps working after the next release, which a versioned link does not.
       - name: Rename APK and generate checksum
         run: |
-          apk_name="eink-birding-${GITHUB_REF_NAME}.apk"
+          apk_name="tancho-${GITHUB_REF_NAME}.apk"
           apk_path=$(find app/build/outputs/apk/release -maxdepth 1 -name '*.apk')
           cp "$apk_path" "$apk_name"
           sha256sum "$apk_name" > "${apk_name}.sha256"
-          cp "$apk_path" eink-birding.apk
-          sha256sum eink-birding.apk > eink-birding.apk.sha256
+          cp "$apk_path" tancho.apk
+          sha256sum tancho.apk > tancho.apk.sha256
 
       - name: Create release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            eink-birding-*.apk
-            eink-birding-*.apk.sha256
-            eink-birding.apk
-            eink-birding.apk.sha256
+            tancho-*.apk
+            tancho-*.apk.sha256
+            tancho.apk
+            tancho.apk.sha256
           body_path: .github/release-body.md
           generate_release_notes: true
