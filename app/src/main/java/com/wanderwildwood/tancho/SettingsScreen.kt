@@ -1,5 +1,7 @@
 package com.wanderwildwood.tancho
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,25 +10,34 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
@@ -54,7 +65,14 @@ fun SettingsScreen(
     onRestoreBackup: () -> Unit,
     onDeleteLog: () -> Unit,
 ) {
+    var showAbout by remember { mutableStateOf(false) }
+
+    if (showAbout) {
+        AboutDialog(onDismiss = { showAbout = false })
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
+        SettingsHeader(onAbout = { showAbout = true })
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -194,8 +212,6 @@ fun SettingsScreen(
 
             HorizontalDividerMMD()
 
-            Spacer(modifier = Modifier.height(16.dp))
-            AboutSection()
             Spacer(modifier = Modifier.height(24.dp))
             OutlinedButtonMMD(
                 onClick = settings::reset,
@@ -312,35 +328,80 @@ private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) 
 private const val ARMED_MS = 5000L
 
 /**
- * What this is, what it was built from, and who the parts belong to. Folded away because
- * it is read once; a row that opens in place rather than a screen that has to be left.
+ * The only heading this app draws. The listening screen wants every pixel and says what it
+ * is by what is on it; a settings list does not, and without a name at the top the "i" in
+ * the corner has nothing to sit beside.
  */
 @Composable
-private fun AboutSection() {
-    var open by remember { mutableStateOf(false) }
-
-    ActionRow(label = stringResource(R.string.about), onClick = { open = !open })
-    if (open) {
-        Column(
+private fun SettingsHeader(onAbout: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        TextMMD(
+            text = stringResource(R.string.destination_settings),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        Image(
+            painter = painterResource(R.drawable.ic_info_24dp),
+            contentDescription = stringResource(R.string.about),
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp),
+                .clickable(onClick = onAbout)
+                .padding(8.dp)
+                .size(24.dp),
+        )
+    }
+}
+
+/**
+ * What this is, what it was built from, and who the parts belong to. Read once, by someone
+ * deciding whether to trust it, so it opens over the list rather than sending them to a
+ * screen they then have to leave.
+ *
+ * No dim behind it: the panel would repaint every pixel to draw a grey it cannot show.
+ */
+@Composable
+private fun AboutDialog(onDismiss: () -> Unit) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        val view = LocalView.current
+        SideEffect {
+            (view.parent as? DialogWindowProvider)?.window?.setDimAmount(0f)
+        }
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .fillMaxWidth(),
         ) {
-            TextMMD(
-                text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                style = MaterialTheme.typography.bodyLarge,
-                fontWeight = FontWeight.Bold,
-            )
-            TextMMD(
-                text = BuildConfig.APPLICATION_ID,
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            TextMMD(
-                text = stringResource(R.string.about_body),
-                style = MaterialTheme.typography.bodySmall,
-            )
+            Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)) {
+                TextMMD(
+                    text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                TextMMD(
+                    text = stringResource(R.string.about_body),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Spacer(modifier = Modifier.height(18.dp))
+                OutlinedButtonMMD(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    TextMMD(stringResource(R.string.close))
+                }
+            }
         }
     }
 }
