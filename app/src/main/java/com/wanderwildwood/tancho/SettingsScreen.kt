@@ -212,15 +212,14 @@ fun SettingsScreen(
 
             HorizontalDividerMMD()
 
-            Spacer(modifier = Modifier.height(24.dp))
-            OutlinedButtonMMD(
-                onClick = settings::reset,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            ) {
-                TextMMD(stringResource(R.string.settings_reset))
-            }
+            // Resetting throws away every choice on this screen, so it asks the way
+            // deleting the log does. A button here and a row there were two shapes for
+            // one kind of action, on one screen.
+            ConfirmingRow(
+                label = R.string.settings_reset,
+                armedLabel = R.string.settings_reset_confirm,
+                onConfirmed = settings::reset,
+            )
             Spacer(modifier = Modifier.height(24.dp))
         }
 
