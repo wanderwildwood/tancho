@@ -51,7 +51,7 @@ For updates without doing this by hand, add this repository to
 It will offer each new release as it appears. **The application id is settled** — updates
 install over what you have, keeping your settings and anything the app has stored.
 
-## License
+## Licence
 
 GPLv3. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
 under that licence, and the rest is too.
