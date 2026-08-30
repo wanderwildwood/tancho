@@ -113,8 +113,11 @@
                 android:textSize="16sp"
                 android:text="@string/nothing_heard_yet" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerObservations"
+            <!-- Compose, so the log is drawn with the same row and the same MMD type as the
+                 listening screen. It was a RecyclerView of rounded boxes whose border weight
+                 carried the confidence, which meant this app said one thing two ways. -->
+            <androidx.compose.ui.platform.ComposeView
+                android:id="@+id/observationList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

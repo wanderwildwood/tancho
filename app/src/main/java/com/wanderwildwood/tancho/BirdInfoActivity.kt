@@ -18,18 +18,23 @@ import com.wanderwildwood.tancho.databinding.ActivityBirdInfoBinding
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 
 
 class BirdInfoActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBirdInfoBinding
     private lateinit var database: BirdDBHelper
-    private lateinit var adapter: RecyclerOverviewListAdapterBirdInfo
     private lateinit var assetList: List<String>
     private lateinit var labelList: List<String>
     private lateinit var eBirdList: List<String>
     private lateinit var mContext: Context
-    private var rowTapsWired = false
     private var photoUrl: String? = null
     private lateinit var allBirdsList: ArrayList<Pair<Int, String>>
 
@@ -62,9 +67,6 @@ class BirdInfoActivity : BaseActivity() {
         val paramsPhoto: ViewGroup.LayoutParams = binding.photo.getLayoutParams() as ViewGroup.LayoutParams
         paramsPhoto.height = (width / 1.8f).toInt()
 
-        val linearLayoutManager = LinearLayoutManager(this)
-        binding.recyclerObservations.setLayoutManager(linearLayoutManager)
-
         loadLabels(this)
         loadAssetList(this)
         loadEbirdList(this)
@@ -74,55 +76,56 @@ class BirdInfoActivity : BaseActivity() {
 
     }
 
+    /** What the list is showing, which the search field narrows. */
+    private val shown = mutableStateOf<List<Pair<Int, String>>>(emptyList())
+
     override fun onResume() {
         super.onResume()
 
-        adapter = RecyclerOverviewListAdapterBirdInfo(applicationContext, allBirdsList)
-        binding.recyclerObservations.setAdapter(adapter)
-        binding.recyclerObservations.setFocusable(false)
-        // Once only. Added on every resume, this stacks another listener on the same
-        // list each time the screen is opened, and one tap then runs the handler as many
-        // times as the screen has been visited.
-        if (!rowTapsWired) {
-            rowTapsWired = true
-            binding.recyclerObservations.addOnItemTouchListener(
-            RecyclerItemClickListener(baseContext, binding.recyclerObservations, object : RecyclerItemClickListener.OnItemClickListener {
-                override fun onItemClick(view: View?, position: Int) {
-                    val assetId = assetList[adapter.getSpeciesID(position)]
-                    if (assetId == "NO_ASSET") {
-                        clearPhoto()
-                        return
+        shown.value = allBirdsList
+        binding.speciesList.setContent {
+            ThemeMMD {
+                val birds by shown
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(birds, key = { it.first }) { (speciesId, label) ->
+                        BirdRow(
+                            name = label.split("_").last(),
+                            latinName = label.split("_").first(),
+                            modifier = Modifier.clickable { showSpecies(speciesId) },
+                        )
                     }
-                    // The library's embed page is behind a proof-of-work bot check that
-                    // answers "Making sure you're not a bot!" instead of a bird, so the
-                    // photo comes straight from its image host: one request, one jpeg.
-                    val url = BirdPhoto.url(assetId)
-                    if (url == photoUrl) return
-                    photoUrl = url
-                    val label = labelList[adapter.getSpeciesID(position)]
-                    binding.photoName.setText(label.split("_").last())
-                    binding.photoName.setVisibility(View.VISIBLE)
-                    binding.photoLatinname.setText(label.split("_").first())
-                    binding.photoLatinname.setVisibility(View.VISIBLE)
-                    binding.photoReload.setVisibility(View.VISIBLE)
-                    binding.photoEbird.setVisibility(View.VISIBLE)
-                    binding.photoEbird.setTag(position)
-                    showPhoto(url, false)
                 }
-
-                override fun onLongItemClick(view: View?, position: Int) {}
-            })
-            )
+            }
         }
-        binding.searchEdit.doOnTextChanged { text, start, before, count ->
-            allBirdsList = labelList.mapIndexed { index, element ->
-                Pair(index, element)
-            }.filter { it.second.contains(text.toString(), ignoreCase = true) } // Add the filter here
+        binding.searchEdit.doOnTextChanged { text, _, _, _ ->
+            shown.value = labelList.mapIndexed { index, element -> Pair(index, element) }
+                .filter { it.second.contains(text.toString(), ignoreCase = true) }
                 .sortedBy { it.second.split("_")[1] }
-                .toCollection(ArrayList())
-            adapter.updateBirdList(allBirdsList);
         }
+    }
 
+    /** Puts a bird's photograph up. Was the body of the RecyclerView's tap listener. */
+    private fun showSpecies(speciesId: Int) {
+        val assetId = assetList[speciesId]
+        if (assetId == "NO_ASSET") {
+            clearPhoto()
+            return
+        }
+        // The library's embed page is behind a proof-of-work bot check that answers
+        // "Making sure you're not a bot!" instead of a bird, so the photo comes straight
+        // from its image host: one request, one jpeg.
+        val url = BirdPhoto.url(assetId)
+        if (url == photoUrl) return
+        photoUrl = url
+        val label = labelList[speciesId]
+        binding.photoName.setText(label.split("_").last())
+        binding.photoName.setVisibility(View.VISIBLE)
+        binding.photoLatinname.setText(label.split("_").first())
+        binding.photoLatinname.setVisibility(View.VISIBLE)
+        binding.photoReload.setVisibility(View.VISIBLE)
+        binding.photoEbird.setVisibility(View.VISIBLE)
+        binding.photoEbird.setTag(speciesId)
+        showPhoto(url, false)
     }
 
 
@@ -207,8 +210,9 @@ class BirdInfoActivity : BaseActivity() {
 
 
     fun ebird(view: View) {
-        val position = binding.photoEbird.tag as Int
-        val id = adapter.getSpeciesID(position)
+        // The tag holds the species, not a row: with the list in Compose there are no row
+        // positions to look one up from, and the species was what this ever wanted.
+        val id = binding.photoEbird.tag as Int
         startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
     }
 

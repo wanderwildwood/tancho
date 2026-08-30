@@ -399,67 +399,15 @@ private fun ControlChip(
 }
 
 @Composable
-private fun HeardRow(entry: Heard) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-    ) {
-        TextMMD(
-            text = entry.name,
-            style = MaterialTheme.typography.titleMedium,
-        )
-        TextMMD(
-            text = entry.latinName,
-            style = MaterialTheme.typography.bodySmall,
-        )
-        Spacer(modifier = Modifier.height(6.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            TextMMD(
-                text = clockTime(entry.firstHeard),
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            // Blocks, and no number beside them. What BirdNET reports is a softmax output,
-            // not a calibrated probability: "85%" reads as "wrong about one time in seven",
-            // which is a promise nothing here can keep. Five squares say how sure it sounds
-            // without saying how often it is right. The blocks are coarser than the number
-            // was -- twenty points a square against the number's five -- and that is the
-            // trade: the lost resolution was never resolution, only decimal places.
-            ConfidenceBlocks(percent = entry.shownPercent)
-            if (entry.times > 1) {
-                Spacer(modifier = Modifier.width(12.dp))
-                TextMMD(
-                    text = "×${entry.times}",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-        }
-    }
-}
+private fun HeardRow(entry: Heard) = BirdRow(
+    name = entry.name,
+    latinName = entry.latinName,
+    time = clockTime(entry.firstHeard),
+    percent = entry.shownPercent,
+    times = entry.times,
+)
 
-/** Confidence as filled squares. Five of them, one per twenty points. */
-@Composable
-private fun ConfidenceBlocks(percent: Int) {
-    val filled = (percent + 19) / 20
-    Row {
-        repeat(5) { index ->
-            val isFilled = index < filled
-            Box(
-                modifier = Modifier
-                    .padding(end = 3.dp)
-                    .size(10.dp)
-                    .then(
-                        if (isFilled) {
-                            Modifier.background(MaterialTheme.colorScheme.onSurface)
-                        } else {
-                            Modifier.border(1.dp, MaterialTheme.colorScheme.onSurface)
-                        }
-                    )
-            )
-        }
-    }
-}
 
-private fun clockTime(millis: Long): String =
+/** Shared with the log, which shows the same time in the same place in the row. */
+internal fun clockTime(millis: Long): String =
     SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(millis))
