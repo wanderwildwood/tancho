@@ -46,6 +46,20 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.window.DialogWindowProvider
+import com.mudita.mmd.components.buttons.OutlinedButtonMMD
+import com.mudita.mmd.components.switcher.SwitchMMD
+import com.mudita.mmd.components.text_field.TextFieldMMD
 
 /**
  * The listening screen.
@@ -62,11 +76,23 @@ fun ListeningScreen(
     heard: List<Heard>,
     placeAndDate: PlaceAndDate,
     placeKnown: Boolean,
+    settings: Settings,
+    onPlaceChanged: () -> Unit,
     showPhoto: Boolean,
     photoAssetId: String?,
     onToggleListening: () -> Unit,
     onCyclePlaceAndDate: () -> Unit,
 ) {
+    var askingPlace by remember { mutableStateOf(false) }
+
+    if (askingPlace) {
+        PlaceDialog(
+            settings = settings,
+            onChanged = onPlaceChanged,
+            onDismiss = { askingPlace = false },
+        )
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         // The two controls share one row under the picture. They used to have a row each -
         // 118px of a 800px panel to say a word that never changes, print a location that
@@ -95,12 +121,16 @@ fun ListeningScreen(
             // switch, which is not shown when there are no recordings to draw.
             val labels = PlaceAndDate.entries.map { stringResource(it.label) } +
                 stringResource(R.string.place_and_date_unknown)
+            // Known: the tap cycles how much the place counts for, which is one repaint
+            // and no screen to leave. Not known: the tap opens the way to fixing that,
+            // because the chip is where the reader finds out, and the answer belongs where
+            // the question was raised rather than three taps away in settings.
             ControlChip(
                 text = if (placeKnown) stringResource(placeAndDate.label)
                     else stringResource(R.string.place_and_date_unknown),
                 widest = labels.maxBy { it.length },
                 anchor = Alignment.CenterEnd,
-                onClick = if (placeKnown) onCyclePlaceAndDate else null,
+                onClick = if (placeKnown) onCyclePlaceAndDate else { { askingPlace = true } },
             )
         }
         HorizontalDividerMMD()
@@ -255,6 +285,91 @@ private fun ListeningChip(isListening: Boolean, onToggle: () -> Unit) {
  * Three taps rather than a dragged slider for the filter: a drag on e-ink repaints the
  * whole track for every pixel of movement, and the value was never that precise.
  */
+/**
+ * Where you are, asked at the point the app admits it does not know.
+ *
+ * The same two settings live in Settings, and this is deliberately the same pair rather than
+ * a second way of storing them: it writes the identical preferences, so whichever screen you
+ * reach them from, there is one answer. What it saves is the walk — the chip is where the
+ * reader learns the app has no location, and a fix offered there is worth two full-panel
+ * repaints in a way a settings screen three taps away is not.
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: () -> Unit) {
+    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
+        val view = LocalView.current
+        SideEffect { (view.parent as? DialogWindowProvider)?.window?.setDimAmount(0f) }
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+        ) {
+            Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)) {
+                TextMMD(
+                    text = stringResource(R.string.place_title),
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            settings.manualLocation = !settings.manualLocation
+                            onChanged()
+                        }
+                        .padding(vertical = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextMMD(
+                        text = stringResource(R.string.place_use_gps),
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.weight(1f).padding(end = 16.dp),
+                    )
+                    SwitchMMD(
+                        checked = !settings.manualLocation,
+                        onCheckedChange = {
+                            settings.manualLocation = !it
+                            onChanged()
+                        },
+                    )
+                }
+                // Only where there is something to type. A field that is on screen and not
+                // being read is the same lie as a switch that does nothing.
+                if (settings.manualLocation) {
+                    TextFieldMMD(
+                        value = settings.manualLocationValue,
+                        onValueChange = {
+                            settings.manualLocationValue = it
+                            onChanged()
+                        },
+                        singleLine = true,
+                        isError = !settings.manualLocationIsValid,
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                        ),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                    )
+                    TextMMD(
+                        text = stringResource(R.string.place_manual_hint),
+                        style = MaterialTheme.typography.bodySmall,
+                    )
+                }
+                Spacer(modifier = Modifier.height(18.dp))
+                OutlinedButtonMMD(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+                    TextMMD(stringResource(R.string.close))
+                }
+            }
+        }
+    }
+}
+
 @Composable
 private fun ControlChip(
     text: String,

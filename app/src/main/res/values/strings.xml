@@ -43,6 +43,9 @@
     <string name="ignore_non_birds">Birds only</string>
     <string name="summary_ignore_non_birds">Throw away the model\'s non-bird answers: people, dogs, engines, sirens, tools and plain noise.</string>
     <string name="place_and_date">Place and date</string>
+    <string name="place_title">Place</string>
+    <string name="place_use_gps">Use GPS</string>
+    <string name="place_manual_hint">Latitude and longitude, as 35.89/-82.83.</string>
     <string name="place_and_date_unknown">Place not known</string>
     <string name="place_and_date_off">Any bird</string>
     <string name="place_and_date_some">Expected first</string>

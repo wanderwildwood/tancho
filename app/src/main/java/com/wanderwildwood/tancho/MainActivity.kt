@@ -85,10 +85,15 @@ class MainActivity : BaseActivity() {
         var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
         // Re-read whenever the screen comes back, because a fix can arrive while it is up.
         val placeKnown by state.placeKnown.collectAsStateWithLifecycle()
+        val settings = remember { Settings(this@MainActivity) }
 
         ListeningScreen(
           isListening = isListening,
           placeKnown = placeKnown,
+          settings = settings,
+          // Re-reads the preference and tells the screen what it now knows, so turning GPS
+          // back on stops saying "Place not known" without leaving the screen.
+          onPlaceChanged = { LocationHelper.requestLocation(this@MainActivity, soundClassifier) },
           heard = heard,
           placeAndDate = placeAndDate,
           showPhoto = photoWhileListening,
