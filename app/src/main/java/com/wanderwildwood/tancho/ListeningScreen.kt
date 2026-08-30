@@ -294,12 +294,13 @@ private fun HeardRow(entry: Heard) {
                 style = MaterialTheme.typography.bodySmall,
             )
             Spacer(modifier = Modifier.width(12.dp))
+            // Blocks, and no number beside them. What BirdNET reports is a softmax output,
+            // not a calibrated probability: "85%" reads as "wrong about one time in seven",
+            // which is a promise nothing here can keep. Five squares say how sure it sounds
+            // without saying how often it is right. The blocks are coarser than the number
+            // was -- twenty points a square against the number's five -- and that is the
+            // trade: the lost resolution was never resolution, only decimal places.
             ConfidenceBlocks(percent = entry.shownPercent)
-            Spacer(modifier = Modifier.width(8.dp))
-            TextMMD(
-                text = "${entry.shownPercent}%",
-                style = MaterialTheme.typography.bodySmall,
-            )
             if (entry.times > 1) {
                 Spacer(modifier = Modifier.width(12.dp))
                 TextMMD(
