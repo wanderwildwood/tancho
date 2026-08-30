@@ -36,11 +36,16 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     public void onBindViewHolder(ObservationViewHolder holder, int position) {
 
         holder.name.setText(birdObservations.get(position).getName());
-        holder.probability.setText((int) Math.round(birdObservations.get(position).getProbability()*100.0)+ " %");
 
         // Upstream graded confidence red to green across five bands. The panel renders all
         // five as much the same grey, so this says it with the border instead, and in three
         // bands rather than five, which is as many as a border weight can be told apart at.
+        //
+        // The border is the whole of it: the row used to print "62 %" beside the name as
+        // well. BirdNET's figure is a softmax output rather than a calibrated probability,
+        // so two digits of it claim a precision that is not there, and the border was
+        // already saying the part that is known. The listening screen dropped its own
+        // percentage for the same reason.
         double probability = birdObservations.get(position).getProbability();
         if (probability < 0.5) holder.holder.setBackgroundResource(R.drawable.oval_uncertain);
         else if (probability < 0.8) holder.holder.setBackgroundResource(R.drawable.oval_likely);
@@ -102,7 +107,6 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     public static class ObservationViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView name;
-        private final TextView probability;
         private final LinearLayout holder;
         private final TextView time;
         private final TextView date;
@@ -110,7 +114,6 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
         public ObservationViewHolder(View itemView) {
             super(itemView);
             this.name = (TextView) itemView.findViewById(R.id.name);
-            this.probability = (TextView) itemView.findViewById(R.id.probability);
             this.holder = (LinearLayout) itemView.findViewById(R.id.holder);
             this.time = (TextView) itemView.findViewById(R.id.time);
             this.date = (TextView) itemView.findViewById(R.id.date);
