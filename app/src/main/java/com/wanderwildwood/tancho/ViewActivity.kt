@@ -85,6 +85,11 @@ class ViewActivity : BaseActivity() {
 
     /** Reads the log in and puts it on screen. Run on the way in, and after a row is removed. */
     private fun reloadObservations() {
+        // Asked for again rather than kept. Restoring a backup closes this helper and opens
+        // a new one over a different file, and a reference taken in onCreate goes on
+        // answering from the log that was replaced -- so a restore looked like it had done
+        // nothing until the app was killed and started again.
+        database = BirdDBHelper.getInstance(this)
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         val isDetailedFilterActive = sharedPref.getBoolean("view_detailed", false)
         birdObservations = ArrayList(database.getAllBirdObservations(isDetailedFilterActive).sortedByDescending { it.millis } )  //Conversion between Java ArrayList and Kotlin ArrayList
