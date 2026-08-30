@@ -251,14 +251,22 @@ class ViewActivity : BaseActivity() {
         val df = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
         val dateString = df.format(adapter.getMillis(position))
 
-        val locationString = adapter.getLocation(position)
-
         // What was heard, when and where, and nothing else. Upstream signed every shared
         // sighting "Get whoBIRD on F-Droid" -- an advertisement for a different app, in
         // English whatever the reader's language, riding out in somebody's own message.
         // Where this app came from is in About, which is where a reader looks for it.
-        val shareString = dateString + ", " + timeString + ", " +
-            labelList[id].replace("_", ", ") + ", " + locationString
+        //
+        // The place is left off when there is no place. An entry recorded without a fix
+        // used to share as "..., 0.0, 0.0", which claims the equator at the prime
+        // meridian rather than admitting to knowing nothing.
+        val shareString = buildString {
+            append(dateString).append(", ")
+            append(timeString).append(", ")
+            append(labelList[id].replace("_", ", "))
+            if (adapter.hasLocation(position)) {
+                append(", ").append(adapter.getLocation(position))
+            }
+        }
 
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"

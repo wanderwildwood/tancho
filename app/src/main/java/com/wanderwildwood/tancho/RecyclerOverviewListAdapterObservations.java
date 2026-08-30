@@ -87,6 +87,18 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
 
     public String getLocation(int position) { return birdObservations.get(position).getLatitude() + ", " + birdObservations.get(position).getLongitude();}
 
+    /**
+     * Whether this observation was actually placed anywhere.
+     *
+     * An entry recorded with no fix, or before a location was set, stores 0/0 -- which is
+     * also the app's own default in settings. Null Island is a real point on the map and
+     * no bird was ever heard there, so this reads it as "nowhere" rather than a place.
+     */
+    public boolean hasLocation(int position) {
+        return birdObservations.get(position).getLatitude() != 0.0
+                || birdObservations.get(position).getLongitude() != 0.0;
+    }
+
     public static class ObservationViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView name;
