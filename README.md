@@ -9,6 +9,11 @@ what is singing.
 
 Fork of [whoBIRD](https://github.com/woheller69/whoBIRD) by woheller69.
 
+| | |
+|---|---|
+| ![Listening, with what it hears named as it hears it](screenshots/1-listening.png) | ![The log of what was heard](screenshots/2-heard.png) |
+| ![The species list](screenshots/3-species.png) | ![Settings, including which language the bird names are in](screenshots/4-settings.png) |
+
 ## How it works
 
 Recognition is [BirdNET](https://github.com/kahst/BirdNET-Analyzer), running on the phone.
