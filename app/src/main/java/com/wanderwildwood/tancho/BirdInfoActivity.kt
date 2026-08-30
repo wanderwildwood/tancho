@@ -20,11 +20,11 @@ import java.io.IOException
 import java.io.InputStreamReader
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
+import com.mudita.mmd.components.lazy.LazyColumnMMD
 
 
 class BirdInfoActivity : BaseActivity() {
@@ -86,7 +86,7 @@ class BirdInfoActivity : BaseActivity() {
         binding.speciesList.setContent {
             ThemeMMD {
                 val birds by shown
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumnMMD(modifier = Modifier.fillMaxSize()) {
                     items(birds, key = { it.first }) { (speciesId, label) ->
                         BirdRow(
                             name = label.split("_").last(),

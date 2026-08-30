@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -20,6 +19,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
+import com.mudita.mmd.components.lazy.LazyColumnMMD
 
 /**
  * The language the birds are named in.
@@ -42,7 +42,7 @@ import com.mudita.mmd.components.text.TextMMD
 fun LanguageScreen(chosen: String, inUse: String, onChoose: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         ScreenHeading(stringResource(R.string.bird_names))
-        LazyColumn(modifier = Modifier.weight(1f)) {
+        LazyColumnMMD(modifier = Modifier.weight(1f)) {
             // Following the phone is a choice like any other, and the one everybody
             // starts on, so it is the first row rather than a switch above the list. It
             // carries what it currently comes to, because "same as the phone" does not

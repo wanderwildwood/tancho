@@ -25,7 +25,6 @@ import java.util.Locale
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -36,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
+import com.mudita.mmd.components.lazy.LazyColumnMMD
 
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -143,7 +143,7 @@ class ViewActivity : BaseActivity() {
                 }
 
                 val dayFormat = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
-                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                LazyColumnMMD(modifier = Modifier.fillMaxSize()) {
                     itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
                         val day = dayFormat.format(Date(row.millis))
                         if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {
