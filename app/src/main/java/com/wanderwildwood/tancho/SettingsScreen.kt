@@ -353,7 +353,7 @@ private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) 
 }
 
 /** How long a tap on the delete row stays armed before it forgets it was asked. */
-private const val ARMED_MS = 5000L
+private const val ARMED_MS = 4000L
 
 /**
  * The only heading this app draws. The listening screen wants every pixel and says what it

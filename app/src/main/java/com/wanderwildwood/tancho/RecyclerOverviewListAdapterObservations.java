@@ -22,7 +22,7 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     private final List<BirdObservation> birdObservations;
 
     /** How long a row stays armed before it forgets it was asked. Birding's other rows too. */
-    private static final long ARMED_MS = 5000L;
+    private static final long ARMED_MS = 4000L;
 
     private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
     private final Runnable disarm = this::disarm;
