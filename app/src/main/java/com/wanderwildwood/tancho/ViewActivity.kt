@@ -253,7 +253,12 @@ class ViewActivity : BaseActivity() {
 
         val locationString = adapter.getLocation(position)
 
-        val shareString = dateString + ", " + timeString + ", " + labelList[id].replace("_",", ") + ", " + locationString +"\n\nGet whoBIRD on F-Droid"
+        // What was heard, when and where, and nothing else. Upstream signed every shared
+        // sighting "Get whoBIRD on F-Droid" -- an advertisement for a different app, in
+        // English whatever the reader's language, riding out in somebody's own message.
+        // Where this app came from is in About, which is where a reader looks for it.
+        val shareString = dateString + ", " + timeString + ", " +
+            labelList[id].replace("_", ", ") + ", " + locationString
 
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "text/plain"
