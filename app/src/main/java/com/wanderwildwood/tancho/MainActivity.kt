@@ -83,9 +83,12 @@ class MainActivity : BaseActivity() {
         val heard by state.heard.collectAsStateWithLifecycle()
         val photo by state.photo.collectAsStateWithLifecycle()
         var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
+        // Re-read whenever the screen comes back, because a fix can arrive while it is up.
+        val placeKnown by state.placeKnown.collectAsStateWithLifecycle()
 
         ListeningScreen(
           isListening = isListening,
+          placeKnown = placeKnown,
           heard = heard,
           placeAndDate = placeAndDate,
           showPhoto = photoWhileListening,

@@ -61,6 +61,7 @@ fun ListeningScreen(
     isListening: Boolean,
     heard: List<Heard>,
     placeAndDate: PlaceAndDate,
+    placeKnown: Boolean,
     showPhoto: Boolean,
     photoAssetId: String?,
     onToggleListening: () -> Unit,
@@ -86,11 +87,20 @@ fun ListeningScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ListeningChip(isListening = isListening, onToggle = onToggleListening)
+            // Until there is a fix, or a location typed in, this setting is not doing
+            // anything: the meta model is left neutral and every answer is weighed the
+            // same. Saying "Expected first" over that is the app claiming to know where
+            // it is standing. It says what it actually knows instead, and does not offer
+            // a choice that would have no effect -- the same rule as the spectrogram
+            // switch, which is not shown when there are no recordings to draw.
+            val labels = PlaceAndDate.entries.map { stringResource(it.label) } +
+                stringResource(R.string.place_and_date_unknown)
             ControlChip(
-                text = stringResource(placeAndDate.label),
-                widest = PlaceAndDate.entries.map { stringResource(it.label) }.maxBy { it.length },
+                text = if (placeKnown) stringResource(placeAndDate.label)
+                    else stringResource(R.string.place_and_date_unknown),
+                widest = labels.maxBy { it.length },
                 anchor = Alignment.CenterEnd,
-                onClick = onCyclePlaceAndDate,
+                onClick = if (placeKnown) onCyclePlaceAndDate else null,
             )
         }
         HorizontalDividerMMD()
@@ -250,11 +260,12 @@ private fun ControlChip(
     text: String,
     widest: String,
     anchor: Alignment,
-    onClick: () -> Unit,
+    /** Null where the chip is stating a fact rather than offering a choice. */
+    onClick: (() -> Unit)?,
 ) {
     Box(
         modifier = Modifier
-            .clickable(onClick = onClick)
+            .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
             .padding(vertical = 4.dp),
         contentAlignment = anchor,
     ) {

@@ -21,9 +21,50 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     private final Context context;
     private final List<BirdObservation> birdObservations;
 
+    /** How long a row stays armed before it forgets it was asked. Birding's other rows too. */
+    private static final long ARMED_MS = 5000L;
+
+    private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private final Runnable disarm = this::disarm;
+    private int armedPosition = -1;
+
     public RecyclerOverviewListAdapterObservations(Context context, List<BirdObservation> birdObservations) {
         this.context = context;
         this.birdObservations = birdObservations;
+    }
+
+    /**
+     * Asks, on the row, before taking a reading out of the log.
+     *
+     * A long press arms; the row says so in place of the bird's name; a tap then removes it.
+     * The question withdraws itself after a few seconds, so a row armed by accident is not
+     * left live in a list somebody is scrolling.
+     *
+     * No delete control sits on the rows themselves. This log runs to hundreds of lines and
+     * a glyph repeated down all of them is a lot of ink to spend on an act that is rare and
+     * corrective — the field journal can afford one per row because it has few, long rows.
+     */
+    public void arm(int position) {
+        armedPosition = position;
+        notifyItemChanged(position);
+        handler.removeCallbacks(disarm);
+        handler.postDelayed(disarm, ARMED_MS);
+    }
+
+    public void disarm() {
+        int was = armedPosition;
+        armedPosition = -1;
+        handler.removeCallbacks(disarm);
+        if (was >= 0 && was < birdObservations.size()) notifyItemChanged(was);
+    }
+
+    public boolean isArmed(int position) {
+        return armedPosition == position;
+    }
+
+    /** Every database row the given line stands for. See BirdObservation#getCoveredIds. */
+    public List<Integer> getCoveredIds(int position) {
+        return birdObservations.get(position).getCoveredIds();
     }
 
     @Override
@@ -35,7 +76,11 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(ObservationViewHolder holder, int position) {
 
-        holder.name.setText(birdObservations.get(position).getName());
+        boolean armed = isArmed(position);
+        holder.name.setText(armed
+                ? context.getString(R.string.delete_observation_confirm)
+                : birdObservations.get(position).getName());
+        holder.name.setTypeface(null, armed ? android.graphics.Typeface.BOLD : android.graphics.Typeface.NORMAL);
 
         // Upstream graded confidence red to green across five bands. The panel renders all
         // five as much the same grey, so this says it with the border instead, and in three

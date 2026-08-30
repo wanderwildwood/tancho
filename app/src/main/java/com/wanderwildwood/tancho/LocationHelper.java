@@ -30,24 +30,66 @@ public class LocationHelper {
         locationListenerGPS=null;
     }
 
+    /**
+     * Whether the app knows where it is.
+     *
+     * False until a fix arrives, and false for a manual location left at its 0/0 default:
+     * that pair passes the format check and is a real point on the map, in the Gulf of
+     * Guinea, and the meta model will happily tell you what sings there. Nobody who turned
+     * the switch on without typing anything meant to ask about the equator.
+     */
+    static boolean hasLocation(Context context) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        if (prefs.getBoolean("manual_location", false)) {
+            return !isNowhere(manualLocation(prefs));
+        }
+        return oldLocation != null;
+    }
+
+    private static Location manualLocation(SharedPreferences prefs) {
+        String value = prefs.getString("manual_location_value", "0.000/0.000");
+        String[] parts = value.split("/");
+        Location location = new Location("GPS");
+        try {
+            location.setLatitude(Double.parseDouble(parts[0]));
+            location.setLongitude(Double.parseDouble(parts[1]));
+        } catch (Exception e) {
+            location.setLatitude(0.0);
+            location.setLongitude(0.0);
+        }
+        return location;
+    }
+
+    /** 0/0 is not a place anyone birds. It is what the app holds when it has been told nothing. */
+    private static boolean isNowhere(Location location) {
+        return location.getLatitude() == 0.0 && location.getLongitude() == 0.0;
+    }
+
     static void requestLocation(Context context, SoundClassifier soundClassifier) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (sharedPreferences.getBoolean("manual_location", false)){
-            String manualLocation = sharedPreferences.getString("manual_location_value", "0.000/0.000");
-            String lat = manualLocation.split("/")[0];
-            String lon = manualLocation.split("/")[1];
-            preciseLocation = new Location("GPS");
-            preciseLocation.setLatitude(Double.parseDouble(lat));
-            preciseLocation.setLongitude(Double.parseDouble(lon));
+            preciseLocation = manualLocation(sharedPreferences);
+            // A manual location still sitting at its default is no location. Running the
+            // meta model on it would weigh every answer towards the Gulf of Guinea while
+            // the screen said "Expected first", which is a confident answer to a question
+            // the app cannot answer.
+            if (isNowhere(preciseLocation)) {
+                oldLocation = null;
+                oldLocationTime = 0;
+                soundClassifier.noteLocationKnown(false);
+                return;
+            }
             oldLocation = preciseLocation;
             soundClassifier.runMetaInterpreter(oldLocation);
+            soundClassifier.noteLocationKnown(true);
             oldLocationTime = 0;
             return;
         }
 
         if (System.currentTimeMillis() - oldLocationTime > 3 * 60 * 1000) {oldLocation = null; oldLocationTime = 0;}  //location older than 3 min -> reset
         else soundClassifier.runMetaInterpreter(oldLocation);
+        soundClassifier.noteLocationKnown(oldLocation != null);
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && checkLocationProvider(context)) {
             LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
@@ -65,6 +107,7 @@ public class LocationHelper {
                         oldLocation = roundLoc;
                         oldLocationTime = System.currentTimeMillis();
                         soundClassifier.runMetaInterpreter(roundLoc);
+                        soundClassifier.noteLocationKnown(true);
                     }
                 }
 

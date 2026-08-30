@@ -80,6 +80,11 @@ class ViewActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        reloadObservations()
+    }
+
+    /** Reads the log in and puts it on screen. Run on the way in, and after a row is removed. */
+    private fun reloadObservations() {
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         val isDetailedFilterActive = sharedPref.getBoolean("view_detailed", false)
         birdObservations = ArrayList(database.getAllBirdObservations(isDetailedFilterActive).sortedByDescending { it.millis } )  //Conversion between Java ArrayList and Kotlin ArrayList
@@ -101,6 +106,17 @@ class ViewActivity : BaseActivity() {
             binding.recyclerObservations.addOnItemTouchListener(
             RecyclerItemClickListener(baseContext, binding.recyclerObservations, object : RecyclerItemClickListener.OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
+                    // An armed row is asking a question, so the tap answers it rather than
+                    // doing what a tap normally does here.
+                    if (adapter.isArmed(position)) {
+                        val ids = adapter.getCoveredIds(position)
+                        adapter.disarm()
+                        database.removeEntries(ids)
+                        clearPhoto()
+                        reloadObservations()
+                        return
+                    }
+                    adapter.disarm()
                     WavUtils.playWaveFile(mContext, adapter.getMillis(position))
                     val assetId = assetList[adapter.getSpeciesID(position)]
                     if (assetId == "NO_ASSET") {
@@ -127,7 +143,12 @@ class ViewActivity : BaseActivity() {
                     showSpectrogram(adapter.getMillis(position))
                 }
 
-                override fun onLongItemClick(view: View?, position: Int) {}
+                // A recogniser is wrong sometimes. Until now the only answer to a wrong
+                // line was to throw the whole log away, so a record you knew to be untrue
+                // was the cheaper option. A long press asks; see the adapter.
+                override fun onLongItemClick(view: View?, position: Int) {
+                    adapter.arm(position)
+                }
             })
             )
         }

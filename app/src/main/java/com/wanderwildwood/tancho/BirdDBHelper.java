@@ -61,6 +61,26 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         db.insert(TABLE_NAME, null, cv); // Insert the row into the table with all columns and their values from parameters.
     }
     
+    /**
+     * Takes one reading out of the log, and every row it stood for.
+     *
+     * A recogniser is wrong sometimes, and until now the only answer to a wrong line was to
+     * throw away the whole log. A record you cannot correct keeps saying something you know
+     * is untrue, which is worse than a record with a gap in it.
+     */
+    public synchronized void removeEntries(List<Integer> ids) {
+        if (ids == null || ids.isEmpty()) return;
+        StringBuilder placeholders = new StringBuilder();
+        String[] args = new String[ids.size()];
+        for (int i = 0; i < ids.size(); i++) {
+            if (i > 0) placeholders.append(',');
+            placeholders.append('?');
+            args[i] = String.valueOf(ids.get(i));
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, COLUMN_ID + " IN (" + placeholders + ")", args);
+    }
+
     public synchronized void clearAllEntries() {
         SQLiteDatabase db = getWritableDatabase();
         String CLEAR_TABLE = "DELETE FROM "+ TABLE_NAME;
@@ -117,11 +137,15 @@ public class BirdDBHelper extends SQLiteOpenHelper {
                     // Check if the current entry has the same species id as previousEntry and a higher probability value
                     if ((previousEntry != null && previousEntry.getSpeciesId() == birdObservation.getSpeciesId()) && birdObservation.getProbability() > previousEntry.getProbability()) {
                         // Replace the previous entry in List<BirdObservation> birdObservations with this new entry
+                        // The run carries forward with it: the rows this one now stands
+                        // for are still in the database, and a removal has to take them.
+                        birdObservation.coverAll(previousEntry.getCoveredIds());
                         birdObservations.remove(previousEntry);
                         previousEntry = birdObservation;
                         birdObservations.add(birdObservation);
                     } else if (previousEntry != null && previousEntry.getSpeciesId() == birdObservation.getSpeciesId() && birdObservation.getProbability() <= previousEntry.getProbability()) {
-                        // Skip this entry as it has a lower probability value than the previous one with the same species id
+                        // Skipped from the list, but remembered, for the same reason.
+                        previousEntry.cover(birdObservation.getId());
                     } else {
                         // Add the current entry to the list if it doesn't match the conditions above or if there is no previous entry
                         birdObservations.add(birdObservation);

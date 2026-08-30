@@ -53,6 +53,19 @@ class ListeningState {
     private val _photo = MutableStateFlow<Photo?>(null)
     val photo: StateFlow<Photo?> = _photo.asStateFlow()
 
+    /**
+     * Whether the app knows where it is standing.
+     *
+     * False until a fix arrives or a location is typed in, and the screen says so rather
+     * than offering a place setting that is not being applied to anything.
+     */
+    private val _placeKnown = MutableStateFlow(false)
+    val placeKnown: StateFlow<Boolean> = _placeKnown.asStateFlow()
+
+    fun setPlaceKnown(known: Boolean) {
+        _placeKnown.value = known
+    }
+
     /** How much the where-and-when model is allowed to weigh in, 0f..1f. */
     val metaInfluence = MutableStateFlow(0.6f)
 

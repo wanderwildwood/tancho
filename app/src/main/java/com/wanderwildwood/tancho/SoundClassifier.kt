@@ -292,6 +292,11 @@ class SoundClassifier(
 
   }
 
+  /** Told by [LocationHelper], which is the only thing that knows. */
+  fun noteLocationKnown(known: Boolean) {
+    state.setPlaceKnown(known)
+  }
+
   fun runMetaInterpreter(location: Location) {
     val dayOfYear = LocalDate.now().dayOfYear
     val week = ceil( dayOfYear*48.0/366.0) //model year has 48 weeks

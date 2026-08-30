@@ -43,6 +43,7 @@
     <string name="ignore_non_birds">Birds only</string>
     <string name="summary_ignore_non_birds">Throw away the model\'s non-bird answers: people, dogs, engines, sirens, tools and plain noise.</string>
     <string name="place_and_date">Place and date</string>
+    <string name="place_and_date_unknown">Place not known</string>
     <string name="place_and_date_off">Any bird</string>
     <string name="place_and_date_some">Expected first</string>
     <string name="place_and_date_full">Expected only</string>
@@ -59,6 +60,7 @@
     <string name="restore_backup_confirm">Restore — this replaces the log; tap again</string>
     <string name="restore_done">Log restored</string>
     <string name="restore_failed">That file is not a backup this app wrote</string>
+    <string name="delete_observation_confirm">Remove this — tap again</string>
     <string name="delete_log">Delete the log</string>
     <string name="delete_log_confirm">Delete the log — tap again</string>
     <string name="show_spectrogram">Show the sound</string>
