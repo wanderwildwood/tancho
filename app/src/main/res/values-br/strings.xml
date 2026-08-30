@@ -17,6 +17,5 @@
     <string name="settings_notification_sound">Son ar gemennadenn</string>
     <string name="save_wav">Enrollañ restroù .wav</string>
     <string name="summary_save_wav">Enrollañ ur restr .wav evit pep diguzhadenn er renkell sonerezh. Android 12+ zo rekis</string>
-    <string name="language">Yezh</string>
     <string name="bluetooth_connection">Implijit ar Bluetooth</string>
 </resources>

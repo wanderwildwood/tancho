@@ -12,7 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -59,6 +59,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun SettingsScreen(
     settings: Settings,
+    scrollState: ScrollState,
+    birdNames: String,
     onChooseLanguage: () -> Unit,
     onExportLog: () -> Unit,
     onSaveBackup: () -> Unit,
@@ -76,7 +78,7 @@ fun SettingsScreen(
         Column(
             modifier = Modifier
                 .weight(1f)
-                .verticalScroll(rememberScrollState()),
+                .verticalScroll(scrollState),
         ) {
             ChoiceRow(
                 label = stringResource(R.string.settings_audiosource),
@@ -188,9 +190,13 @@ fun SettingsScreen(
 
             HorizontalDividerMMD()
 
-            if (canChooseLanguage) {
-                ActionRow(label = stringResource(R.string.language), onClick = onChooseLanguage)
-            }
+            // The names the birds are read out under. Not "Language": the app's own words
+            // still follow the phone, and this is the only thing the row changes.
+            ValueRow(
+                label = stringResource(R.string.bird_names),
+                value = birdNames,
+                onClick = onChooseLanguage,
+            )
 
             HorizontalDividerMMD()
 
@@ -250,6 +256,31 @@ private fun ChoiceRow(label: String, value: String, summary: String? = null, onC
             text = value,
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
+        )
+    }
+}
+
+/**
+ * A setting shown as the value it is on, which opens a screen to change it. It looks like
+ * [ChoiceRow] and means something else: there a tap *is* the change, here it is the way to
+ * the choice. Worth the second shape only where the values are too many to tap through.
+ */
+@Composable
+private fun ValueRow(label: String, value: String, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
+        TextMMD(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(start = 16.dp),
         )
     }
 }

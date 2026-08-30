@@ -17,6 +17,5 @@
     <string name="settings_notification_sound">Son de notification</string>
     <string name="save_wav">Enregistrer les fichiers .wav</string>
     <string name="summary_save_wav">Enregistre un fichier .wav pour chaque détection dans le répertoire Musique. Nécessite Android 12+</string>
-    <string name="language">Langue</string>
     <string name="bluetooth_connection">Utiliser le Bluetooth</string>
 </resources>

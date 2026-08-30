@@ -170,65 +170,10 @@ class ViewActivity : BaseActivity() {
         }
     }
 
-    /** Retrieve labels from "labels.txt" file */
-    private fun loadLabels(context: Context) { //TODO: Refactor
-        val localeList = context.resources.configuration.locales
-        var language = localeList.get(0).language
-
-        if (language == "en") {
-            val country = localeList.get(0).country
-            language = when (country) {
-                "GB" -> "en_uk"
-                else -> "en"
-            }
-        } else if (language == "pt") {
-            val country = localeList.get(0).country
-            language = when (country) {
-                "BR" -> "pt_BR"
-                else -> "pt_PT"
-            }
-        }
-
-        var filename = "labels"+"_${language}.txt"    // TODO: Common definition for all classes
-
-        //Check if file exists
-        val assetManager = context.assets // Replace 'assets' with actual AssetManager instance
-        try {
-            val mapList = assetManager.list("")?.toMutableList()
-
-            if (mapList != null) {
-                if (!mapList.contains(filename)) {
-                    filename = "labels"+"_en.txt"
-                }
-            }
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-            filename = "labels"+"_en.txt"
-        }
-
-        Log.i("ViewActivity", filename)
-
-        try {
-            val reader =
-                BufferedReader(InputStreamReader(context.assets.open(filename)))
-            val wordList = mutableListOf<String>()
-            reader.useLines { lines ->
-                lines.forEach {
-                    wordList.add(it)
-                }
-            }
-            labelList = wordList.map { it.toTitleCase() }
-            Log.i("ViewActivity", "Label list entries: ${labelList.size}")
-        } catch (e: IOException) {
-            Log.e("ViewActivity", "Failed to read labels ${filename}: ${e.message}")
-        }
+    /** The names of the birds, in the reader's language. See [BirdNames]. */
+    private fun loadLabels(context: Context) {
+        labelList = BirdNames.load(context)
     }
-
-    private fun String.toTitleCase() =
-        splitToSequence("_")
-            .map { it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() } }
-            .joinToString("_")
-            .trim()
 
     /**
      * Puts the photo on screen, and the app's own mark there if it cannot be had. The

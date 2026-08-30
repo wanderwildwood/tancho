@@ -4,10 +4,15 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.provider.Settings as AndroidSettings
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import com.mudita.mmd.ThemeMMD
 import net.lingala.zip4j.ZipFile
 import java.io.File
@@ -35,34 +40,42 @@ class SettingsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val settings = Settings(this)
+        val activity = this
         setContent {
             ThemeMMD {
-                SettingsScreen(
-                    settings = settings,
-                    onChooseLanguage = ::chooseLanguage,
-                    onExportLog = ::exportLog,
-                    onSaveBackup = ::saveBackup,
-                    onRestoreBackup = ::restoreBackup,
-                    onDeleteLog = ::deleteLog,
-                )
+                // The one place in the app with a screen behind a screen, so it is held
+                // here rather than by a second activity: one window, and back is back.
+                var showLanguages by remember { mutableStateOf(false) }
+                // Held out here so that choosing a language comes back to the row you
+                // chose it from, near the bottom, rather than to the top of the list.
+                val scrolled = rememberScrollState()
+                var chosen by remember { mutableStateOf(BirdNames.chosen(activity)) }
+
+                if (showLanguages) {
+                    BackHandler { showLanguages = false }
+                    LanguageScreen(
+                        chosen = chosen,
+                        inUse = remember(chosen) { BirdNames.inUse(activity) },
+                        onChoose = { code ->
+                            BirdNames.choose(activity, code)
+                            chosen = code
+                            showLanguages = false
+                        },
+                    )
+                } else {
+                    SettingsScreen(
+                        settings = settings,
+                        scrollState = scrolled,
+                        birdNames = remember(chosen) { BirdNames.nameInUse(activity) },
+                        onChooseLanguage = { showLanguages = true },
+                        onExportLog = ::exportLog,
+                        onSaveBackup = ::saveBackup,
+                        onRestoreBackup = ::restoreBackup,
+                        onDeleteLog = ::deleteLog,
+                    )
+                }
             }
         }
-    }
-
-    /**
-     * The language is Android's to set, not the app's: the system keeps a per-app choice
-     * from Android 13 on, and this hands off to the screen that owns it.
-     */
-    private fun chooseLanguage() {
-        startActivity(
-            Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
-                addCategory(Intent.CATEGORY_DEFAULT)
-                data = Uri.parse("package:$packageName")
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-                addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-            }
-        )
     }
 
     /** Every observation as text, handed to whatever the reader wants to send it with. */

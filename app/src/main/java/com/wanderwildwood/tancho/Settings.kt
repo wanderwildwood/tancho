@@ -1,7 +1,6 @@
 package com.wanderwildwood.tancho
 
 import android.content.Context
-import android.os.Build
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -166,9 +165,6 @@ class Settings(context: Context) {
         const val DEFAULT_LOCATION = "0.000/0.000"
     }
 }
-
-/** Whether the system keeps a per-app language for this device. Android 13 on. */
-val canChooseLanguage: Boolean get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 
 /**
  * The recorder to take audio from. The numbers are Android's `MediaRecorder.AudioSource`

@@ -14,7 +14,6 @@
     <string name="settings_audiosource">Orixe do audio</string>
     <string name="settings_notification_sound">Son da notificación</string>
     <string name="save_wav">Gardar ficheiros .wav</string>
-    <string name="language">Idioma</string>
     <string name="samples_zero">Sen audio para analizar: Hai cero mostras de audio!</string>
     <string name="settings_highpass">Filtro de Frecuencia Alta [Hz]</string>
     <string name="summary_save_wav">Garda no directorio Music un ficheiro .wav para cada detección. Require Android 12+</string>

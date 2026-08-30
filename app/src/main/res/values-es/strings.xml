@@ -18,5 +18,4 @@
     <string name="save_wav">Guardar archivos .wav</string>
     <string name="summary_save_wav">Guarda un archivo .wav por cada detección en la carpeta Music. Requiere Android 12 o superior.</string>
     <string name="bluetooth_connection">Usar Bluetooth</string>
-    <string name="language">Idioma</string>
 </resources>

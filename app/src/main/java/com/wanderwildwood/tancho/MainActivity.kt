@@ -133,6 +133,9 @@ class MainActivity : BaseActivity() {
       audioManager.isBluetoothScoOn = false
     }
 
+    // Coming back from settings, where the bird names may have changed language.
+    soundClassifier.refreshLabels()
+
     LocationHelper.requestLocation(this, soundClassifier)
     if (!checkLocationPermission()){
       Toast.makeText(this, this.resources.getString(R.string.error_location_permission), Toast.LENGTH_SHORT).show()

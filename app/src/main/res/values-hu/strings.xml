@@ -17,6 +17,5 @@
     <string name="settings_notification_sound">Értesítési hang</string>
     <string name="save_wav">.wav fájlok elmentése</string>
     <string name="summary_save_wav">Elment egy .wav fájlt minden egyes észleléskor a Music könyvtárba. Android 12+ szükséges hozzá</string>
-    <string name="language">Nyelv</string>
     <string name="bluetooth_connection">Bluetooth használata</string>
 </resources>

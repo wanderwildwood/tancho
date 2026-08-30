@@ -17,5 +17,4 @@
     <string name="settings_notification_sound">Звук сповіщення</string>
     <string name="save_wav">Зберегти .wav файли</string>
     <string name="summary_save_wav">Зберігати .wav файл для кожного розпізнавання у каталог Музика. Потребує Android 12+</string>
-    <string name="language">Мова</string>
 </resources>

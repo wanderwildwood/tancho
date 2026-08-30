@@ -17,7 +17,6 @@
     <string name="settings_notification_sound">Dźwięk powiadomień</string>
     <string name="save_wav">Zapisuj pliki .wav</string>
     <string name="summary_save_wav">Zapisuje plik .wav dla każdego wykrycia w katalogu Muzyka. Wymaga systemu Android 12+</string>
-    <string name="language">Język</string>
     <string name="bluetooth_connection">Używaj Bluetooth</string>
     <string name="manual_location">Ustaw lokalizację</string>
     <string name="error_invalid_GPS">Niewłaściwy format GPS</string>

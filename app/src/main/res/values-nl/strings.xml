@@ -17,7 +17,6 @@
     <string name="settings_notification_sound">Meldingsgeluid</string>
     <string name="save_wav">Bewaar .wav bestanden</string>
     <string name="summary_save_wav">Bewaar een .wav bestand voor elke detectie in de Muziek map. Vanaf Android 12+</string>
-    <string name="language">Taal</string>
     <string name="bluetooth_connection">Gebruik bluetooth</string>
     <string name="error_invalid_GPS">Ongeldig GPS-formaat</string>
     <string name="manual_location">Locatie instellen</string>

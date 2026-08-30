@@ -40,7 +40,6 @@ import java.nio.FloatBuffer
 import java.nio.channels.FileChannel
 import java.nio.file.StandardOpenOption
 import java.time.LocalDate
-import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 import kotlin.concurrent.scheduleAtFixedRate
@@ -68,8 +67,6 @@ class SoundClassifier(
     this.database = BirdDBHelper.getInstance(mContext)
   }
   class Options(
-    /** Path of the converted model label file, relative to the assets/ directory.  */
-    val labelsBase: String = "labels",
     /** Path of the converted .tflite file, relative to the assets/ directory.  */
     val assetFile: String = "assets.txt",
     /** Path of the converted .tflite file, relative to the assets/ directory.  */
@@ -102,6 +99,9 @@ class SoundClassifier(
 
   /** Names of the model's output classes.  */
   lateinit var labelList: List<String>
+
+  /** Which names file [labelList] came from, so [refreshLabels] can tell when it moved. */
+  private var labelFile: String = ""
 
   /** Names of the model's output classes.  */
   lateinit var assetList: List<String>
@@ -192,57 +192,30 @@ class SoundClassifier(
     }
   }
   
-  /** Retrieve labels from "labels.txt" file */
+  /**
+   * The names of the model's output classes, in the reader's language.
+   *
+   * Three copies of this reading used to sit in this class, [ViewActivity] and
+   * [BirdInfoActivity]; two of them carried a TODO asking for one. [BirdNames] is it.
+   */
   private fun loadLabels(context: Context) {
-    val localeList = context.resources.configuration.locales
-    var language = localeList.get(0).language
+    labelList = BirdNames.load(context)
+    labelFile = BirdNames.file(context)
+    Log.i(TAG, "${labelFile}: ${labelList.size} entries")
+  }
 
-    if (language == "en") {
-      val country = localeList.get(0).country
-      language = when (country) {
-          "GB", "AU", "NZ", "IE", "ZA" -> "en_uk"
-          else -> "en"
-      }
-    } else if (language == "pt") {
-      val country = localeList.get(0).country
-      language = when (country) {
-          "BR" -> "pt_BR"
-          else -> "pt_PT"
-      }
-    }
-
-    var filename = options.labelsBase+"_${language}.txt"
-
-    //Check if file exists
-    val assetManager = context.assets // Replace 'assets' with actual AssetManager instance
-    try {
-      val mapList = assetManager.list("")?.toMutableList()
-
-      if (mapList != null) {
-        if (!mapList.contains(filename)) {
-          filename = options.labelsBase+"_en.txt"
-        }
-      }
-    } catch (ex: IOException) {
-      ex.printStackTrace()
-      filename = options.labelsBase+"_en.txt"
-    }
-
-    Log.i(TAG,filename)
-    try {
-      val reader =
-        BufferedReader(InputStreamReader(context.assets.open(filename)))
-      val wordList = mutableListOf<String>()
-      reader.useLines { lines ->
-        lines.forEach {
-          wordList.add(it)
-        }
-      }
-      labelList = wordList.map { it.toTitleCase() }
-      Log.i(TAG, "Label list entries: ${labelList.size}")
-    } catch (e: IOException) {
-      Log.e(TAG, "Failed to read labels ${filename}: ${e.message}")
-    }
+  /**
+   * Re-reads the names if the language has changed since they were read.
+   *
+   * The classifier is built once and outlives the settings screen, so a language chosen
+   * there would otherwise not be seen until the app was killed and started again - and
+   * the reader who just changed it is looking straight at the screen that would not have
+   * changed. Called on the way back from settings. Cheap when nothing has changed, which
+   * is almost always.
+   */
+  fun refreshLabels() {
+    if (BirdNames.file(mContext) == labelFile) return
+    loadLabels(mContext)
   }
 
   private fun setupInterpreter(context: Context) {
@@ -628,12 +601,6 @@ class SoundClassifier(
     copy.flip()     // Prepare the copy for reading
     return copy
   }
-
-  private fun String.toTitleCase() =
-    splitToSequence("_")
-      .map { it.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() } }
-      .joinToString("_")
-      .trim()
 
   companion object {
     private const val TAG = "SoundClassifier"

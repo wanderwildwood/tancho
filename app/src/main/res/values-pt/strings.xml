@@ -18,6 +18,5 @@
     <string name="settings_notification_sound">Som de notificação</string>
     <string name="save_wav">Salvar arquivos .wav</string>
     <string name="summary_save_wav">Salva um arquivo .wav para cada deteção, no seu diretório de Música. Necessita de versão do Android pelo menos 12.</string>
-    <string name="language">Idioma</string>
 </resources>
 

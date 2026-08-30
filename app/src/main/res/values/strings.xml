@@ -18,7 +18,8 @@
     <string name="settings_notification_sound">Sound on each identification</string>
     <string name="save_wav">Save recordings</string>
     <string name="summary_save_wav">Keep the sound of each detection, so tapping its row plays back what was heard. About 288KB each, in the app\'s own storage rather than in your music.</string>
-    <string name="language">Language</string>
+    <string name="bird_names">Bird names</string>
+    <string name="bird_names_phone">Same as the phone</string>
     <string name="settings_reset">Reset settings</string>
     <string name="settings_reset_confirm">Reset settings — tap again to confirm</string>
     <string name="bluetooth_connection">Use Bluetooth</string>

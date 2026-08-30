@@ -15,7 +15,6 @@
     <string name="settings_audiosource">音频来源</string>
     <string name="settings_notification_sound">提示声</string>
     <string name="save_wav">保存 .wav 文件</string>
-    <string name="language">语言</string>
     <string name="settings_threshold">阈值 [%]</string>
     <string name="summary_save_wav">在 Music 文件夹中为每个检测保存一个.wav 文件。需要 Android 12及以上系统</string>
     <string name="bluetooth_connection">使用蓝牙</string>

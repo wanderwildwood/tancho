@@ -17,6 +17,5 @@
     <string name="save_wav">Сохранить.wav файлы</string>
     <string name="summary_save_wav">Сохраняет файл .wav для каждого определения в музыкальном каталоге. Требуется Android 12+</string>
     <string name="settings_highpass">Высокочастотный фильтр [Гц]</string>
-    <string name="language">Язык</string>
     <string name="bluetooth_connection">Использовать Bluetooth</string>
 </resources>
