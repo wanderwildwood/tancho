@@ -51,6 +51,12 @@ For updates without doing this by hand, add this repository to
 It will offer each new release as it appears. **The application id is settled** — updates
 install over what you have, keeping your settings and anything the app has stored.
 
+## Support
+
+This is free software and it stays free; there is nothing here to buy. If you would like to
+send something somewhere anyway, there are some llamas in Hot Springs, North Carolina who go
+through a great deal of hay: <https://hotspringsllamas.org/donate/>
+
 ## Licence
 
 GPLv3. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
