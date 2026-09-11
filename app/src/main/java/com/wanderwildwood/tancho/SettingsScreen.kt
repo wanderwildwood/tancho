@@ -44,6 +44,11 @@ import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
 import kotlinx.coroutines.delay
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.platform.LocalContext
+import com.wanderwildwood.tancho.R
 
 /**
  * Settings.
@@ -422,6 +427,9 @@ private fun AboutDialog(onDismiss: () -> Unit) {
                     text = stringResource(R.string.about_body),
                     style = MaterialTheme.typography.bodySmall,
                 )
+                Spacer(modifier = Modifier.height(14.dp))
+                Llama()
+
                 Spacer(modifier = Modifier.height(18.dp))
                 OutlinedButtonMMD(
                     onClick = onDismiss,
@@ -458,4 +466,40 @@ private fun SectionHeading(text: String) {
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
     )
+}
+
+/**
+ * A llama at the foot of the About, which opens the page a donation goes to.
+ *
+ * Three words rather than an address: a verb and an object, so what happens when you press
+ * them is not a surprise even though the page is not named. The drawing is his own, and it is
+ * ink rather than an emoji, which is a colour glyph and reaches the panel as a pale smudge.
+ *
+ * The Kompakt may have nothing registered for a web address, so the intent is allowed to fail
+ * quietly rather than take the dialog down with it.
+ */
+@Composable
+private fun Llama() {
+    val context = LocalContext.current
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                runCatching {
+                    context.startActivity(
+                        Intent(Intent.ACTION_VIEW, Uri.parse("https://hotspringsllamas.org/donate/")),
+                    )
+                }
+            }
+            .padding(vertical = 4.dp),
+    ) {
+        Image(
+            painter = painterResource(R.drawable.llama),
+            contentDescription = null,
+            modifier = Modifier.size(22.dp),
+        )
+        Spacer(Modifier.width(10.dp))
+        TextMMD(text = "Feed the llamas", style = MaterialTheme.typography.bodySmall)
+    }
 }
