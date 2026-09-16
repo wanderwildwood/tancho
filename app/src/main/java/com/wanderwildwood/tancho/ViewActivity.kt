@@ -354,6 +354,16 @@ class ViewActivity : BaseActivity() {
 
     fun ebird(view: View) {
         val id = selected?.speciesId ?: return
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
+        // The Kompakt may have nothing registered for a web address, and an uncaught
+        // ActivityNotFoundException here takes the app down rather than the link.
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
+        }.onFailure {
+            Toast.makeText(
+                this,
+                "There is no browser on this phone to open that with.",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
     }
 }

@@ -213,7 +213,17 @@ class BirdInfoActivity : BaseActivity() {
         // The tag holds the species, not a row: with the list in Compose there are no row
         // positions to look one up from, and the species was what this ever wanted.
         val id = binding.photoEbird.tag as Int
-        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
+        // The Kompakt may have nothing registered for a web address, and an uncaught
+        // ActivityNotFoundException here takes the app down rather than the link.
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
+        }.onFailure {
+            Toast.makeText(
+                this,
+                "There is no browser on this phone to open that with.",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
     }
 
 }
