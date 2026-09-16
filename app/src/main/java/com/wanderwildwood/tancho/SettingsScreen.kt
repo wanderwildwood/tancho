@@ -1,7 +1,6 @@
 package com.wanderwildwood.tancho
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,32 +14,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
+import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
@@ -81,156 +74,209 @@ fun SettingsScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         SettingsHeader(onAbout = { showAbout = true })
-        Column(
+        // MMD's list, not a scrolling Column: it steps four rows to a swipe and stops, and it
+        // brings the chevron rail at both ends. A settings screen that coasts was the one
+        // screen in the app that did not behave like the phone it is on.
+        LazyColumnMMD(
             modifier = Modifier
                 .weight(1f)
                 .verticalScroll(scrollState),
         ) {
-            ChoiceRow(
-                label = stringResource(R.string.settings_audiosource),
-                value = stringResource(settings.audioSource.label),
-                summary = stringResource(R.string.summary_settings_audiosource),
-                onCycle = settings::cycleAudioSource,
-            )
-            // The unit travels with the number rather than sitting in brackets after the
-            // label. "Threshold [%] ... 30" was the only place on the screen that read
-            // like an instrument panel.
-            ChoiceRow(
-                label = stringResource(R.string.settings_threshold),
-                value = "${settings.threshold}%",
-                summary = stringResource(R.string.summary_settings_threshold),
-                onCycle = settings::cycleThreshold,
-            )
-            ChoiceRow(
-                label = stringResource(R.string.settings_highpass),
-                value = "${settings.highPass} Hz",
-                summary = stringResource(R.string.summary_settings_highpass),
-                onCycle = settings::cycleHighPass,
-            )
-
-            HorizontalDividerMMD()
-
-            SwitchRow(
-                label = stringResource(R.string.ignore_non_birds),
-                summary = stringResource(R.string.summary_ignore_non_birds),
-                checked = settings.ignoreNonBirds,
-                onCheckedChange = { settings.ignoreNonBirds = it },
-            )
-            SwitchRow(
-                label = stringResource(R.string.list_repeats),
-                summary = stringResource(R.string.summary_list_repeats),
-                checked = settings.listRepeats,
-                onCheckedChange = { settings.listRepeats = it },
-            )
-            SwitchRow(
-                label = stringResource(R.string.photo_while_listening),
-                summary = stringResource(R.string.summary_photo_while_listening),
-                checked = settings.photoWhileListening,
-                onCheckedChange = { settings.photoWhileListening = it },
-            )
-            SwitchRow(
-                label = stringResource(R.string.settings_notification_sound),
-                checked = settings.notificationSound,
-                onCheckedChange = { settings.notificationSound = it },
-            )
-            SwitchRow(
-                label = stringResource(R.string.save_wav),
-                summary = stringResource(R.string.summary_save_wav),
-                checked = settings.saveWav,
-                onCheckedChange = { settings.saveWav = it },
-            )
-            // Both of these act on the recordings, so neither is offered when there are
-            // none to act on. A switch that is on and does nothing is worse than no switch.
-            if (settings.saveWav) {
-                SwitchRow(
-                    label = stringResource(R.string.show_spectrogram),
-                    summary = stringResource(R.string.summary_show_spectrogram),
-                    checked = settings.showSpectrogram,
-                    onCheckedChange = { settings.showSpectrogram = it },
-                )
-                SwitchRow(
-                    label = stringResource(R.string.clear_recordings),
-                    checked = settings.clearRecordings,
-                    onCheckedChange = { settings.clearRecordings = it },
+            item {
+                ChoiceRow(
+                    label = stringResource(R.string.settings_audiosource),
+                    value = stringResource(settings.audioSource.label),
+                    summary = stringResource(R.string.summary_settings_audiosource),
+                    onCycle = settings::cycleAudioSource,
                 )
             }
-            SwitchRow(
-                label = stringResource(R.string.bluetooth_connection),
-                summary = stringResource(R.string.summary_bluetooth_connection),
-                checked = settings.bluetooth,
-                onCheckedChange = { settings.bluetooth = it },
-            )
-
-            HorizontalDividerMMD()
-
-            SwitchRow(
-                label = stringResource(R.string.manual_location),
-                summary = stringResource(R.string.summary_manual_location),
-                checked = settings.manualLocation,
-                onCheckedChange = { settings.manualLocation = it },
-            )
-            if (settings.manualLocation) {
-                TextFieldMMD(
-                    value = settings.manualLocationValue,
-                    onValueChange = { settings.manualLocationValue = it },
-                    singleLine = true,
-                    isError = !settings.manualLocationIsValid,
-                    textStyle = MaterialTheme.typography.bodyLarge,
-                    supportingText = {
-                        if (!settings.manualLocationIsValid) {
-                            TextMMD(
-                                text = stringResource(R.string.error_invalid_GPS),
-                                style = MaterialTheme.typography.bodySmall,
-                            )
-                        }
-                    },
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Done,
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 4.dp),
+            item {
+                // The unit travels with the number rather than sitting in brackets after the
+                // label. "Threshold [%] ... 30" was the only place on the screen that read
+                // like an instrument panel.
+                ChoiceRow(
+                    label = stringResource(R.string.settings_threshold),
+                    value = "${settings.threshold}%",
+                    summary = stringResource(R.string.summary_settings_threshold),
+                    onCycle = settings::cycleThreshold,
                 )
             }
+            item {
+                ChoiceRow(
+                    label = stringResource(R.string.settings_highpass),
+                    value = "${settings.highPass} Hz",
+                    summary = stringResource(R.string.summary_settings_highpass),
+                    onCycle = settings::cycleHighPass,
+                )
+            }
+            item {
 
-            HorizontalDividerMMD()
+                HorizontalDividerMMD()
+            }
+            item {
 
-            // The names the birds are read out under. Not "Language": the app's own words
-            // still follow the phone, and this is the only thing the row changes.
-            ValueRow(
-                label = stringResource(R.string.bird_names),
-                value = birdNames,
-                onClick = onChooseLanguage,
-            )
+                SwitchRow(
+                    label = stringResource(R.string.ignore_non_birds),
+                    summary = stringResource(R.string.summary_ignore_non_birds),
+                    checked = settings.ignoreNonBirds,
+                    onCheckedChange = { settings.ignoreNonBirds = it },
+                )
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.list_repeats),
+                    summary = stringResource(R.string.summary_list_repeats),
+                    checked = settings.listRepeats,
+                    onCheckedChange = { settings.listRepeats = it },
+                )
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.photo_while_listening),
+                    summary = stringResource(R.string.summary_photo_while_listening),
+                    checked = settings.photoWhileListening,
+                    onCheckedChange = { settings.photoWhileListening = it },
+                )
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.settings_notification_sound),
+                    checked = settings.notificationSound,
+                    onCheckedChange = { settings.notificationSound = it },
+                )
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.save_wav),
+                    summary = stringResource(R.string.summary_save_wav),
+                    checked = settings.saveWav,
+                    onCheckedChange = { settings.saveWav = it },
+                )
+            }
+            item {
+                // Both of these act on the recordings, so neither is offered when there are
+                // none to act on. A switch that is on and does nothing is worse than no switch.
+                if (settings.saveWav) {
+                    SwitchRow(
+                        label = stringResource(R.string.show_spectrogram),
+                        summary = stringResource(R.string.summary_show_spectrogram),
+                        checked = settings.showSpectrogram,
+                        onCheckedChange = { settings.showSpectrogram = it },
+                    )
+                    SwitchRow(
+                        label = stringResource(R.string.clear_recordings),
+                        checked = settings.clearRecordings,
+                        onCheckedChange = { settings.clearRecordings = it },
+                    )
+                }
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.bluetooth_connection),
+                    summary = stringResource(R.string.summary_bluetooth_connection),
+                    checked = settings.bluetooth,
+                    onCheckedChange = { settings.bluetooth = it },
+                )
+            }
+            item {
 
-            HorizontalDividerMMD()
+                HorizontalDividerMMD()
+            }
+            item {
 
-            // A heading groups them; the labels carry the rest. A row that needs a
-            // paragraph has the wrong label.
-            SectionHeading(stringResource(R.string.log_heading))
-            ActionRow(label = stringResource(R.string.export_log), onClick = onExportLog)
-            ActionRow(label = stringResource(R.string.save_backup), onClick = onSaveBackup)
-            // Restoring replaces the log rather than merging into it, so it asks the same
-            // way deleting does: the row itself, not a dialog.
-            ConfirmingRow(
-                label = R.string.restore_backup,
-                armedLabel = R.string.restore_backup_confirm,
-                onConfirmed = onRestoreBackup,
-            )
-            DeleteRow(onConfirmed = onDeleteLog)
+                SwitchRow(
+                    label = stringResource(R.string.manual_location),
+                    summary = stringResource(R.string.summary_manual_location),
+                    checked = settings.manualLocation,
+                    onCheckedChange = { settings.manualLocation = it },
+                )
+            }
+            item {
+                if (settings.manualLocation) {
+                    TextFieldMMD(
+                        value = settings.manualLocationValue,
+                        onValueChange = { settings.manualLocationValue = it },
+                        singleLine = true,
+                        isError = !settings.manualLocationIsValid,
+                        textStyle = MaterialTheme.typography.bodyLarge,
+                        supportingText = {
+                            if (!settings.manualLocationIsValid) {
+                                TextMMD(
+                                    text = stringResource(R.string.error_invalid_GPS),
+                                    style = MaterialTheme.typography.bodySmall,
+                                )
+                            }
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done,
+                        ),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 4.dp),
+                    )
+                }
+            }
+            item {
 
-            HorizontalDividerMMD()
+                HorizontalDividerMMD()
+            }
+            item {
 
-            // Resetting throws away every choice on this screen, so it asks the way
-            // deleting the log does. A button here and a row there were two shapes for
-            // one kind of action, on one screen.
-            ConfirmingRow(
-                label = R.string.settings_reset,
-                armedLabel = R.string.settings_reset_confirm,
-                onConfirmed = settings::reset,
-            )
-            Spacer(modifier = Modifier.height(24.dp))
+                // The names the birds are read out under. Not "Language": the app's own words
+                // still follow the phone, and this is the only thing the row changes.
+                ValueRow(
+                    label = stringResource(R.string.bird_names),
+                    value = birdNames,
+                    onClick = onChooseLanguage,
+                )
+            }
+            item {
+
+                HorizontalDividerMMD()
+            }
+            item {
+
+                // A heading groups them; the labels carry the rest. A row that needs a
+                // paragraph has the wrong label.
+                SectionHeading(stringResource(R.string.log_heading))
+            }
+            item {
+                ActionRow(label = stringResource(R.string.export_log), onClick = onExportLog)
+            }
+            item {
+                ActionRow(label = stringResource(R.string.save_backup), onClick = onSaveBackup)
+            }
+            item {
+                // Restoring replaces the log rather than merging into it, so it asks the same
+                // way deleting does: the row itself, not a dialog.
+                ConfirmingRow(
+                    label = R.string.restore_backup,
+                    armedLabel = R.string.restore_backup_confirm,
+                    onConfirmed = onRestoreBackup,
+                )
+            }
+            item {
+                DeleteRow(onConfirmed = onDeleteLog)
+            }
+            item {
+
+                HorizontalDividerMMD()
+            }
+            item {
+
+                // Resetting throws away every choice on this screen, so it asks the way
+                // deleting the log does. A button here and a row there were two shapes for
+                // one kind of action, on one screen.
+                ConfirmingRow(
+                    label = R.string.settings_reset,
+                    armedLabel = R.string.settings_reset_confirm,
+                    onConfirmed = settings::reset,
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
 
         DestinationRowCompose(current = Destination.SETTINGS)
@@ -400,45 +446,26 @@ private fun SettingsHeader(onAbout: () -> Unit) {
  */
 @Composable
 private fun AboutDialog(onDismiss: () -> Unit) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
-    ) {
-        val view = LocalView.current
-        SideEffect {
-            (view.parent as? DialogWindowProvider)?.window?.setDimAmount(0f)
-        }
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .fillMaxWidth(),
-        ) {
-            Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)) {
-                TextMMD(
-                    text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                TextMMD(
-                    text = stringResource(R.string.about_body),
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Spacer(modifier = Modifier.height(14.dp))
-                Llama()
+    EInkDialog(onDismiss = onDismiss) {
+        TextMMD(
+            text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        TextMMD(
+            text = stringResource(R.string.about_body),
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Spacer(modifier = Modifier.height(14.dp))
+        Llama()
 
-                Spacer(modifier = Modifier.height(18.dp))
-                OutlinedButtonMMD(
-                    onClick = onDismiss,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextMMD(stringResource(R.string.close))
-                }
-            }
+        Spacer(modifier = Modifier.height(18.dp))
+        OutlinedButtonMMD(
+            onClick = onDismiss,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            TextMMD(stringResource(R.string.close))
         }
     }
 }

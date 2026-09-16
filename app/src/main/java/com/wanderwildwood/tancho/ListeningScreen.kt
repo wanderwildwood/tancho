@@ -46,17 +46,9 @@ import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
-import androidx.compose.ui.window.DialogWindowProvider
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
@@ -297,75 +289,63 @@ private fun ListeningChip(isListening: Boolean, onToggle: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: () -> Unit) {
-    Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
-        val view = LocalView.current
-        SideEffect { (view.parent as? DialogWindowProvider)?.window?.setDimAmount(0f) }
-        Surface(
-            color = MaterialTheme.colorScheme.surface,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-            border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.padding(horizontal = 20.dp).fillMaxWidth(),
+    EInkDialog(onDismiss = onDismiss) {
+        TextMMD(
+            text = stringResource(R.string.place_title),
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold,
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    settings.manualLocation = !settings.manualLocation
+                    onChanged()
+                }
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column(modifier = Modifier.padding(horizontal = 20.dp, vertical = 18.dp)) {
-                TextMMD(
-                    text = stringResource(R.string.place_title),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            settings.manualLocation = !settings.manualLocation
-                            onChanged()
-                        }
-                        .padding(vertical = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextMMD(
-                        text = stringResource(R.string.place_use_gps),
-                        style = MaterialTheme.typography.bodyLarge,
-                        modifier = Modifier.weight(1f).padding(end = 16.dp),
-                    )
-                    SwitchMMD(
-                        checked = !settings.manualLocation,
-                        onCheckedChange = {
-                            settings.manualLocation = !it
-                            onChanged()
-                        },
-                    )
-                }
-                // Only where there is something to type. A field that is on screen and not
-                // being read is the same lie as a switch that does nothing.
-                if (settings.manualLocation) {
-                    TextFieldMMD(
-                        value = settings.manualLocationValue,
-                        onValueChange = {
-                            settings.manualLocationValue = it
-                            onChanged()
-                        },
-                        singleLine = true,
-                        isError = !settings.manualLocationIsValid,
-                        textStyle = MaterialTheme.typography.bodyLarge,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done,
-                        ),
-                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
-                    )
-                    TextMMD(
-                        text = stringResource(R.string.place_manual_hint),
-                        style = MaterialTheme.typography.bodySmall,
-                    )
-                }
-                Spacer(modifier = Modifier.height(18.dp))
-                OutlinedButtonMMD(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
-                    TextMMD(stringResource(R.string.close))
-                }
-            }
+            TextMMD(
+                text = stringResource(R.string.place_use_gps),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.weight(1f).padding(end = 16.dp),
+            )
+            SwitchMMD(
+                checked = !settings.manualLocation,
+                onCheckedChange = {
+                    settings.manualLocation = !it
+                    onChanged()
+                },
+            )
+        }
+        // Only where there is something to type. A field that is on screen and not
+        // being read is the same lie as a switch that does nothing.
+        if (settings.manualLocation) {
+            TextFieldMMD(
+                value = settings.manualLocationValue,
+                onValueChange = {
+                    settings.manualLocationValue = it
+                    onChanged()
+                },
+                singleLine = true,
+                isError = !settings.manualLocationIsValid,
+                textStyle = MaterialTheme.typography.bodyLarge,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Done,
+                ),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+            )
+            TextMMD(
+                text = stringResource(R.string.place_manual_hint),
+                style = MaterialTheme.typography.bodySmall,
+            )
+        }
+        Spacer(modifier = Modifier.height(18.dp))
+        OutlinedButtonMMD(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
+            TextMMD(stringResource(R.string.close))
         }
     }
 }

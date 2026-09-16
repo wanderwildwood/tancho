@@ -72,7 +72,7 @@ class ViewActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.destinationRow.setContent { ThemeMMD { DestinationRowCompose(Destination.HEARD) } }
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) { DestinationRowCompose(Destination.HEARD) } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -131,7 +131,7 @@ class ViewActivity : BaseActivity() {
      */
     private fun wireList() {
         binding.observationList.setContent {
-            ThemeMMD {
+            ThemeMMD(colorScheme = monochrome) {
                 val rows by observations
                 var armed by remember { mutableStateOf<Int?>(null) }
 

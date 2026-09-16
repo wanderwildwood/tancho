@@ -42,7 +42,7 @@ class SettingsActivity : BaseActivity() {
         val settings = Settings(this)
         val activity = this
         setContent {
-            ThemeMMD {
+            ThemeMMD(colorScheme = monochrome) {
                 // The one place in the app with a screen behind a screen, so it is held
                 // here rather than by a second activity: one window, and back is back.
                 var showLanguages by remember { mutableStateOf(false) }

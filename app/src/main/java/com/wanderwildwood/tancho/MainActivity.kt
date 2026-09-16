@@ -78,7 +78,7 @@ class MainActivity : BaseActivity() {
     soundClassifier = SoundClassifier(this, state, SoundClassifier.Options())
 
     setContent {
-      ThemeMMD {
+      ThemeMMD(colorScheme = monochrome) {
         val isListening by state.isListening.collectAsStateWithLifecycle()
         val heard by state.heard.collectAsStateWithLifecycle()
         val photo by state.photo.collectAsStateWithLifecycle()
