@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -48,7 +47,6 @@ class SettingsActivity : BaseActivity() {
                 var showLanguages by remember { mutableStateOf(false) }
                 // Held out here so that choosing a language comes back to the row you
                 // chose it from, near the bottom, rather than to the top of the list.
-                val scrolled = rememberScrollState()
                 var chosen by remember { mutableStateOf(BirdNames.chosen(activity)) }
 
                 if (showLanguages) {
@@ -65,7 +63,6 @@ class SettingsActivity : BaseActivity() {
                 } else {
                     SettingsScreen(
                         settings = settings,
-                        scrollState = scrolled,
                         birdNames = remember(chosen) { BirdNames.nameInUse(activity) },
                         onChooseLanguage = { showLanguages = true },
                         onExportLog = ::exportLog,

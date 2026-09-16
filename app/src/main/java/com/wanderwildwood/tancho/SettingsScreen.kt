@@ -1,9 +1,12 @@
 package com.wanderwildwood.tancho
 
 import android.widget.Toast
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,9 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -37,6 +38,7 @@ import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
+import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 import kotlinx.coroutines.delay
 import android.content.Intent
 import android.net.Uri
@@ -58,7 +60,6 @@ import com.wanderwildwood.tancho.R
 @Composable
 fun SettingsScreen(
     settings: Settings,
-    scrollState: ScrollState,
     birdNames: String,
     onChooseLanguage: () -> Unit,
     onExportLog: () -> Unit,
@@ -73,15 +74,14 @@ fun SettingsScreen(
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        SettingsHeader(onAbout = { showAbout = true })
+        TopAppBarMMD(
+            title = { TextMMD(text = stringResource(R.string.destination_settings)) },
+            actions = { BarButton(R.drawable.ic_info_24dp, R.string.about) { showAbout = true } },
+        )
         // MMD's list, not a scrolling Column: it steps four rows to a swipe and stops, and it
         // brings the chevron rail at both ends. A settings screen that coasts was the one
         // screen in the app that did not behave like the phone it is on.
-        LazyColumnMMD(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(scrollState),
-        ) {
+        LazyColumnMMD(modifier = Modifier.weight(1f)) {
             item {
                 ChoiceRow(
                     label = stringResource(R.string.settings_audiosource),
@@ -413,26 +413,17 @@ private const val ARMED_MS = 4000L
  * the corner has nothing to sit beside.
  */
 @Composable
-private fun SettingsHeader(onAbout: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+private fun BarButton(@DrawableRes icon: Int, @StringRes description: Int, onClick: () -> Unit) {
+    // A 22dp mark in a 48dp target, the same three numbers as every other app of this shop.
+    // What stood here was a 24dp Image with clickable hung off it -- half the target.
+    Box(
+        modifier = Modifier.size(48.dp).clickable(onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
-        TextMMD(
-            text = stringResource(R.string.destination_settings),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-        )
         Image(
-            painter = painterResource(R.drawable.ic_info_24dp),
-            contentDescription = stringResource(R.string.about),
-            modifier = Modifier
-                .clickable(onClick = onAbout)
-                .padding(8.dp)
-                .size(24.dp),
+            painter = painterResource(icon),
+            contentDescription = stringResource(description),
+            modifier = Modifier.size(22.dp),
         )
     }
 }

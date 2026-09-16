@@ -261,23 +261,6 @@ private fun ListeningChip(isListening: Boolean, onToggle: () -> Unit) {
 }
 
 /**
- * A word you can press. Nothing behind it and no rule around it: it sits on the surface
- * like everything else on this screen, and the only thing marking it out is that it is the
- * one line of it that answers to a tap.
- *
- * [widest] is the longest thing this will ever say, laid out unseen behind the real text
- * to fix the width, and [anchor] is the edge that stays put inside it: the listening word
- * grows dots to the right of itself, so it is held to the left; the filter is read against
- * the right margin, so it is held to the right. Without that they slide sideways as they
- * change, which is worse than the box was. Both of these change what they say - one cycles through
- * three filters, the other gains and loses dots every 700ms - and a box that resizes
- * redraws its border every time. On e-ink that is a twitch, three times a second, on the
- * one part of the screen whose whole job is to sit still and be glanced at.
- *
- * Three taps rather than a dragged slider for the filter: a drag on e-ink repaints the
- * whole track for every pixel of movement, and the value was never that precise.
- */
-/**
  * Where you are, asked at the point the app admits it does not know.
  *
  * The same two settings live in Settings, and this is deliberately the same pair rather than
@@ -350,6 +333,23 @@ private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: ()
     }
 }
 
+/**
+ * A word you can press. Nothing behind it and no rule around it: it sits on the surface
+ * like everything else on this screen, and the only thing marking it out is that it is the
+ * one line of it that answers to a tap.
+ *
+ * [widest] is the longest thing this will ever say, laid out unseen behind the real text
+ * to fix the width, and [anchor] is the edge that stays put inside it: the listening word
+ * grows dots to the right of itself, so it is held to the left; the filter is read against
+ * the right margin, so it is held to the right. Without that they slide sideways as they
+ * change, which is worse than the box was. Both of these change what they say - one cycles through
+ * three filters, the other gains and loses dots every 700ms - and a box that resizes
+ * redraws its border every time. On e-ink that is a twitch, three times a second, on the
+ * one part of the screen whose whole job is to sit still and be glanced at.
+ *
+ * Three taps rather than a dragged slider for the filter: a drag on e-ink repaints the
+ * whole track for every pixel of movement, and the value was never that precise.
+ */
 @Composable
 private fun ControlChip(
     text: String,
