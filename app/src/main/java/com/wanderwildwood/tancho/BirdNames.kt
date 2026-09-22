@@ -1,6 +1,7 @@
 package com.wanderwildwood.tancho
 
 import android.content.Context
+import android.net.Uri
 import androidx.preference.PreferenceManager
 import java.io.BufferedReader
 import java.io.IOException
@@ -137,6 +138,37 @@ object BirdNames {
             else -> locale.language
         }
         return if (languages.any { it.code == code }) code else FALLBACK
+    }
+
+    /**
+     * The Wikipedia page for a species, in the language the names are in, for the browser
+     * to open. The app never fetches it: identifying a bird asks the network nothing, and
+     * reading about one is a request the reader makes, visibly, from their own browser.
+     *
+     * It searches by the scientific name rather than guessing a title. Wikipedias title
+     * their articles by the common name in their own language, which need not be the one
+     * BirdNET uses, but nearly all of them redirect the binomial to it; `go` jumps
+     * straight there, and where there is no redirect the search shows what there is.
+     */
+    fun wikipedia(context: Context, scientificName: String): Uri =
+        Uri.Builder()
+            .scheme("https")
+            .authority("${wikipediaCode(inUse(context))}.wikipedia.org")
+            .path("wiki/Special:Search")
+            .appendQueryParameter("search", scientificName)
+            .appendQueryParameter("go", "Go")
+            .build()
+
+    /**
+     * BirdNET's code to a Wikipedia's subdomain. They agree except where a BirdNET code is
+     * a file rather than a language (`en_uk`, `pt_BR`, `pt_PT`), and for Indonesian, which
+     * BirdNET spells by the old ISO code.
+     */
+    private fun wikipediaCode(code: String): String = when (code) {
+        "en_uk" -> "en"
+        "pt_BR", "pt_PT" -> "pt"
+        "in" -> "id"
+        else -> code
     }
 
     /** The asset the names are read from, which is what [load] opens. */

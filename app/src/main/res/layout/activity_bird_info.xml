@@ -44,6 +44,17 @@
                 android:layout_below="@id/photo_reload"
                 android:src="@drawable/ic_info_24dp"
                 android:onClick="ebird"/>
+            <ImageButton
+                android:id="@+id/photo_wikipedia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:backgroundTint="?attr/colorSecondary"
+                android:tint="@android:color/white"
+                android:layout_below="@id/photo_ebird"
+                android:contentDescription="@string/wikipedia"
+                android:src="@drawable/ic_article_24dp"
+                android:onClick="wikipedia"/>
             <TextView
                 android:id="@+id/photo_name"
                 android:layout_width="wrap_content"

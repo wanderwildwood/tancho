@@ -205,6 +205,7 @@ class ViewActivity : BaseActivity() {
         binding.photoLatinname.setVisibility(View.VISIBLE)
         binding.photoReload.setVisibility(View.VISIBLE)
         binding.photoEbird.setVisibility(View.VISIBLE)
+        binding.photoWikipedia.setVisibility(View.VISIBLE)
         binding.photoShare.setVisibility(View.VISIBLE)
         showPhoto(url, false)
         showSpectrogram(row.millis)
@@ -304,6 +305,7 @@ class ViewActivity : BaseActivity() {
         binding.photoLatinname.setVisibility(View.GONE)
         binding.photoReload.setVisibility(View.GONE)
         binding.photoEbird.setVisibility(View.GONE)
+        binding.photoWikipedia.setVisibility(View.GONE)
         binding.photoShare.setVisibility(View.GONE)
     }
 
@@ -358,6 +360,20 @@ class ViewActivity : BaseActivity() {
         // ActivityNotFoundException here takes the app down rather than the link.
         runCatching {
             startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
+        }.onFailure {
+            Toast.makeText(
+                this,
+                "There is no browser on this phone to open that with.",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
+
+    fun wikipedia(view: View) {
+        val id = selected?.speciesId ?: return
+        val scientificName = labelList[id].split("_").first()
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, BirdNames.wikipedia(this, scientificName)))
         }.onFailure {
             Toast.makeText(
                 this,

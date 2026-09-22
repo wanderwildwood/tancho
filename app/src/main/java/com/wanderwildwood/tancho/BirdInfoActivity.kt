@@ -124,6 +124,7 @@ class BirdInfoActivity : BaseActivity() {
         binding.photoLatinname.setVisibility(View.VISIBLE)
         binding.photoReload.setVisibility(View.VISIBLE)
         binding.photoEbird.setVisibility(View.VISIBLE)
+        binding.photoWikipedia.setVisibility(View.VISIBLE)
         binding.photoEbird.setTag(speciesId)
         showPhoto(url, false)
     }
@@ -202,6 +203,7 @@ class BirdInfoActivity : BaseActivity() {
         binding.photoLatinname.setVisibility(View.GONE)
         binding.photoReload.setVisibility(View.GONE)
         binding.photoEbird.setVisibility(View.GONE)
+        binding.photoWikipedia.setVisibility(View.GONE)
     }
 
     fun reload(view: View) {
@@ -226,4 +228,18 @@ class BirdInfoActivity : BaseActivity() {
         }
     }
 
+
+    fun wikipedia(view: View) {
+        val id = binding.photoEbird.tag as Int
+        val scientificName = labelList[id].split("_").first()
+        runCatching {
+            startActivity(Intent(Intent.ACTION_VIEW, BirdNames.wikipedia(this, scientificName)))
+        }.onFailure {
+            Toast.makeText(
+                this,
+                "There is no browser on this phone to open that with.",
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
 }
