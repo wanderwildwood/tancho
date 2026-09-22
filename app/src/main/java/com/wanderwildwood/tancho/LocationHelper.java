@@ -131,7 +131,7 @@ public class LocationHelper {
     public static boolean checkLocationProvider(Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(context, "Error no GPS", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.error_no_gps), Toast.LENGTH_SHORT).show();
             return false;
         } else {
             return true;

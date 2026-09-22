@@ -73,5 +73,21 @@
     <string name="about">About</string>
     <string name="close">Close</string>
     <string name="about_body">Identification happens on this phone. The only thing fetched is a bird\'s photograph, and only for a row you open.\n\nA fork of whoBIRD by woheller69. GNU General Public License v3.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. Models CC BY-NC-SA 4.0, not for commercial use.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.\n\ngithub.com/wanderwildwood/tancho</string>
+    <!-- The recogniser's threshold in settings. %1$s is a whole number from the list the row cycles through, e.g. 30 -->
+    <string name="settings_threshold_value">%1$s%%</string>
+    <!-- The high-pass filter in settings. %1$s is a whole number of hertz, e.g. 200 -->
+    <string name="settings_highpass_value">%1$s Hz</string>
+    <!-- Beside a bird heard more than once in a row. %1$s is how many times, 2 or more -->
+    <string name="times_heard">×%1$s</string>
+    <!-- Toast when GPS is off in the phone's settings -->
+    <string name="error_no_gps">Error no GPS</string>
+    <!-- Checkbox on the first screen: download the larger, 32-bit model instead -->
+    <string name="download_32bit">32bit (~63MB)</string>
+    <!-- Toast when a web link cannot be opened -->
+    <string name="no_browser">There is no browser on this phone to open that with.</string>
+    <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
+    <string name="about_title">Birding %1$s</string>
+    <!-- The donation link at the foot of the About, beside a drawing of a llama. A fixed phrase: a verb and an object, so the reader knows what pressing it does -->
+    <string name="about_feed_the_llamas">Feed the llamas</string>
 </resources>
 

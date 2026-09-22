@@ -222,7 +222,7 @@ class BirdInfoActivity : BaseActivity() {
         }.onFailure {
             Toast.makeText(
                 this,
-                "There is no browser on this phone to open that with.",
+                getString(R.string.no_browser),
                 Toast.LENGTH_SHORT,
             ).show()
         }
@@ -237,7 +237,7 @@ class BirdInfoActivity : BaseActivity() {
         }.onFailure {
             Toast.makeText(
                 this,
-                "There is no browser on this phone to open that with.",
+                getString(R.string.no_browser),
                 Toast.LENGTH_SHORT,
             ).show()
         }

@@ -96,7 +96,7 @@ fun SettingsScreen(
                 // like an instrument panel.
                 ChoiceRow(
                     label = stringResource(R.string.settings_threshold),
-                    value = "${settings.threshold}%",
+                    value = stringResource(R.string.settings_threshold_value, settings.threshold.toString()),
                     summary = stringResource(R.string.summary_settings_threshold),
                     onCycle = settings::cycleThreshold,
                 )
@@ -104,7 +104,7 @@ fun SettingsScreen(
             item {
                 ChoiceRow(
                     label = stringResource(R.string.settings_highpass),
-                    value = "${settings.highPass} Hz",
+                    value = stringResource(R.string.settings_highpass_value, settings.highPass.toString()),
                     summary = stringResource(R.string.summary_settings_highpass),
                     onCycle = settings::cycleHighPass,
                 )
@@ -439,7 +439,7 @@ private fun BarButton(@DrawableRes icon: Int, @StringRes description: Int, onCli
 private fun AboutDialog(onDismiss: () -> Unit) {
     EInkDialog(onDismiss = onDismiss) {
         TextMMD(
-            text = stringResource(R.string.app_name) + " " + BuildConfig.VERSION_NAME,
+            text = stringResource(R.string.about_title, BuildConfig.VERSION_NAME),
             style = MaterialTheme.typography.bodyLarge,
             fontWeight = FontWeight.Bold,
         )
@@ -515,7 +515,7 @@ private fun Llama() {
                         Intent(Intent.ACTION_VIEW, Uri.parse("https://square.link/u/AGu8oT10")),
                     )
                 }.onFailure {
-                    Toast.makeText(context, "There is no browser on this phone to open that with.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
                 }
             }
             .padding(vertical = 4.dp),
@@ -526,6 +526,6 @@ private fun Llama() {
             modifier = Modifier.size(22.dp),
         )
         Spacer(Modifier.width(6.dp))
-        TextMMD(text = "Feed the llamas", style = MaterialTheme.typography.bodySmall)
+        TextMMD(text = stringResource(R.string.about_feed_the_llamas), style = MaterialTheme.typography.bodySmall)
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.text.TextMMD
@@ -75,7 +76,7 @@ fun BirdRow(
                 if (percent != null) ConfidenceBlocks(percent = percent)
                 if (times > 1) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    TextMMD(text = "×$times", style = MaterialTheme.typography.bodySmall)
+                    TextMMD(text = stringResource(R.string.times_heard, times.toString()), style = MaterialTheme.typography.bodySmall)
                 }
             }
         }
