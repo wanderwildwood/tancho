@@ -24,6 +24,10 @@ A second, much smaller model narrows the answer by where you are and what week o
 it is, so a bird that cannot be here now is not offered. That is what the location permission
 is for, and it can be turned off in settings.
 
+A bird's photograph carries two buttons: one opens its eBird page, the other its Wikipedia
+article, in the language the bird names are set to. Both open in your browser; the app does
+not fetch or keep either page.
+
 Detections are kept in a database on the phone, viewable, exportable and deletable from the
 app. What the app records, stores and sends is set out in [PRIVACY.md](PRIVACY.md).
 

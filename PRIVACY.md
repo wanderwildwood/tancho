@@ -42,13 +42,16 @@ you a species from another continent.
 1. **The model, once.** On first run the app downloads the BirdNET model files (~39MB, or
    ~63MB for 32-bit) from `raw.githubusercontent.com`. After that it identifies birds with
    no network at all — aeroplane mode included.
-2. **Bird photographs, when shown.** Images come from `macaulaylibrary.org` in a WebView.
-   On the listening screen this is off by default (**Show Images** in settings). In the
-   observation and species lists, tapping an entry loads its photograph. Cornell's server
-   therefore learns your IP address and which species you looked at, the same as opening
-   the page in a browser would. Trackers and page scripts are blocked before they load
-   (`MlWebViewClient.kt`); no cookies, accounts or identifiers are sent by the app.
-3. **eBird, only if you tap it.** The species link opens `ebird.org` in your own browser.
+2. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
+   server (`cdn.download.ams.birds.cornell.edu`) as a single jpeg, and kept in the app's
+   cache so a species is fetched once. On the listening screen this is off by default
+   (**Show Images** in settings). In the observation and species lists, tapping an entry
+   loads its photograph. Cornell's server therefore learns your IP address and which
+   species you looked at. There is no web page involved — no scripts, no cookies — and no
+   account or identifier is sent by the app (`BirdPhoto.kt`).
+3. **eBird and Wikipedia, only if you tap them.** The two buttons on a bird's photograph
+   open its `ebird.org` page, and its Wikipedia page in the language the bird names are
+   set to, in your own browser. The app itself fetches neither.
 
 There is no analytics, no crash reporting and no update check. The HTTP library the app
 carried but never called has been removed.
