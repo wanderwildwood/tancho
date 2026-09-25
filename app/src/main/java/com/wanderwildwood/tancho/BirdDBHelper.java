@@ -42,9 +42,12 @@ public class BirdDBHelper extends SQLiteOpenHelper {
     
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop the table and create it again if there's a version change in the database schema.
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_NAME);
-        this.onCreate(db);
+        // Deliberately not "drop the table and make it again", which is what this was. Nothing
+        // has bumped the version yet, but the first change to it would have erased every
+        // observation anybody had ever logged, with no warning. A new version must bring a
+        // migration; until it does, opening refuses loudly rather than starting an empty log.
+        throw new IllegalStateException(
+                "BirdDatabase v" + oldVersion + " -> v" + newVersion + " has no migration; refusing to erase the log");
     }
     
     public synchronized void addEntry(String name, float latitude, float longitude, int speciesId, float probability, long timeInMillis) {
@@ -79,6 +82,16 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         }
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_NAME, COLUMN_ID + " IN (" + placeholders + ")", args);
+    }
+
+    /** Every moment the log holds a line for, which is what a recording is named by. */
+    public synchronized java.util.Set<Long> allTimestamps() {
+        java.util.Set<Long> out = new java.util.HashSet<>();
+        SQLiteDatabase db = getReadableDatabase();
+        try (android.database.Cursor c = db.rawQuery("SELECT DISTINCT " + COLUMN_MILLIS + " FROM " + TABLE_NAME, null)) {
+            while (c.moveToNext()) out.add(c.getLong(0));
+        }
+        return out;
     }
 
     public synchronized void clearAllEntries() {

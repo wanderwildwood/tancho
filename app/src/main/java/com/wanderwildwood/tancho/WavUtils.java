@@ -37,6 +37,34 @@ public class WavUtils {
      * were only ever kept there because that is where the shared-storage version had put
      * them - a habit that outlived its reason.
      */
+    /**
+     * Deletes the recordings no line in the log is for any more.
+     *
+     * A recording is named by the moment it was heard, the same moment its line in the log
+     * carries, and deleting the line never took the recording with it: removing a wrong answer,
+     * deleting the whole log, or restoring an older one each left clips behind that nothing
+     * would ever show again, at a few hundred kilobytes each.
+     *
+     * @return how many went.
+     */
+    public static int sweepOrphans(Context context, java.util.Set<Long> logged) {
+        File[] files = recordings(context);
+        if (files == null) return 0;
+        int gone = 0;
+        for (File f : files) {
+            String name = f.getName();
+            if (!name.endsWith(".wav")) continue;
+            long at;
+            try {
+                at = Long.parseLong(name.substring(0, name.length() - 4));
+            } catch (NumberFormatException e) {
+                continue;  // not one of ours by name; left alone
+            }
+            if (!logged.contains(at) && f.delete()) gone++;
+        }
+        return gone;
+    }
+
     public static File recordingsDir(Context context) {
         File files = context.getExternalFilesDir(null);
         if (files == null) return null;

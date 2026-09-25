@@ -163,6 +163,7 @@ class ViewActivity : BaseActivity() {
                                     if (isArmed) {
                                         armed = null
                                         database.removeEntries(row.coveredIds)
+                                        Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
                                         clearPhoto()
                                         reloadObservations()
                                     } else {

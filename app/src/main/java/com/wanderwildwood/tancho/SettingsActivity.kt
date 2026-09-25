@@ -105,6 +105,7 @@ class SettingsActivity : BaseActivity() {
     /** Confirmed on the row itself before it gets here. There is no undo. */
     private fun deleteLog() {
         BirdDBHelper.getInstance(this).clearAllEntries()
+        WavUtils.sweepOrphans(this, emptySet())
         Toast.makeText(this, getString(R.string.clear_db), Toast.LENGTH_SHORT).show()
     }
 
@@ -144,12 +145,43 @@ class SettingsActivity : BaseActivity() {
                 return
             }
 
-            // Close the open handle first: extracting a database out from under SQLite
-            // leaves the process holding a file that no longer exists.
+            // ⚠ Unpacked and checked beside the log, then swapped in -- never deleted first,
+            // which is what this did: every file in the databases folder went, then the backup
+            // was extracted, so a damaged backup or a full disk part way through left no log
+            // at all and only part of the new one.
+            val staging = File(cacheDir, "restore-staging").apply { deleteRecursively(); mkdirs() }
+            zip.extractAll(staging.path)
+            val stagedDb = staging.walkTopDown().firstOrNull { it.name == BirdDBHelper.DB_NAME }
+            val opens = stagedDb != null && runCatching {
+                android.database.sqlite.SQLiteDatabase.openDatabase(
+                    stagedDb.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY
+                ).use { db -> db.rawQuery("SELECT count(*) FROM sqlite_master", null).use { it.moveToFirst() } }
+            }.getOrDefault(false)
+            if (!opens) {
+                staging.deleteRecursively()
+                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
+                return
+            }
+
+            // Close the open handle first: moving a database out from under SQLite leaves the
+            // process holding a file that no longer exists.
             BirdDBHelper.getInstance(this).close()
-            databases.listFiles()?.forEach { it.delete() }
-            zip.extractAll(databases.parent)
+            val previous = File(databases.parentFile, "databases-before-restore").apply { deleteRecursively() }
+            val setAside = !databases.exists() || databases.renameTo(previous)
+            val placed = setAside && stagedDb!!.parentFile!!.renameTo(databases)
+            if (!placed) {
+                // Whatever happened, the log that was there goes back where it was.
+                if (!databases.exists() && previous.exists()) previous.renameTo(databases)
+                staging.deleteRecursively()
+                BirdDBHelper.reopen(this)
+                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
+                return
+            }
+            previous.deleteRecursively()
+            staging.deleteRecursively()
             BirdDBHelper.reopen(this)
+            // Recordings belong to lines; those the restored log has no line for go.
+            WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
             Toast.makeText(this, getString(R.string.restore_done), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
