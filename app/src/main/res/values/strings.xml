@@ -88,6 +88,6 @@
     <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
     <string name="about_title">Birding %1$s</string>
     <!-- The donation link at the foot of the About, beside a drawing of a llama. A fixed phrase: a verb and an object, so the reader knows what pressing it does -->
-    <string name="about_feed_the_llamas">Feed the llamas</string>
+    <string name="about_feed_the_llamas">feed the llamas</string>
 </resources>
 

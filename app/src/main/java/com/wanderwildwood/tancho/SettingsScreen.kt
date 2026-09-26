@@ -507,7 +507,7 @@ private fun Llama() {
         modifier = Modifier.fillMaxWidth(),
     ) {
         TextMMD(text = "wanderthe.dev", style = MaterialTheme.typography.bodySmall)
-        Spacer(Modifier.width(12.dp))
+        Spacer(Modifier.width(6.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
