@@ -489,8 +489,8 @@ private fun SectionHeading(text: String) {
 
 /**
  * A llama at the foot of the About, which opens the page a donation goes to.
- * It shares one line with the site's name, which is plain text; only the llama and its
- * words are pressed.
+ * It shares one line with the site's name, which opens the site; the llama and its
+ * words open the page.
  *
  * Three words rather than an address: a verb and an object, so what happens when you press
  * them is not a surprise even though the page is not named. The drawing is his own, and it is
@@ -506,7 +506,22 @@ private fun Llama() {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth(),
     ) {
-        TextMMD(text = "wanderthe.dev", style = MaterialTheme.typography.bodySmall)
+        TextMMD(
+            text = "wanderthe.dev",
+            style = MaterialTheme.typography.bodySmall,
+            // The site's address opens the site, the way the llama beside it opens its page.
+            modifier = Modifier
+                .clickable {
+                    runCatching {
+                        context.startActivity(
+                            Intent(Intent.ACTION_VIEW, Uri.parse("https://wanderthe.dev")),
+                        )
+                    }.onFailure {
+                        Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .padding(vertical = 4.dp),
+        )
         Spacer(Modifier.width(6.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
