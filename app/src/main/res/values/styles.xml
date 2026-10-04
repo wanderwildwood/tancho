@@ -2,7 +2,7 @@
     <!-- The panel is grey, so the app is black and white and nothing else. Colour on
          e-ink is a set of greys the reader has to decode; anything that matters here is
          said with weight, size or a filled shape instead. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+    <style name="Base.AppTheme" parent="Theme.MaterialComponents.Light">
         <item name="colorPrimary">@android:color/black</item>
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="colorAccent">@android:color/black</item>
@@ -16,6 +16,9 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="toolbarStyle">@style/Widget.MaterialComponents.Toolbar.Primary</item>
     </style>
+
+    <!-- Android 12 and later add the launch screen to this; see values-v31. -->
+    <style name="AppTheme" parent="Base.AppTheme" />
 
 
     <!-- The listening screen draws its own bar with MMD. -->

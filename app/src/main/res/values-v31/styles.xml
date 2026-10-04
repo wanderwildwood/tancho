@@ -1,0 +1,18 @@
+<resources>
+    <!--
+      No splash screen.
+
+      Android 12 shows one whether or not an app asks, and the only lever is what it
+      draws, so it draws nothing: a transparent icon on white, indistinguishable from
+      the app's own background. A logo that flashes up and vanishes is worth less than
+      nothing on e-ink, where it costs a full-panel refresh before the app has done
+      anything at all.
+
+      Here under v31 because minSdk is 26 and these attributes only exist from 12 on.
+    -->
+    <style name="AppTheme" parent="Base.AppTheme">
+        <item name="android:windowSplashScreenBackground">@android:color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/splash_nothing</item>
+        <item name="android:windowSplashScreenAnimationDuration">0</item>
+    </style>
+</resources>
