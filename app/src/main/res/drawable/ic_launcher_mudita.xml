@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Birding: launcher icon in the Mudita Kompakt stock style (81 grid, ring r=19.25 x 2.5,
+     glyph stroke 2.5, black on transparent). Built by icons/mudita-style/final.py. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="81dp"
+    android:height="81dp"
+    android:viewportWidth="81"
+    android:viewportHeight="81">
+    <path
+        android:pathData="M19.25,2.5C9.999,2.5 2.5,9.999 2.5,19.25V61.75C2.5,71.001 9.999,78.5 19.25,78.5H61.75C71.001,78.5 78.5,71.001 78.5,61.75V19.25C78.5,9.999 71.001,2.5 61.75,2.5H19.25ZM0,19.25C0,8.619 8.619,0 19.25,0H61.75C72.382,0 81,8.619 81,19.25V61.75C81,72.382 72.382,81 61.75,81H19.25C8.619,81 0,72.382 0,61.75V19.25Z"
+        android:fillColor="#FF000000"
+        android:fillType="evenOdd"/>
+    <path
+        android:pathData="M28.612,50.115 L29.809,46.521 L50.472,59.099 L41.488,59.099 L37.895,55.505 L32.504,51.911 L28.612,50.115Z"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M22.981,34.483 L19.388,33.584 L22.083,32.686 L23.88,29.092 L24.778,27.295 L24.778,24.6 L23.88,22.803 L24.778,22.803 L26.575,24.6 L27.473,21.901 L28.372,25.499 L30.168,24.6 L29.27,27.295 L30.168,26.397 L29.27,29.092 L31.067,28.194 L31.965,29.991 L35.559,31.787 L40.949,33.584 L48.136,36.279 L57.12,35.381 L61.612,35.381 L59.816,36.279 L61.612,36.279 L53.527,37.178 L49.933,38.076 L53.523,40.771 L48.136,39.873 L46.34,40.771 L44.543,43.467 L42.329,45.267 L40.051,46.162 L36.457,46.162 L31.965,45.263 L28.372,43.47 L25.676,40.771 L24.778,37.178 L22.981,34.483Z"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M48.136,39.873 L40.949,38.975 L35.559,39.873 L32.864,38.076 L31.067,36.279 L40.949,33.584"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M26.37,31.996 C26.399,32.093 26.388,32.197 26.345,32.301 C26.302,32.402 26.223,32.499 26.118,32.578 C26.018,32.661 25.892,32.722 25.759,32.758 C25.623,32.794 25.486,32.804 25.357,32.79 C25.227,32.772 25.109,32.729 25.019,32.661 C24.929,32.596 24.868,32.51 24.843,32.413 C24.814,32.316 24.825,32.211 24.868,32.107 C24.911,32.003 24.99,31.91 25.094,31.827 C25.195,31.748 25.321,31.687 25.454,31.651 C25.59,31.611 25.727,31.6 25.856,31.618 C25.985,31.636 26.104,31.68 26.194,31.744 C26.284,31.812 26.345,31.899 26.37,31.996Z"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M25.676,38.975 L29.27,36.279 L31.965,33.584 L32.864,30.889 L31.965,29.991"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M40.051,46.162 L37.356,50.654 L41.848,45.263"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+    <path
+        android:pathData="M35.559,46.162 L32.864,47.06 L37.356,46.162"
+        android:fillColor="#00000000"
+        android:fillType="evenOdd"
+        android:strokeColor="#FF000000"
+        android:strokeWidth="2.1"
+        android:strokeLineCap="butt"
+        android:strokeLineJoin="round"/>
+</vector>
