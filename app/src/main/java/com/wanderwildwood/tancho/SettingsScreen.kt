@@ -78,10 +78,10 @@ fun SettingsScreen(
             title = { TextMMD(text = stringResource(R.string.destination_settings)) },
             actions = { BarButton(R.drawable.ic_info_24dp, R.string.about) { showAbout = true } },
         )
-        // MMD's list, not a scrolling Column: it steps four rows to a swipe and stops, and it
-        // brings the chevron rail at both ends. A settings screen that coasts was the one
+        // MMD's list, not a scrolling Column: it steps four rows to a swipe and stops, with no
+        // scrollbar beside it. A settings screen that coasts was the one
         // screen in the app that did not behave like the phone it is on.
-        LazyColumnMMD(modifier = Modifier.weight(1f)) {
+        LazyColumnMMD(modifier = Modifier.weight(1f), isScrollbarVisible = false) {
             item {
                 ChoiceRow(
                     label = stringResource(R.string.settings_audiosource),

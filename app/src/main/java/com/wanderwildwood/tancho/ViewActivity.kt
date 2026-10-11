@@ -143,7 +143,7 @@ class ViewActivity : BaseActivity() {
                 }
 
                 val dayFormat = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
-                LazyColumnMMD(modifier = Modifier.fillMaxSize()) {
+                LazyColumnMMD(modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
                     itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
                         val day = dayFormat.format(Date(row.millis))
                         if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {

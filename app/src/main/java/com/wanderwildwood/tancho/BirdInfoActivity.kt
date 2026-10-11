@@ -86,7 +86,7 @@ class BirdInfoActivity : BaseActivity() {
         binding.speciesList.setContent {
             ThemeMMD(colorScheme = monochrome) {
                 val birds by shown
-                LazyColumnMMD(modifier = Modifier.fillMaxSize()) {
+                LazyColumnMMD(modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
                     items(birds, key = { it.first }) { (speciesId, label) ->
                         BirdRow(
                             name = label.split("_").last(),
