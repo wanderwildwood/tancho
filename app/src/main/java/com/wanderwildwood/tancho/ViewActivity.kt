@@ -226,41 +226,43 @@ class ViewActivity : BaseActivity() {
                     scrollTarget.value = null
                 }
 
-                LazyColumnMMD(state = listState, modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
-                    itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
-                        val day = dayFormat.format(Date(row.millis))
-                        if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {
-                            DayHeading(day)
+                ListJumpBox(listState, ListJump.Pages) {
+                    LazyColumnMMD(state = listState, modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
+                        itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
+                            val day = dayFormat.format(Date(row.millis))
+                            if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {
+                                DayHeading(day)
+                            }
+                            val isArmed = armed == row.id
+                            BirdRow(
+                                name = if (isArmed) stringResource(R.string.delete_observation_confirm)
+                                    else row.name,
+                                latinName = if (isArmed) ""
+                                    else labelList[row.speciesId].split("_").first(),
+                                time = clockTime(row.millis),
+                                percent = (row.probability * 20f).roundToInt() * 5,
+                                bold = isArmed,
+                                modifier = Modifier.combinedClickable(
+                                    onClick = {
+                                        if (isArmed) {
+                                            armed = null
+                                            database.removeEntries(row.coveredIds)
+                                            Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
+                                            clearPhoto()
+                                            reloadObservations()
+                                        } else {
+                                            armed = null
+                                            openObservation(row)
+                                        }
+                                    },
+                                    // A recogniser is wrong sometimes, and until there was this
+                                    // the only answer to a wrong line was to throw the whole log
+                                    // away -- so keeping a record you knew to be untrue was the
+                                    // cheaper option.
+                                    onLongClick = { armed = row.id },
+                                ),
+                            )
                         }
-                        val isArmed = armed == row.id
-                        BirdRow(
-                            name = if (isArmed) stringResource(R.string.delete_observation_confirm)
-                                else row.name,
-                            latinName = if (isArmed) ""
-                                else labelList[row.speciesId].split("_").first(),
-                            time = clockTime(row.millis),
-                            percent = (row.probability * 20f).roundToInt() * 5,
-                            bold = isArmed,
-                            modifier = Modifier.combinedClickable(
-                                onClick = {
-                                    if (isArmed) {
-                                        armed = null
-                                        database.removeEntries(row.coveredIds)
-                                        Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
-                                        clearPhoto()
-                                        reloadObservations()
-                                    } else {
-                                        armed = null
-                                        openObservation(row)
-                                    }
-                                },
-                                // A recogniser is wrong sometimes, and until there was this
-                                // the only answer to a wrong line was to throw the whole log
-                                // away -- so keeping a record you knew to be untrue was the
-                                // cheaper option.
-                                onLongClick = { armed = row.id },
-                            ),
-                        )
                     }
                 }
             }

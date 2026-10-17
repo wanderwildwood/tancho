@@ -86,7 +86,7 @@
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <Space
@@ -124,10 +124,13 @@
 
             <!-- Compose, so this list is drawn with the same row and the same MMD type as
                  the listening screen rather than a RecyclerView that only resembles it. -->
+            <!-- The rest of the height, not all of it: at match_parent under the search box
+                 it ran past the bottom of the screen by the box's height. -->
             <androidx.compose.ui.platform.ComposeView
                 android:id="@+id/speciesList"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
         </LinearLayout>
 

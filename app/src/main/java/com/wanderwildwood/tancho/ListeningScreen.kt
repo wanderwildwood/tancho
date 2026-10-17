@@ -153,14 +153,16 @@ fun ListeningScreen(
                     if (listState.firstVisibleItemIndex <= 1) listState.scrollToItem(0)
                 }
 
-                LazyColumnMMD(
-                    state = listState,
-                    contentPadding = PaddingValues(vertical = 8.dp),
-                    modifier = Modifier.fillMaxSize(),
-                    isScrollbarVisible = false,
-                ) {
-                    items(heard, key = { it.firstHeard }) { entry ->
-                        HeardRow(entry, onClick = { onOpenHeard(entry) })
+                ListJumpBox(listState, ListJump.Pages) {
+                    LazyColumnMMD(
+                        state = listState,
+                        contentPadding = PaddingValues(vertical = 8.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        isScrollbarVisible = false,
+                    ) {
+                        items(heard, key = { it.firstHeard }) { entry ->
+                            HeardRow(entry, onClick = { onOpenHeard(entry) })
+                        }
                     }
                 }
             }

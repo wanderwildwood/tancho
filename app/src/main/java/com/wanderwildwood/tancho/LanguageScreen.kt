@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.lazy.LazyColumnMMD
+import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 
 /**
  * The language the birds are named in.
@@ -102,19 +104,9 @@ private fun LanguageRow(
     }
 }
 
-/** The same name-at-the-top the settings list has, without the "i" it has no use for. */
+/** The same bar the settings list has, without the "i" it has no use for. */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun ScreenHeading(text: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        TextMMD(
-            text = text,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-        )
-    }
+    TopAppBarMMD(title = { TextMMD(text = text) })
 }
