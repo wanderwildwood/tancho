@@ -204,15 +204,22 @@ private fun PageDots(state: LazyListState) {
     var heightPx by remember { mutableIntStateOf(0) }
 
     // A page is a screenful less a row, the step a swipe takes, so a dot lands where swiping
-    // would have.
+    // would have. The rows to a screen are measured once for each length of list and then held:
+    // where rows differ in height a fresh count on every screen would add and drop dots under the
+    // reader's thumb as the list moved. A list that changes length is measured again.
+    val held = remember(state) { intArrayOf(-1, 0) } // the length measured at, rows to a screen
     val pages by remember(state) {
         derivedStateOf {
             val info = state.layoutInfo
             val total = info.totalItemsCount
-            val onScreen = info.visibleItemsInfo.size
             val viewport = info.viewportEndOffset - info.viewportStartOffset
             val row = info.visibleItemsInfo.firstOrNull()?.size ?: 0
-            val step = if (viewport > 0 && row > 0) (viewport / row - 1).coerceAtLeast(1) else 1
+            if (held[0] != total && viewport > 0 && row > 0) {
+                held[0] = total
+                held[1] = viewport / row
+            }
+            val onScreen = held[1].coerceAtLeast(1)
+            val step = (onScreen - 1).coerceAtLeast(1)
             val count = if (total <= onScreen) 1 else (total - onScreen + step - 1) / step + 1
             val lastVisible = info.visibleItemsInfo.lastOrNull()?.index ?: 0
             val current = if (lastVisible >= total - 1) count - 1 else (state.firstVisibleItemIndex + step / 2) / step
