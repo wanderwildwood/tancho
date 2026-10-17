@@ -74,6 +74,8 @@ fun ListeningScreen(
     photoAssetId: String?,
     onToggleListening: () -> Unit,
     onCyclePlaceAndDate: () -> Unit,
+    /** A row was tapped: open that hearing in the log. */
+    onOpenHeard: (Heard) -> Unit,
 ) {
     var askingPlace by remember { mutableStateOf(false) }
 
@@ -158,7 +160,7 @@ fun ListeningScreen(
                     isScrollbarVisible = false,
                 ) {
                     items(heard, key = { it.firstHeard }) { entry ->
-                        HeardRow(entry)
+                        HeardRow(entry, onClick = { onOpenHeard(entry) })
                     }
                 }
             }
@@ -379,13 +381,19 @@ private fun ControlChip(
     }
 }
 
+/**
+ * The whole row is the way into the log, rather than a link beside the name: a row is the
+ * size of a fingertip on this panel, and a separate control would be one more thing on a
+ * screen whose job is to sit still.
+ */
 @Composable
-private fun HeardRow(entry: Heard) = BirdRow(
+private fun HeardRow(entry: Heard, onClick: () -> Unit) = BirdRow(
     name = entry.name,
     latinName = entry.latinName,
     time = clockTime(entry.firstHeard),
     percent = entry.shownPercent,
     times = entry.times,
+    modifier = Modifier.clickable(onClick = onClick),
 )
 
 

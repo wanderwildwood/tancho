@@ -89,15 +89,35 @@ public class WavUtils {
         return deleted;
     }
 
-    public static void playWaveFile(Context context, long timestamp) {
+    /** The recording playing now, so a second one replaces it rather than talking over it. */
+    private static MediaPlayer playing;
+
+    /** Stops whatever recording is playing. Leaving the log does this, so the microphone does not come back to hear it. */
+    public static synchronized void stopPlaying() {
+        if (playing == null) return;
+        try {
+            playing.stop();
+        } catch (IllegalStateException ignored) {
+        }
+        playing.release();
+        playing = null;
+    }
+
+    public static synchronized void playWaveFile(Context context, long timestamp) {
+        stopPlaying();
         File path = new File(recordingsDir(context), timestamp + ".wav");
         Log.d(TAG,"Play "+path.getAbsolutePath());
         if (path.exists()){
             Log.d(TAG,"Play "+path.getAbsolutePath());
             MediaPlayer mediaPlayer = MediaPlayer.create(context, Uri.parse(path.getAbsolutePath()));
+            if (mediaPlayer == null) return;
+            playing = mediaPlayer;
             mediaPlayer.setVolume(1, 1);
             mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(mp -> {
+                synchronized (WavUtils.class) {
+                    if (playing == mp) playing = null;
+                }
                 mp.reset();
                 mp.release();
             });

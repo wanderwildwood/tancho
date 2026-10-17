@@ -26,6 +26,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,8 +48,22 @@ class ViewActivity : BaseActivity() {
     /** What the log is showing. Compose state, so a removal redraws it. */
     private val observations = mutableStateOf<List<BirdObservation>>(emptyList())
 
-    /** The reading whose photograph is up, which the share and eBird buttons act on. */
+    /** The reading whose photograph is up, which the share button acts on. */
     private var selected: BirdObservation? = null
+
+    /** The bird whose photograph is up, which the eBird and Wikipedia buttons act on. */
+    private var selectedSpecies: Int? = null
+
+    /** A hearing the listening screen asked to see, opened once the log is read in. */
+    private data class Focus(val speciesId: Int, val from: Long, val to: Long)
+
+    private var focus: Focus? = null
+
+    /** Kept here so the log can be moved to a row from outside the list. */
+    private val listState = LazyListState()
+
+    /** The row the list is to bring to the top, or null. */
+    private val scrollTarget = mutableStateOf<Int?>(null)
     private lateinit var birdObservations: ArrayList<BirdObservation>
     private lateinit var assetList: List<String>
     private lateinit var labelList: List<String>
@@ -93,11 +108,72 @@ class ViewActivity : BaseActivity() {
         loadAssetList(this)
         loadEbirdList(this)
         wireList()
+        focus = focusOf(intent)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        focusOf(intent)?.let { focus = it }
     }
 
     override fun onResume() {
         super.onResume()
         reloadObservations()
+        focus?.let {
+            focus = null
+            openFocus(it)
+        }
+    }
+
+    /** Leaving the log stops a recording, so the listening screen does not come back to hear it. */
+    override fun onPause() {
+        super.onPause()
+        WavUtils.stopPlaying()
+    }
+
+    private fun focusOf(intent: Intent?): Focus? {
+        if (intent == null || !intent.hasExtra(EXTRA_SPECIES)) return null
+        val focus = Focus(
+            intent.getIntExtra(EXTRA_SPECIES, -1),
+            intent.getLongExtra(EXTRA_FROM, 0L),
+            intent.getLongExtra(EXTRA_TO, 0L),
+        )
+        // Read once. A later resume from the same intent must not jump the log again.
+        intent.removeExtra(EXTRA_SPECIES)
+        return focus
+    }
+
+    /**
+     * Opens the row for a hearing from the listening screen: the reading of that bird
+     * nearest the time it was heard, which is the best of the run, as the log keeps it.
+     *
+     * Every reading the listening screen shows was written here before it was shown, so
+     * there is normally a row. When there is not - the row was removed, or the log was
+     * deleted or replaced since - the bird is still put up, without a recording, and the
+     * log says it has no row for it rather than opening one from another day.
+     */
+    private fun openFocus(focus: Focus) {
+        if (focus.speciesId !in labelList.indices) return
+        val rows = observations.value
+        fun distance(row: BirdObservation) = when {
+            row.millis < focus.from -> focus.from - row.millis
+            row.millis > focus.to -> row.millis - focus.to
+            else -> 0L
+        }
+        val match = rows.withIndex()
+            .filter { it.value.speciesId == focus.speciesId && distance(it.value) <= SAME_HEARING_MS }
+            .minWithOrNull(compareBy<IndexedValue<BirdObservation>> { distance(it.value) }
+                .thenByDescending { it.value.probability })
+        if (match != null) {
+            scrollTarget.value = match.index
+            openObservation(match.value)
+        } else {
+            scrollTarget.value = 0
+            WavUtils.stopPlaying()
+            showBird(focus.speciesId, null)
+            Toast.makeText(this, getString(R.string.heard_not_in_log), Toast.LENGTH_SHORT).show()
+        }
     }
 
     /** How long a row stays armed before it forgets it was asked. Four, as everywhere. */
@@ -143,7 +219,14 @@ class ViewActivity : BaseActivity() {
                 }
 
                 val dayFormat = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
-                LazyColumnMMD(modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
+                val target by scrollTarget
+                LaunchedEffect(target) {
+                    val index = target ?: return@LaunchedEffect
+                    listState.scrollToItem(index)
+                    scrollTarget.value = null
+                }
+
+                LazyColumnMMD(state = listState, modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
                     itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
                         val day = dayFormat.format(Date(row.millis))
                         if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {
@@ -187,10 +270,26 @@ class ViewActivity : BaseActivity() {
     /** Plays what was heard, and puts the bird on screen. */
     private fun openObservation(row: BirdObservation) {
         WavUtils.playWaveFile(mContext, row.millis)
-        val assetId = assetList[row.speciesId]
+        showBird(row.speciesId, row)
+    }
+
+    /**
+     * Puts a bird on screen: its photograph and names, and with a [row] the sound of that
+     * reading. A second reading of the bird already up changes only what is particular to
+     * the reading, not the photograph.
+     */
+    private fun showBird(speciesId: Int, row: BirdObservation?) {
+        val assetId = assetList[speciesId]
         if (assetId == "NO_ASSET") {
             clearPhoto()
             return
+        }
+        selected = row
+        selectedSpecies = speciesId
+        binding.photoShare.setVisibility(if (row != null) View.VISIBLE else View.GONE)
+        if (row != null) showSpectrogram(row.millis) else {
+            binding.spectrogram.setImageDrawable(null)
+            binding.spectrogram.setVisibility(View.GONE)
         }
         // The library's embed page is behind a proof-of-work bot check that answers
         // "Making sure you're not a bot!" instead of a bird, so the photo comes straight
@@ -198,8 +297,7 @@ class ViewActivity : BaseActivity() {
         val url = BirdPhoto.url(assetId)
         if (url == photoUrl) return
         photoUrl = url
-        selected = row
-        val label = labelList[row.speciesId]
+        val label = labelList[speciesId]
         binding.photoName.setText(label.split("_").last())
         binding.photoName.setVisibility(View.VISIBLE)
         binding.photoLatinname.setText(label.split("_").first())
@@ -207,9 +305,7 @@ class ViewActivity : BaseActivity() {
         binding.photoReload.setVisibility(View.VISIBLE)
         binding.photoEbird.setVisibility(View.VISIBLE)
         binding.photoWikipedia.setVisibility(View.VISIBLE)
-        binding.photoShare.setVisibility(View.VISIBLE)
         showPhoto(url, false)
-        showSpectrogram(row.millis)
     }
 
 
@@ -296,6 +392,8 @@ class ViewActivity : BaseActivity() {
 
     private fun clearPhoto() {
         photoUrl = null
+        selected = null
+        selectedSpecies = null
         binding.spectrogram.setImageDrawable(null)
         binding.spectrogram.setVisibility(View.GONE)
         binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
@@ -356,7 +454,7 @@ class ViewActivity : BaseActivity() {
     }
 
     fun ebird(view: View) {
-        val id = selected?.speciesId ?: return
+        val id = selectedSpecies ?: return
         // The Kompakt may have nothing registered for a web address, and an uncaught
         // ActivityNotFoundException here takes the app down rather than the link.
         runCatching {
@@ -371,7 +469,7 @@ class ViewActivity : BaseActivity() {
     }
 
     fun wikipedia(view: View) {
-        val id = selected?.speciesId ?: return
+        val id = selectedSpecies ?: return
         val scientificName = labelList[id].split("_").first()
         runCatching {
             startActivity(Intent(Intent.ACTION_VIEW, BirdNames.wikipedia(this, scientificName)))
@@ -382,5 +480,15 @@ class ViewActivity : BaseActivity() {
                 Toast.LENGTH_SHORT,
             ).show()
         }
+    }
+
+    companion object {
+        /** A hearing to open, from the listening screen: the species and when it was heard. */
+        const val EXTRA_SPECIES = "com.wanderwildwood.tancho.extra.SPECIES"
+        const val EXTRA_FROM = "com.wanderwildwood.tancho.extra.FROM"
+        const val EXTRA_TO = "com.wanderwildwood.tancho.extra.TO"
+
+        /** The listening screen folds a bird's run within a minute; a reading this close is the same hearing. */
+        private const val SAME_HEARING_MS = 60_000L
     }
 }

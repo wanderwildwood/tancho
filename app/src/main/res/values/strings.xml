@@ -89,5 +89,6 @@
     <string name="about_title">Birding %1$s</string>
     <!-- The donation link at the foot of the About, beside a drawing of a llama. A fixed phrase: a verb and an object, so the reader knows what pressing it does -->
     <string name="about_feed_the_llamas">feed the llamas</string>
+    <string name="heard_not_in_log">That hearing is no longer in the log.</string>
 </resources>
 

@@ -20,6 +20,7 @@ package com.wanderwildwood.tancho
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Build
@@ -110,6 +111,7 @@ class MainActivity : BaseActivity() {
               .putFloat("meta_model_influence", placeAndDate.influence * 100f)
               .apply()
           },
+          onOpenHeard = { openInLog(it) },
         )
       }
     }
@@ -129,6 +131,25 @@ class MainActivity : BaseActivity() {
     } else {
       soundClassifier.isPaused = true
     }
+  }
+
+  /**
+   * Opens the log at this hearing. The recorder is not touched here: leaving the screen
+   * pauses it as it always has, and Back resumes it if it was running, so the hearing
+   * goes on where it left off.
+   */
+  private fun openInLog(entry: Heard) {
+    // A bird still singing may have a later reading held back from the screen; fold it in
+    // so the log is searched over the whole of the hearing.
+    state.flush()
+    val current = state.heard.value.firstOrNull { it.firstHeard == entry.firstHeard } ?: entry
+    startActivity(
+      Intent(this, ViewActivity::class.java)
+        .putExtra(ViewActivity.EXTRA_SPECIES, current.speciesIndex)
+        .putExtra(ViewActivity.EXTRA_FROM, current.firstHeard)
+        .putExtra(ViewActivity.EXTRA_TO, current.lastHeard)
+        .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+    )
   }
 
   override fun onResume() {
