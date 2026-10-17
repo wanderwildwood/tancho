@@ -40,7 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
-import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.text.TextMMD
 import kotlinx.coroutines.delay
 import java.text.SimpleDateFormat
@@ -154,11 +153,10 @@ fun ListeningScreen(
                 }
 
                 ListJumpBox(listState, ListJump.Pages) {
-                    LazyColumnMMD(
+                    PagedColumn(
                         state = listState,
                         contentPadding = PaddingValues(vertical = 8.dp),
                         modifier = Modifier.fillMaxSize(),
-                        isScrollbarVisible = false,
                     ) {
                         items(heard, key = { it.firstHeard }) { entry ->
                             HeardRow(entry, onClick = { onOpenHeard(entry) })

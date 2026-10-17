@@ -34,7 +34,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
-import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
@@ -81,7 +80,7 @@ fun SettingsScreen(
         // MMD's list, not a scrolling Column: it steps four rows to a swipe and stops, with no
         // scrollbar beside it. A settings screen that coasts was the one
         // screen in the app that did not behave like the phone it is on.
-        LazyColumnMMD(modifier = Modifier.weight(1f), isScrollbarVisible = false) {
+        PagedColumn(modifier = Modifier.weight(1f)) {
             item {
                 ChoiceRow(
                     label = stringResource(R.string.settings_audiosource),

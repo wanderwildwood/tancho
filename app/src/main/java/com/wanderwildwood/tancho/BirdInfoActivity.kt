@@ -28,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
-import com.mudita.mmd.components.lazy.LazyColumnMMD
 
 
 class BirdInfoActivity : BaseActivity() {
@@ -101,7 +100,7 @@ class BirdInfoActivity : BaseActivity() {
                 }
                 BoxWithConstraints {
                     ListJumpBox(state, if (latin != null && maxHeight >= LETTERS_NEED) latin else ListJump.Pages) {
-                        LazyColumnMMD(state = state, modifier = Modifier.fillMaxSize(), isScrollbarVisible = false) {
+                        PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
                             items(birds, key = { it.first }) { (speciesId, label) ->
                                 BirdRow(
                                     name = label.split("_").last(),

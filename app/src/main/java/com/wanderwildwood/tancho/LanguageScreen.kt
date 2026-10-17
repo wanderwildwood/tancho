@@ -20,7 +20,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
-import com.mudita.mmd.components.lazy.LazyColumnMMD
 import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 
 /**
@@ -44,7 +43,7 @@ import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 fun LanguageScreen(chosen: String, inUse: String, onChoose: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         ScreenHeading(stringResource(R.string.bird_names))
-        LazyColumnMMD(modifier = Modifier.weight(1f), isScrollbarVisible = false) {
+        PagedColumn(modifier = Modifier.weight(1f)) {
             // Following the phone is a choice like any other, and the one everybody
             // starts on, so it is the first row rather than a switch above the list. It
             // carries what it currently comes to, because "same as the phone" does not
