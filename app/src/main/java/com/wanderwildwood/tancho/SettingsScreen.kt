@@ -67,6 +67,7 @@ fun SettingsScreen(
     onDeleteLog: () -> Unit,
 ) {
     var showAbout by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     if (showAbout) {
         AboutDialog(onDismiss = { showAbout = false })
@@ -127,6 +128,14 @@ fun SettingsScreen(
                     summary = stringResource(R.string.summary_list_repeats),
                     checked = settings.listRepeats,
                     onCheckedChange = { settings.listRepeats = it },
+                )
+            }
+            item {
+                val jumpShown by rememberListJumpShown()
+                SwitchRow(
+                    label = stringResource(R.string.list_jump_setting),
+                    checked = jumpShown,
+                    onCheckedChange = { ListJumpPrefs.setShown(context, it) },
                 )
             }
             item {
