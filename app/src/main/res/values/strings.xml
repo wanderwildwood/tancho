@@ -43,7 +43,7 @@
     <string name="place_and_date">Place and date</string>
     <string name="place_title">Place</string>
     <string name="place_use_gps">Use GPS</string>
-    <string name="place_manual_hint">Latitude and longitude, as 35.89/-82.83.</string>
+    <string name="place_manual_hint">Latitude and longitude, as 37.42/-122.08.</string>
     <string name="place_and_date_unknown">Place not known</string>
     <string name="place_and_date_off">Any bird</string>
     <string name="place_and_date_some">Expected first</string>
