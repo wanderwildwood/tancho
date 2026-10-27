@@ -67,8 +67,6 @@ fun SettingsScreen(
     onDeleteLog: () -> Unit,
 ) {
     var showAbout by remember { mutableStateOf(false) }
-    val context = LocalContext.current
-
     if (showAbout) {
         AboutDialog(onDismiss = { showAbout = false })
     }
@@ -128,14 +126,6 @@ fun SettingsScreen(
                     summary = stringResource(R.string.summary_list_repeats),
                     checked = settings.listRepeats,
                     onCheckedChange = { settings.listRepeats = it },
-                )
-            }
-            item {
-                val jumpShown by rememberListJumpShown()
-                SwitchRow(
-                    label = stringResource(R.string.list_jump_setting),
-                    checked = jumpShown,
-                    onCheckedChange = { ListJumpPrefs.setShown(context, it) },
                 )
             }
             item {
@@ -200,6 +190,14 @@ fun SettingsScreen(
                 )
             }
             item {
+                SwitchRow(
+                    label = stringResource(R.string.share_place),
+                    summary = stringResource(R.string.summary_share_place),
+                    checked = settings.sharePlace,
+                    onCheckedChange = { settings.sharePlace = it },
+                )
+            }
+            item {
                 if (settings.manualLocation) {
                     TextFieldMMD(
                         value = settings.manualLocationValue,
@@ -211,7 +209,7 @@ fun SettingsScreen(
                             if (!settings.manualLocationIsValid) {
                                 TextMMD(
                                     text = stringResource(R.string.error_invalid_GPS),
-                                    style = MaterialTheme.typography.bodySmall,
+                                    style = MaterialTheme.typography.labelSmall,
                                 )
                             }
                         },
@@ -309,7 +307,7 @@ private fun ChoiceRow(label: String, value: String, summary: String? = null, onC
         Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
             TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
             if (summary != null) {
-                TextMMD(text = summary, style = MaterialTheme.typography.bodySmall)
+                TextMMD(text = summary, style = MaterialTheme.typography.labelSmall)
             }
         }
         TextMMD(
@@ -363,7 +361,7 @@ private fun SwitchRow(
         Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
             TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
             if (summary != null) {
-                TextMMD(text = summary, style = MaterialTheme.typography.bodySmall)
+                TextMMD(text = summary, style = MaterialTheme.typography.labelSmall)
             }
         }
         SwitchMMD(checked = checked, onCheckedChange = onCheckedChange)
@@ -413,7 +411,7 @@ private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) 
 }
 
 /** How long a tap on the delete row stays armed before it forgets it was asked. */
-private const val ARMED_MS = 4000L
+private const val ARMED_MS = 6000L
 
 /**
  * The only heading this app draws. The listening screen wants every pixel and says what it
@@ -436,39 +434,6 @@ private fun BarButton(@DrawableRes icon: Int, @StringRes description: Int, onCli
     }
 }
 
-/**
- * What this is, what it was built from, and who the parts belong to. Read once, by someone
- * deciding whether to trust it, so it opens over the list rather than sending them to a
- * screen they then have to leave.
- *
- * No dim behind it: the panel would repaint every pixel to draw a grey it cannot show.
- */
-@Composable
-private fun AboutDialog(onDismiss: () -> Unit) {
-    EInkDialog(onDismiss = onDismiss) {
-        TextMMD(
-            text = stringResource(R.string.about_title, BuildConfig.VERSION_NAME),
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.Bold,
-        )
-        Spacer(modifier = Modifier.height(12.dp))
-        TextMMD(
-            text = stringResource(R.string.about_body),
-            style = MaterialTheme.typography.bodySmall,
-        )
-        Spacer(modifier = Modifier.height(14.dp))
-        AboutLinks()
-
-        Spacer(modifier = Modifier.height(18.dp))
-        OutlinedButtonMMD(
-            onClick = onDismiss,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            TextMMD(stringResource(R.string.close))
-        }
-    }
-}
-
 @Composable
 private fun ActionRow(label: String, onClick: () -> Unit, summary: String? = null) {
     Column(
@@ -479,7 +444,7 @@ private fun ActionRow(label: String, onClick: () -> Unit, summary: String? = nul
     ) {
         TextMMD(text = label, style = MaterialTheme.typography.bodyLarge)
         if (summary != null) {
-            TextMMD(text = summary, style = MaterialTheme.typography.bodySmall)
+            TextMMD(text = summary, style = MaterialTheme.typography.labelSmall)
         }
     }
 }
@@ -489,43 +454,8 @@ private fun ActionRow(label: String, onClick: () -> Unit, summary: String? = nul
 private fun SectionHeading(text: String) {
     TextMMD(
         text = text,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
     )
-}
-
-/**
- * The foot of the About: the site's name, which opens the site, and the words that open the
- * text of the licence the model is under. Each opens its page in a browser.
- *
- * The Kompakt may have nothing registered for a web address, so the intent is allowed to fail
- * quietly rather than take the dialog down with it.
- */
-@Composable
-private fun AboutLinks() {
-    val context = LocalContext.current
-    fun open(address: String) {
-        runCatching {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(address)))
-        }.onFailure {
-            Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
-        }
-    }
-    Column(modifier = Modifier.fillMaxWidth()) {
-        TextMMD(
-            text = stringResource(R.string.about_model_licence_link),
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .clickable { open("https://creativecommons.org/licenses/by-nc-sa/4.0/") }
-                .padding(vertical = 4.dp),
-        )
-        TextMMD(
-            text = "wanderthe.dev",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier
-                .clickable { open("https://wanderthe.dev") }
-                .padding(vertical = 4.dp),
-        )
-    }
 }

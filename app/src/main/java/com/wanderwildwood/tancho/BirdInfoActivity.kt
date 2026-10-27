@@ -1,8 +1,6 @@
 package com.wanderwildwood.tancho
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.DisplayMetrics
@@ -22,9 +20,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
@@ -90,25 +85,13 @@ class BirdInfoActivity : BaseActivity() {
             ThemeMMD(colorScheme = monochrome) {
                 val birds by shown
                 val state = rememberLazyListState()
-                // Sorted by the name shown, so letters, where the names are written in A to Z
-                // and there is the height for twenty-seven of them; under the photograph on the
-                // Kompakt there is not, and in a script without A to Z every name files under #.
-                // Page dots serve both of those better.
-                val latin = remember(birds) {
-                    val names = birds.map { it.second.split("_").last() }
-                    if (names.count { jumpLetterOf(it) != "#" } * 2 > names.size) ListJump.Letters(names) else null
-                }
-                BoxWithConstraints {
-                    ListJumpBox(state, if (latin != null && maxHeight >= LETTERS_NEED) latin else ListJump.Pages) {
-                        PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
-                            items(birds, key = { it.first }) { (speciesId, label) ->
-                                BirdRow(
-                                    name = label.split("_").last(),
-                                    latinName = label.split("_").first(),
-                                    modifier = Modifier.clickable { showSpecies(speciesId) },
-                                )
-                            }
-                        }
+                PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
+                    items(birds, key = { it.first }) { (speciesId, label) ->
+                        BirdRow(
+                            name = label.split("_").last(),
+                            latinName = label.split("_").first(),
+                            modifier = Modifier.clickable { showSpecies(speciesId) },
+                        )
                     }
                 }
             }
@@ -231,34 +214,13 @@ class BirdInfoActivity : BaseActivity() {
         // The tag holds the species, not a row: with the list in Compose there are no row
         // positions to look one up from, and the species was what this ever wanted.
         val id = binding.photoEbird.tag as Int
-        // The Kompakt may have nothing registered for a web address, and an uncaught
-        // ActivityNotFoundException here takes the app down rather than the link.
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
-        }.onFailure {
-            Toast.makeText(
-                this,
-                getString(R.string.no_browser),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        BrowserLinks.open(this, "https://ebird.org/species/" + eBirdList[id])
     }
 
 
     fun wikipedia(view: View) {
         val id = binding.photoEbird.tag as Int
         val scientificName = labelList[id].split("_").first()
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, BirdNames.wikipedia(this, scientificName)))
-        }.onFailure {
-            Toast.makeText(
-                this,
-                getString(R.string.no_browser),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        BrowserLinks.open(this, BirdNames.wikipedia(this, scientificName))
     }
 }
-
-/** The height the A to Z column needs to stay readable: twenty-seven rows of 18dp. */
-private val LETTERS_NEED = (27 * 18).dp

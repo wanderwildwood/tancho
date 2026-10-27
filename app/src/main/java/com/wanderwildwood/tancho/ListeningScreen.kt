@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,9 +43,6 @@ import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
 import kotlinx.coroutines.delay
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -64,6 +62,8 @@ import com.mudita.mmd.components.text_field.TextFieldMMD
 @Composable
 fun ListeningScreen(
     isListening: Boolean,
+    micAllowed: Boolean,
+    onAllowMicrophone: () -> Unit,
     heard: List<Heard>,
     placeAndDate: PlaceAndDate,
     placeKnown: Boolean,
@@ -105,7 +105,19 @@ fun ListeningScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            ListeningChip(isListening = isListening, onToggle = onToggleListening)
+            if (micAllowed) {
+                ListeningChip(isListening = isListening, onToggle = onToggleListening)
+            } else {
+                // Not "Listening": nothing is reaching the recogniser. The word says what is
+                // true and is the way to make it untrue.
+                val text = stringResource(R.string.no_microphone)
+                ControlChip(
+                    text = text,
+                    widest = stringResource(R.string.listening) + "...",
+                    anchor = Alignment.CenterStart,
+                    onClick = onAllowMicrophone,
+                )
+            }
             // Until there is a fix, or a location typed in, this setting is not doing
             // anything: the meta model is left neutral and every answer is weighed the
             // same. Saying "Expected first" over that is the app claiming to know where
@@ -132,7 +144,11 @@ fun ListeningScreen(
             if (heard.isEmpty()) {
                 TextMMD(
                     text = stringResource(
-                        if (isListening) R.string.nothing_heard_yet else R.string.stopped_explainer
+                        when {
+                            !micAllowed -> R.string.no_microphone_explainer
+                            isListening -> R.string.nothing_heard_yet
+                            else -> R.string.stopped_explainer
+                        }
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
@@ -152,15 +168,13 @@ fun ListeningScreen(
                     if (listState.firstVisibleItemIndex <= 1) listState.scrollToItem(0)
                 }
 
-                ListJumpBox(listState, ListJump.Pages) {
-                    PagedColumn(
-                        state = listState,
-                        contentPadding = PaddingValues(vertical = 8.dp),
-                        modifier = Modifier.fillMaxSize(),
-                    ) {
-                        items(heard, key = { it.firstHeard }) { entry ->
-                            HeardRow(entry, onClick = { onOpenHeard(entry) })
-                        }
+                PagedColumn(
+                    state = listState,
+                    contentPadding = PaddingValues(vertical = 8.dp),
+                    modifier = Modifier.fillMaxSize(),
+                ) {
+                    items(heard, key = { it.firstHeard }) { entry ->
+                        HeardRow(entry, onClick = { onOpenHeard(entry) })
                     }
                 }
             }
@@ -326,7 +340,7 @@ private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: ()
             )
             TextMMD(
                 text = stringResource(R.string.place_manual_hint),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
             )
         }
         Spacer(modifier = Modifier.height(18.dp))
@@ -361,9 +375,12 @@ private fun ControlChip(
     /** Null where the chip is stating a fact rather than offering a choice. */
     onClick: (() -> Unit)?,
 ) {
+    // 48dp tall whatever it says, so the press is a fingertip's size: the word is small and
+    // the target is not.
     Box(
         modifier = Modifier
             .then(if (onClick != null) Modifier.clickable(onClick = onClick) else Modifier)
+            .heightIn(min = 48.dp)
             .padding(vertical = 4.dp),
         contentAlignment = anchor,
     ) {
@@ -390,13 +407,9 @@ private fun ControlChip(
 private fun HeardRow(entry: Heard, onClick: () -> Unit) = BirdRow(
     name = entry.name,
     latinName = entry.latinName,
-    time = clockTime(entry.firstHeard),
+    time = LocalContext.current.timeText(entry.firstHeard),
     percent = entry.shownPercent,
     times = entry.times,
     modifier = Modifier.clickable(onClick = onClick),
 )
 
-
-/** Shared with the log, which shows the same time in the same place in the row. */
-internal fun clockTime(millis: Long): String =
-    SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date(millis))

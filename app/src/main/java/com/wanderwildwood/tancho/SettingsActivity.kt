@@ -8,10 +8,12 @@ import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalCursorBlinkEnabled
 import com.mudita.mmd.ThemeMMD
 import net.lingala.zip4j.ZipFile
 import java.io.File
@@ -42,6 +44,8 @@ class SettingsActivity : BaseActivity() {
         val activity = this
         setContent {
             ThemeMMD(colorScheme = monochrome) {
+              // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
+              CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
                 // The one place in the app with a screen behind a screen, so it is held
                 // here rather than by a second activity: one window, and back is back.
                 var showLanguages by remember { mutableStateOf(false) }
@@ -71,6 +75,7 @@ class SettingsActivity : BaseActivity() {
                         onDeleteLog = ::deleteLog,
                     )
                 }
+              }
             }
         }
     }

@@ -26,9 +26,11 @@
                 android:src="@drawable/ic_launcher_monochrome" />
             <ImageButton
                 android:id="@+id/photo_reload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/reload_photo"
+                android:tooltipText="@string/reload_photo"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_alignParentStart="true"
@@ -36,9 +38,11 @@
                 android:onClick="reload"/>
             <ImageButton
                 android:id="@+id/photo_share"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/share_hearing"
+                android:tooltipText="@string/share_hearing"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_toEndOf="@id/photo_reload"
@@ -46,9 +50,11 @@
                 android:onClick="share"/>
             <ImageButton
                 android:id="@+id/photo_ebird"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/ebird_page"
+                android:tooltipText="@string/ebird_page"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_below="@id/photo_reload"
@@ -56,13 +62,14 @@
                 android:onClick="ebird"/>
             <ImageButton
                 android:id="@+id/photo_wikipedia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/wikipedia_page"
+                android:tooltipText="@string/wikipedia_page"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_below="@id/photo_ebird"
-                android:contentDescription="@string/wikipedia"
                 android:src="@drawable/ic_article_24dp"
                 android:onClick="wikipedia"/>
             <TextView
@@ -92,7 +99,7 @@
                 android:textStyle="italic"
                 android:textIsSelectable="true"
                 android:textColor="?colorPrimary"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
         <!-- The shape of what was heard, under the bird it was. Height is set in code so
              it keeps a fixed slice of the panel; gone rather than invisible because unlike

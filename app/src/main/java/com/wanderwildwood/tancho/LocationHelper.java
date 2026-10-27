@@ -87,8 +87,26 @@ public class LocationHelper {
             return;
         }
 
-        if (System.currentTimeMillis() - oldLocationTime > 3 * 60 * 1000) {oldLocation = null; oldLocationTime = 0;}  //location older than 3 min -> reset
-        else soundClassifier.runMetaInterpreter(oldLocation);
+        // A fix is good for half an hour, not three minutes: the phone is usually standing
+        // still, and the place that was known a minute ago is still the place. The three
+        // minute rule threw it away on every return to the screen, and with the GPS
+        // receiver then taking a while to find itself again the chip said "Place not known"
+        // with a perfectly good fix in hand.
+        long now = System.currentTimeMillis();
+        if (oldLocation != null && !fixIsFresh(oldLocationTime, now)) {
+            oldLocation = null;
+            oldLocationTime = 0;
+        }
+        if (oldLocation == null) {
+            // The last position the phone itself knows, if it is recent enough.
+            Location last = lastKnownFix(context, now);
+            if (last != null) {
+                oldLocation = rounded(last);
+                oldLocationTime = last.getTime();
+                preciseLocation = last;
+            }
+        }
+        if (oldLocation != null) soundClassifier.runMetaInterpreter(oldLocation);
         soundClassifier.noteLocationKnown(oldLocation != null);
 
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && checkLocationProvider(context)) {
@@ -97,18 +115,18 @@ public class LocationHelper {
                 @Override
                 public void onLocationChanged(Location location) {
                     preciseLocation = location;
-                    Location roundLoc = new Location(location);
-                    roundLoc.setLatitude(Math.round(location.getLatitude() * 100.0) / 100.0);
-                    roundLoc.setLongitude(Math.round(location.getLongitude() * 100.0) / 100.0);
+                    Location roundLoc = rounded(location);
+                    // Every fix renews the time, moved or not: only a change of place
+                    // was renewing it, so a phone standing still aged its own position out.
+                    oldLocationTime = System.currentTimeMillis();
                     if (oldLocation == null ||
                             (roundLoc.getLatitude() != oldLocation.getLatitude()) ||
                             (roundLoc.getLongitude() != oldLocation.getLongitude())){
 
                         oldLocation = roundLoc;
-                        oldLocationTime = System.currentTimeMillis();
                         soundClassifier.runMetaInterpreter(roundLoc);
-                        soundClassifier.noteLocationKnown(true);
                     }
+                    soundClassifier.noteLocationKnown(true);
                 }
 
                 @Deprecated
@@ -126,6 +144,43 @@ public class LocationHelper {
             };
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, locationListenerGPS);
         }
+    }
+
+    /** How long a position is trusted for without a newer one. */
+    static final long FIX_MAX_AGE_MS = 30 * 60 * 1000;
+
+    /** Whether a position taken at [fixTime] is still good at [now]. */
+    static boolean fixIsFresh(long fixTime, long now) {
+        return fixTime > 0 && now - fixTime <= FIX_MAX_AGE_MS;
+    }
+
+    /** To two decimals, about a kilometre: all the where-and-when model can use anyway. */
+    private static Location rounded(Location location) {
+        Location roundLoc = new Location(location);
+        roundLoc.setLatitude(Math.round(location.getLatitude() * 100.0) / 100.0);
+        roundLoc.setLongitude(Math.round(location.getLongitude() * 100.0) / 100.0);
+        return roundLoc;
+    }
+
+    /** The newest position any provider remembers that is still fresh, or null. */
+    private static Location lastKnownFix(Context context, long now) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) return null;
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Location best = null;
+        for (String provider : new String[]{LocationManager.GPS_PROVIDER,
+                LocationManager.NETWORK_PROVIDER, LocationManager.PASSIVE_PROVIDER}) {
+            try {
+                Location candidate = locationManager.getLastKnownLocation(provider);
+                if (candidate != null && fixIsFresh(candidate.getTime(), now)
+                        && (best == null || candidate.getTime() > best.getTime())) {
+                    best = candidate;
+                }
+            } catch (SecurityException | IllegalArgumentException e) {
+                // That provider is not available to this app; the next one may be.
+            }
+        }
+        return best;
     }
 
     public static boolean checkLocationProvider(Context context) {

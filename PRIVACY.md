@@ -13,7 +13,7 @@ The microphone is open while the app is listening. Audio goes into a buffer, the
 model runs on it in `SoundClassifier.kt`, and the buffer is overwritten by the next three
 seconds. Nothing is uploaded, because there is no code that could upload it.
 
-Audio is written to disk only if you turn on **Save .wav files** in settings, which is off
+Audio is written to disk only if you turn on **Save recordings** in Settings, which is off
 by default. Those files go to the app's own folder on external storage, not into your music.
 A morning outdoors can write hundreds of megabytes — the recogniser runs every 800ms and every
 detection above the threshold writes a file — and a music library is the wrong place for that:
@@ -34,8 +34,15 @@ you a species from another continent.
   asking for your position does not tell anyone that you asked.
 - The coordinates are stored with each detection in the app's own database, so a saved
   observation says where it was made. That database is in the app's private storage.
-- You can turn the location influence down to nothing with the slider on the main screen,
-  or set a location by hand in settings and never grant the permission at all.
+- You can set the place chip on the listening screen to **Any bird**, which ignores the place,
+  or type a location in Settings and never grant the permission at all.
+- The app asks for the microphone and then, separately, for the location, each with its reason
+  shown first. Saying no to the location is fine; the chip then reads **Place not known**.
+- A position is kept in memory for up to half an hour, so a phone standing still does not forget
+  where it is. It is not written anywhere except to a hearing's row in the log.
+- A hearing sent from the Heard screen carries the coordinates **only if you switch on
+  "Include the place when sharing"** in Settings. It is off by default. The log you send from
+  Settings, and a backup, do include each hearing's coordinates, because they are part of the log.
 
 ## Network
 
@@ -45,11 +52,11 @@ you a species from another continent.
 2. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
    server (`cdn.download.ams.birds.cornell.edu`) as a single jpeg, and kept in the app's
    cache so a species is fetched once. On the listening screen this is off by default
-   (**Show Images** in settings). In the observation and species lists, tapping an entry
+   (**Photo while listening** in Settings). In the observation and species lists, tapping an entry
    loads its photograph. Cornell's server therefore learns your IP address and which
    species you looked at. There is no web page involved — no scripts, no cookies — and no
    account or identifier is sent by the app (`BirdPhoto.kt`).
-3. **eBird and Wikipedia, only if you tap them.** The two buttons on a bird's photograph
+3. **eBird and Wikipedia, only if you tap them.** The eBird and Wikipedia buttons on a bird's photograph
    open its `ebird.org` page, and its Wikipedia page in the language the bird names are
    set to, in your own browser. The app itself fetches neither.
 
@@ -66,7 +73,7 @@ carried but never called has been removed.
 | `files/Recordings/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
 
 App-private means other apps cannot read it and it goes away when you uninstall. The
-database can be exported or deleted from inside the app, in the observations list.
+database can be exported, backed up, restored or deleted from inside the app, under Settings.
 
 ## Permissions
 

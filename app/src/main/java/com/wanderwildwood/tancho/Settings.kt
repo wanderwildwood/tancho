@@ -49,6 +49,12 @@ class Settings(context: Context) {
     var manualLocation by boolPref(MANUAL_LOCATION)
 
     /**
+     * Whether a hearing shared from the log carries the coordinates it was heard at. Off:
+     * the text then says what, and when, and nothing about where the person was standing.
+     */
+    var sharePlace by boolPref(SHARE_PLACE)
+
+    /**
      * Whether BirdNET's non-bird classes are thrown away rather than written down. On by
      * default: the model will happily report a passing car or someone talking, and a log
      * of those is not a log of birds.
@@ -148,21 +154,24 @@ class Settings(context: Context) {
             }
         }
 
-    private companion object {
-        const val AUDIO_SOURCE = "audio_source"
-        const val THRESHOLD = "model_threshold"
-        const val HIGH_PASS = "high_pass"
-        const val PLAY_SOUND = "play_sound"
-        const val WRITE_WAV = "write_wav"
-        const val BLUETOOTH = "bluetooth"
-        const val IGNORE_NON_BIRDS = "ignore_non_birds"
-        const val VIEW_DETAILED = "view_detailed"
-        const val SHOW_IMAGES = "show_images"
-        const val SHOW_SPECTROGRAM = "show_spectrogram"
-        const val CLEAR_RECORDINGS = "clear_recordings"
-        const val MANUAL_LOCATION = "manual_location"
-        const val MANUAL_LOCATION_VALUE = "manual_location_value"
-        const val DEFAULT_LOCATION = "0.000/0.000"
+    companion object {
+        /** Public: the Heard screen reads it when sharing a hearing. */
+        const val SHARE_PLACE = "share_place"
+
+        private const val AUDIO_SOURCE = "audio_source"
+        private const val THRESHOLD = "model_threshold"
+        private const val HIGH_PASS = "high_pass"
+        private const val PLAY_SOUND = "play_sound"
+        private const val WRITE_WAV = "write_wav"
+        private const val BLUETOOTH = "bluetooth"
+        private const val IGNORE_NON_BIRDS = "ignore_non_birds"
+        private const val VIEW_DETAILED = "view_detailed"
+        private const val SHOW_IMAGES = "show_images"
+        private const val SHOW_SPECTROGRAM = "show_spectrogram"
+        private const val CLEAR_RECORDINGS = "clear_recordings"
+        private const val MANUAL_LOCATION = "manual_location"
+        private const val MANUAL_LOCATION_VALUE = "manual_location_value"
+        private const val DEFAULT_LOCATION = "0.000/0.000"
     }
 }
 

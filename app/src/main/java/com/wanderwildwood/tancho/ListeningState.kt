@@ -66,6 +66,18 @@ class ListeningState {
         _placeKnown.value = known
     }
 
+    /**
+     * Whether the microphone may be used. The screen said "Listening" whether or not it could
+     * hear anything, so a person who had said no to the permission was told a recogniser was
+     * running that never received a sound. False shows the real state, and a way to change it.
+     */
+    private val _micAllowed = MutableStateFlow(true)
+    val micAllowed: StateFlow<Boolean> = _micAllowed.asStateFlow()
+
+    fun setMicAllowed(allowed: Boolean) {
+        _micAllowed.value = allowed
+    }
+
     /** How much the where-and-when model is allowed to weigh in, 0f..1f. */
     val metaInfluence = MutableStateFlow(0.6f)
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -16,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
@@ -51,18 +53,23 @@ fun DestinationRowCompose(current: Destination) {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceEvenly,
     ) {
+        // All four on every screen, in the same places, with the one you are on in bold:
+        // leaving the current one out moved the other three along each time, so the word
+        // you pressed last was never where you pressed it. Pressing the bold one does nothing.
         for (destination in Destination.entries) {
-            if (destination == current) continue
+            val here = destination == current
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clickable { context.open(destination) }
-                    .padding(vertical = 16.dp),
+                    .heightIn(min = 48.dp)
+                    .then(if (here) Modifier else Modifier.clickable { context.open(destination) })
+                    .padding(vertical = 14.dp),
                 contentAlignment = Alignment.Center,
             ) {
                 TextMMD(
                     text = stringResource(destination.label),
                     style = MaterialTheme.typography.labelLarge,
+                    fontWeight = if (here) FontWeight.Bold else FontWeight.Normal,
                 )
             }
         }

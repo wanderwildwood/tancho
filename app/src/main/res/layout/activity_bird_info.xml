@@ -26,9 +26,11 @@
                 android:src="@drawable/ic_launcher_monochrome" />
             <ImageButton
                 android:id="@+id/photo_reload"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/reload_photo"
+                android:tooltipText="@string/reload_photo"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_alignParentStart="true"
@@ -36,9 +38,11 @@
                 android:onClick="reload"/>
             <ImageButton
                 android:id="@+id/photo_ebird"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/ebird_page"
+                android:tooltipText="@string/ebird_page"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_below="@id/photo_reload"
@@ -46,13 +50,14 @@
                 android:onClick="ebird"/>
             <ImageButton
                 android:id="@+id/photo_wikipedia"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:visibility="gone"
+                android:contentDescription="@string/wikipedia_page"
+                android:tooltipText="@string/wikipedia_page"
                 android:backgroundTint="?attr/colorSecondary"
                 android:tint="@android:color/white"
                 android:layout_below="@id/photo_ebird"
-                android:contentDescription="@string/wikipedia"
                 android:src="@drawable/ic_article_24dp"
                 android:onClick="wikipedia"/>
             <TextView
@@ -82,7 +87,7 @@
                 android:textStyle="italic"
                 android:textIsSelectable="true"
                 android:textColor="?colorPrimary"
-                android:textSize="10sp" />
+                android:textSize="14sp" />
         </RelativeLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -112,11 +117,21 @@
                         android:layout_marginVertical="3dp"
                         android:layout_marginHorizontal="10dp"
                         android:src="@drawable/ic_search_24dp"/>
+                    <!-- A steady cursor: a blink repaints the field on a slow panel. The hint
+                         says what the box is for; 16sp and 48dp like every other press. -->
                     <EditText
                         android:id="@+id/search_edit"
                         android:background="@null"
                         android:singleLine="true"
                         android:imeOptions="actionDone"
+                        android:hint="@string/search_birds_hint"
+                        android:textColorHint="?colorOnSurface"
+                        android:textColor="?colorOnSurface"
+                        android:textSize="16sp"
+                        android:cursorVisible="false"
+                        android:minHeight="48dp"
+                        android:importantForAutofill="no"
+                        android:inputType="text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
                 </LinearLayout>

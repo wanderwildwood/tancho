@@ -5,8 +5,6 @@
     <string name="download_model">Download the model</string>
     <string name="download_model_text">Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="error_download">Download error</string>
-    <string name="error_audio_permission">Microphone permission not granted</string>
-    <string name="error_location_permission">Location permission not granted</string>
     <string name="clear_db">Observations deleted</string>
     <string name="delete">Delete all observations?</string>
     <string name="settings_threshold">Threshold</string>
@@ -72,7 +70,6 @@
     <string name="clear_recordings">Keep recordings for this session only</string>
     <string name="about">About</string>
     <string name="close">Close</string>
-    <string name="about_body">Identification happens on this phone. The only thing fetched is a bird\'s photograph, and only for a row you open.\n\nA fork of whoBIRD by woheller69. GNU General Public License v3.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology. Models CC BY-NC-SA 4.0, not for commercial use.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
     <!-- The recogniser's threshold in settings. %1$s is a whole number from the list the row cycles through, e.g. 30 -->
     <string name="settings_threshold_value">%1$s%%</string>
     <!-- The high-pass filter in settings. %1$s is a whole number of hertz, e.g. 200 -->
@@ -89,9 +86,29 @@
     <string name="about_title">Birding %1$s</string>
     <!-- A link at the foot of the About to the text of the licence the BirdNET model is under -->
     <string name="about_model_licence_link">Read the CC BY-NC-SA 4.0 licence</string>
+    <string name="about_privacy_title">Privacy</string>
+    <string name="about_privacy">Your log stays on this phone, and identifying a bird happens here. The app goes online for two things only: the BirdNET model, downloaded once from GitHub (about 39MB), and a bird\'s photograph from Cornell\'s image server, for a row you open, or as a bird is heard if Photo while listening is on. Those requests carry nothing you have heard or written; the servers see your internet address and which bird\'s picture was asked for. eBird and Wikipedia open in your browser only when you press them.</string>
+    <string name="about_privacy_more">The microphone is open only while Birding is listening, and the sound is not kept unless you turn on Save recordings. Location is used only to weigh which birds are likely where you are, if you allow it or type a place in. The place is stored with each hearing in your log, so it goes out with a sent log or a backup; a shared hearing includes it only if you switch that on in Settings. There are no ads, no analytics and no tracking. Backups and exports go only where you choose to save them.</string>
+    <string name="about_terms_title">Terms</string>
+    <string name="about_terms">Birding is free software under the GNU General Public License v3. It comes with no warranty: use it at your own risk. The name it gives a bird is a model\'s guess and can be wrong. The BirdNET model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
+    <string name="about_credits_title">Made from</string>
+    <string name="about_credits">A fork of whoBIRD by woheller69.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
+    <string name="share_place">Include the place when sharing</string>
+    <string name="summary_share_place">Add the latitude and longitude to a hearing sent from the log. Off, it says what and when, and not where you stood.</string>
+    <string name="no_microphone">No microphone</string>
+    <string name="no_microphone_explainer">Birding needs the microphone to hear birds. Tap No microphone, above, to allow it.</string>
+    <string name="ask_microphone_title">Allow the microphone</string>
+    <string name="ask_microphone_body">Birding listens through the microphone to hear birds. The sound is identified on this phone and is not kept or sent anywhere unless you turn on Save recordings.</string>
+    <string name="ask_location_title">Allow location</string>
+    <string name="ask_location_body">Birding uses where you are, only on this phone, to weigh which birds are likely nearby. The place is stored with each hearing in your log. You can say no and type a place in Settings instead.</string>
+    <string name="ask_continue">Continue</string>
+    <string name="ask_not_now">Not now</string>
+    <string name="open_app_settings">Open the phone\'s settings for Birding, then allow the microphone under Permissions.</string>
+    <string name="search_birds_hint">Search the birds</string>
+    <string name="reload_photo">Reload the photo</string>
+    <string name="share_hearing">Share this hearing</string>
+    <string name="ebird_page">Open this bird on eBird</string>
+    <string name="wikipedia_page">Open this bird on Wikipedia</string>
     <string name="heard_not_in_log">That hearing is no longer in the log.</string>
-    <string name="list_jump_setting">Letters and page dots</string>
-    <string name="list_jump_shown">Shown</string>
-    <string name="list_jump_hidden">Hidden</string>
 </resources>
 

@@ -23,8 +23,8 @@ android {
         applicationId "com.wanderwildwood.tancho"
         minSdk 26
         targetSdk 35
-        versionCode 38
-        versionName "1.7.20"
+        versionCode 39
+        versionName "1.7.21"
     }
 
     lintOptions{
@@ -77,6 +77,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     namespace 'com.wanderwildwood.tancho'
     androidResources {
         generateLocaleConfig true
@@ -106,4 +109,6 @@ dependencies {
     implementation 'androidx.compose.material3:material3:1.4.0'
     debugImplementation 'androidx.compose.ui:ui-tooling:1.9.5'
     implementation 'com.mudita:MMD:1.0.2'
+
+    testImplementation 'junit:junit:4.13.2'
 }

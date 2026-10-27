@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.text.format.DateFormat
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
@@ -19,9 +18,6 @@ import com.wanderwildwood.tancho.databinding.ActivityViewBinding
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -175,8 +171,8 @@ class ViewActivity : BaseActivity() {
         }
     }
 
-    /** How long a row stays armed before it forgets it was asked. Four, as everywhere. */
-    private val ARMED_MS = 4000L
+    /** How long a row stays armed before it forgets it was asked. Six, as everywhere. */
+    private val ARMED_MS = 6000L
 
     /** Reads the log in and puts it on screen. Run on the way in, and after a row is removed. */
     private fun reloadObservations() {
@@ -217,7 +213,6 @@ class ViewActivity : BaseActivity() {
                     armed = null
                 }
 
-                val dayFormat = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
                 val target by scrollTarget
                 LaunchedEffect(target) {
                     val index = target ?: return@LaunchedEffect
@@ -225,43 +220,41 @@ class ViewActivity : BaseActivity() {
                     scrollTarget.value = null
                 }
 
-                ListJumpBox(listState, ListJump.Pages) {
-                    PagedColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-                        itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
-                            val day = dayFormat.format(Date(row.millis))
-                            if (index == 0 || dayFormat.format(Date(rows[index - 1].millis)) != day) {
-                                DayHeading(day)
-                            }
-                            val isArmed = armed == row.id
-                            BirdRow(
-                                name = if (isArmed) stringResource(R.string.delete_observation_confirm)
-                                    else row.name,
-                                latinName = if (isArmed) ""
-                                    else labelList[row.speciesId].split("_").first(),
-                                time = clockTime(row.millis),
-                                percent = (row.probability * 20f).roundToInt() * 5,
-                                bold = isArmed,
-                                modifier = Modifier.combinedClickable(
-                                    onClick = {
-                                        if (isArmed) {
-                                            armed = null
-                                            database.removeEntries(row.coveredIds)
-                                            Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
-                                            clearPhoto()
-                                            reloadObservations()
-                                        } else {
-                                            armed = null
-                                            openObservation(row)
-                                        }
-                                    },
-                                    // A recogniser is wrong sometimes, and until there was this
-                                    // the only answer to a wrong line was to throw the whole log
-                                    // away -- so keeping a record you knew to be untrue was the
-                                    // cheaper option.
-                                    onLongClick = { armed = row.id },
-                                ),
-                            )
+                PagedColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+                    itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
+                        val day = dateText(row.millis)
+                        if (index == 0 || dateText(rows[index - 1].millis) != day) {
+                            DayHeading(day)
                         }
+                        val isArmed = armed == row.id
+                        BirdRow(
+                            name = if (isArmed) stringResource(R.string.delete_observation_confirm)
+                                else row.name,
+                            latinName = if (isArmed) ""
+                                else labelList[row.speciesId].split("_").first(),
+                            time = timeText(row.millis),
+                            percent = (row.probability * 20f).roundToInt() * 5,
+                            bold = isArmed,
+                            modifier = Modifier.combinedClickable(
+                                onClick = {
+                                    if (isArmed) {
+                                        armed = null
+                                        database.removeEntries(row.coveredIds)
+                                        Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
+                                        clearPhoto()
+                                        reloadObservations()
+                                    } else {
+                                        armed = null
+                                        openObservation(row)
+                                    }
+                                },
+                                // A recogniser is wrong sometimes, and until there was this
+                                // the only answer to a wrong line was to throw the whole log
+                                // away -- so keeping a record you knew to be untrue was the
+                                // cheaper option.
+                                onLongClick = { armed = row.id },
+                            ),
+                        )
                     }
                 }
             }
@@ -417,17 +410,8 @@ class ViewActivity : BaseActivity() {
         val row = selected ?: return
         val id = row.speciesId
 
-        val sdf: SimpleDateFormat
-        val date = Date(row.millis)
-        sdf = if (DateFormat.is24HourFormat(this)) {
-            SimpleDateFormat("HH:mm", Locale.getDefault())
-        } else {
-            SimpleDateFormat("hh:mm aa", Locale.getDefault())
-        }
-        val timeString = sdf.format(date)
-
-        val df = java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT)
-        val dateString = df.format(row.millis)
+        val timeString = timeText(row.millis)
+        val dateString = dateText(row.millis)
 
         // What was heard, when and where, and nothing else. Upstream signed every shared
         // sighting "Get whoBIRD on F-Droid" -- an advertisement for a different app, in
@@ -441,9 +425,13 @@ class ViewActivity : BaseActivity() {
             append(dateString).append(", ")
             append(timeString).append(", ")
             append(labelList[id].replace("_", ", "))
-            // The place is left off when there is no place: 0/0 claims the equator at
+            // The place goes out only when the reader has asked for it in Settings: a message
+            // sent to someone else should not carry where a person stood unless they chose that.
+            // And it is left off when there is no place: 0/0 claims the equator at
             // the prime meridian rather than admitting to knowing nothing.
-            if (row.latitude != 0.0f || row.longitude != 0.0f) {
+            val withPlace = PreferenceManager.getDefaultSharedPreferences(this@ViewActivity)
+                .getBoolean(Settings.SHARE_PLACE, false)
+            if (withPlace && (row.latitude != 0.0f || row.longitude != 0.0f)) {
                 append(", ").append(row.latitude).append(", ").append(row.longitude)
             }
         }
@@ -456,31 +444,13 @@ class ViewActivity : BaseActivity() {
 
     fun ebird(view: View) {
         val id = selectedSpecies ?: return
-        // The Kompakt may have nothing registered for a web address, and an uncaught
-        // ActivityNotFoundException here takes the app down rather than the link.
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://ebird.org/species/"+eBirdList[id])))
-        }.onFailure {
-            Toast.makeText(
-                this,
-                getString(R.string.no_browser),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        BrowserLinks.open(this, "https://ebird.org/species/" + eBirdList[id])
     }
 
     fun wikipedia(view: View) {
         val id = selectedSpecies ?: return
         val scientificName = labelList[id].split("_").first()
-        runCatching {
-            startActivity(Intent(Intent.ACTION_VIEW, BirdNames.wikipedia(this, scientificName)))
-        }.onFailure {
-            Toast.makeText(
-                this,
-                getString(R.string.no_browser),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
+        BrowserLinks.open(this, BirdNames.wikipedia(this, scientificName))
     }
 
     companion object {

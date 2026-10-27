@@ -29,8 +29,22 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalCursorBlinkEnabled
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import com.mudita.mmd.components.buttons.OutlinedButtonMMD
+import com.mudita.mmd.components.text.TextMMD
+import android.net.Uri
+import android.provider.Settings as AndroidSettings
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
@@ -48,6 +62,15 @@ class MainActivity : BaseActivity() {
    * and coming back from there does not rebuild this one.
    */
   private var photoWhileListening by mutableStateOf(false)
+
+  /**
+   * The permission the app is about to ask for, with its reason shown first. Null when
+   * nothing is being asked. The microphone comes before the location, one at a time: a
+   * person told why, and asked for one thing, can say yes to one and no to the other.
+   */
+  private enum class Ask { MICROPHONE, LOCATION }
+
+  private var asking by mutableStateOf<Ask?>(null)
 
   /**
    * BaseActivity sets the theme in onCreate, which replaces whatever the manifest asked
@@ -84,7 +107,10 @@ class MainActivity : BaseActivity() {
 
     setContent {
       ThemeMMD(colorScheme = monochrome) {
+       // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
+       CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
         val isListening by state.isListening.collectAsStateWithLifecycle()
+        val micAllowed by state.micAllowed.collectAsStateWithLifecycle()
         val heard by state.heard.collectAsStateWithLifecycle()
         val photo by state.photo.collectAsStateWithLifecycle()
         var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
@@ -94,11 +120,18 @@ class MainActivity : BaseActivity() {
 
         ListeningScreen(
           isListening = isListening,
+          micAllowed = micAllowed,
+          onAllowMicrophone = { allowMicrophone() },
           placeKnown = placeKnown,
           settings = settings,
           // Re-reads the preference and tells the screen what it now knows, so turning GPS
           // back on stops saying "Place not known" without leaving the screen.
-          onPlaceChanged = { LocationHelper.requestLocation(this@MainActivity, soundClassifier) },
+          onPlaceChanged = {
+            // Switching GPS on is the moment to ask for the permission it needs, with the
+            // reason first, if it was not given before.
+            if (!settings.manualLocation && !checkLocationPermission()) asking = Ask.LOCATION
+            LocationHelper.requestLocation(this@MainActivity, soundClassifier)
+          },
           heard = heard,
           placeAndDate = placeAndDate,
           showPhoto = photoWhileListening,
@@ -113,10 +146,114 @@ class MainActivity : BaseActivity() {
           },
           onOpenHeard = { openInLog(it) },
         )
+        PermissionAsk()
+       }
       }
     }
 
-    requestPermissions()
+    state.setMicAllowed(checkMicrophonePermission())
+    askForPermissions()
+  }
+
+  /** The reason for the permission about to be asked, and the choice to go on or not. */
+  @androidx.compose.runtime.Composable
+  private fun PermissionAsk() {
+    val ask = asking ?: return
+    val title = if (ask == Ask.MICROPHONE) R.string.ask_microphone_title else R.string.ask_location_title
+    val body = if (ask == Ask.MICROPHONE) R.string.ask_microphone_body else R.string.ask_location_body
+    EInkDialog(onDismiss = { declined(ask) }) {
+      TextMMD(
+        text = stringResource(title),
+        style = MaterialTheme.typography.bodyLarge,
+        fontWeight = FontWeight.Bold,
+      )
+      Spacer(modifier = Modifier.height(12.dp))
+      TextMMD(text = stringResource(body), style = MaterialTheme.typography.bodyMedium)
+      Spacer(modifier = Modifier.height(18.dp))
+      OutlinedButtonMMD(onClick = { accepted(ask) }, modifier = Modifier.fillMaxWidth()) {
+        TextMMD(stringResource(R.string.ask_continue))
+      }
+      Spacer(modifier = Modifier.height(8.dp))
+      OutlinedButtonMMD(onClick = { declined(ask) }, modifier = Modifier.fillMaxWidth()) {
+        TextMMD(stringResource(R.string.ask_not_now))
+      }
+    }
+  }
+
+  private fun accepted(ask: Ask) {
+    asking = null
+    when (ask) {
+      Ask.MICROPHONE -> {
+        val perms = mutableListOf(Manifest.permission.RECORD_AUDIO)
+        val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+        if (sharedPref.getBoolean("bluetooth", false)
+          && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+          && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+          perms.add(Manifest.permission.BLUETOOTH_CONNECT)
+        }
+        requestPermissions(perms.toTypedArray(), REQUEST_MICROPHONE)
+      }
+      Ask.LOCATION -> requestPermissions(
+        arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION),
+        REQUEST_LOCATION,
+      )
+    }
+  }
+
+  /** "Not now" for the microphone still goes on to ask about the place: they are separate. */
+  private fun declined(ask: Ask) {
+    asking = null
+    if (ask == Ask.LOCATION) {
+      val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+      sharedPref.edit().putInt("location_declined", sharedPref.getInt("location_declined", 0) + 1).apply()
+    }
+    if (ask == Ask.MICROPHONE) askForLocation()
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    when (requestCode) {
+      REQUEST_MICROPHONE -> {
+        val allowed = checkMicrophonePermission()
+        state.setMicAllowed(allowed)
+        // Granted while the screen says it is listening: start hearing at once, rather than
+        // leaving a word that says Listening over a recogniser nobody started.
+        if (allowed && state.isListening.value) {
+          soundClassifier.isPaused = false
+          soundClassifier.start()
+        }
+        askForLocation()
+      }
+      REQUEST_LOCATION -> {
+        if (checkLocationPermission()) {
+          LocationHelper.requestLocation(this, soundClassifier)
+        } else {
+          val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+          sharedPref.edit().putInt("location_declined", sharedPref.getInt("location_declined", 0) + 1).apply()
+        }
+      }
+    }
+  }
+
+  /**
+   * The chip's answer to "No microphone". Android stops showing its own question after two
+   * refusals, so after one this opens the app's page in the phone's settings instead, where
+   * the permission can be switched on by hand.
+   */
+  private fun allowMicrophone() {
+    val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
+    val askedBefore = sharedPref.getBoolean("microphone_asked", false)
+    if (!askedBefore || shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+      sharedPref.edit().putBoolean("microphone_asked", true).apply()
+      requestPermissions(arrayOf(Manifest.permission.RECORD_AUDIO), REQUEST_MICROPHONE)
+    } else {
+      Toast.makeText(this, getString(R.string.open_app_settings), Toast.LENGTH_LONG).show()
+      runCatching {
+        startActivity(
+          Intent(AndroidSettings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", packageName, null))
+        )
+      }
+    }
   }
 
   /**
@@ -170,14 +307,11 @@ class MainActivity : BaseActivity() {
     soundClassifier.refreshLabels()
 
     LocationHelper.requestLocation(this, soundClassifier)
-    if (!checkLocationPermission()){
-      Toast.makeText(this, this.resources.getString(R.string.error_location_permission), Toast.LENGTH_SHORT).show()
-    }
-    if (checkMicrophonePermission()){
-      if (state.isListening.value) soundClassifier.start()
-    } else {
-      Toast.makeText(this, this.resources.getString(R.string.error_audio_permission), Toast.LENGTH_SHORT).show()
-    }
+    // The screen says so (No microphone, Place not known), where a toast came and went.
+    // The permission may have been switched on in the phone's settings meanwhile.
+    val micAllowed = checkMicrophonePermission()
+    state.setMicAllowed(micAllowed)
+    if (micAllowed && state.isListening.value) soundClassifier.start()
     keepScreenOn(true)
   }
 
@@ -208,27 +342,26 @@ class MainActivity : BaseActivity() {
     }
   }
 
-  private fun requestPermissions() {
-    val perms = mutableListOf<String>()
-    if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-      perms.add(Manifest.permission.RECORD_AUDIO)
+  /** First start of a session: the microphone, then (separately) the place. */
+  private fun askForPermissions() {
+    if (!checkMicrophonePermission()) {
+      PreferenceManager.getDefaultSharedPreferences(this).edit().putBoolean("microphone_asked", true).apply()
+      asking = Ask.MICROPHONE
+    } else {
+      askForLocation()
     }
+  }
 
+  /**
+   * Only when the place is neither typed in nor already allowed, and not once the question
+   * has been turned down twice: asking at every start of the app is nagging. Switching GPS
+   * on from the place chip asks again, because then it is the person's own request.
+   */
+  private fun askForLocation() {
+    if (checkLocationPermission()) return
     val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
-
-    if (!sharedPref.getBoolean("manual_location", false)
-      && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        perms.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-        perms.add(Manifest.permission.ACCESS_FINE_LOCATION)
-    }
-
-    if (sharedPref.getBoolean("bluetooth", false)
-      && ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
-      && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        perms.add(Manifest.permission.BLUETOOTH_CONNECT)
-    }
-
-    if (!perms.isEmpty()) requestPermissions(perms.toTypedArray(), REQUEST_PERMISSIONS)
+    if (sharedPref.getInt("location_declined", 0) >= 2) return
+    asking = Ask.LOCATION
   }
 
   private fun keepScreenOn(enable: Boolean) =
@@ -239,6 +372,7 @@ class MainActivity : BaseActivity() {
     }
 
   companion object {
-    private const val REQUEST_PERMISSIONS = 1337
+    private const val REQUEST_MICROPHONE = 1337
+    private const val REQUEST_LOCATION = 1338
   }
 }

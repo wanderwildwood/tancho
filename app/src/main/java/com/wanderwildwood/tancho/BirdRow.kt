@@ -59,14 +59,14 @@ fun BirdRow(
         if (latinName.isNotBlank()) {
             TextMMD(
                 text = latinName,
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
             )
         }
         if (time != null || percent != null || times > 1) {
             Spacer(modifier = Modifier.height(6.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (time != null) {
-                    TextMMD(text = time, style = MaterialTheme.typography.bodySmall)
+                    TextMMD(text = time, style = MaterialTheme.typography.labelSmall)
                     Spacer(modifier = Modifier.width(12.dp))
                 }
                 // Blocks, and no number beside them. What BirdNET reports is a softmax
@@ -76,7 +76,7 @@ fun BirdRow(
                 if (percent != null) ConfidenceBlocks(percent = percent)
                 if (times > 1) {
                     Spacer(modifier = Modifier.width(12.dp))
-                    TextMMD(text = stringResource(R.string.times_heard, times.toString()), style = MaterialTheme.typography.bodySmall)
+                    TextMMD(text = stringResource(R.string.times_heard, times.toString()), style = MaterialTheme.typography.labelSmall)
                 }
             }
         }
@@ -93,7 +93,7 @@ fun BirdRow(
 fun DayHeading(text: String) {
     TextMMD(
         text = text,
-        style = MaterialTheme.typography.bodySmall,
+        style = MaterialTheme.typography.labelSmall,
         fontWeight = FontWeight.Bold,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 2.dp),
     )
