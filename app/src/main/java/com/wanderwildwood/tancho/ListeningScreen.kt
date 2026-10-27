@@ -312,6 +312,7 @@ private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: ()
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.weight(1f).padding(end = 16.dp),
             )
+            Spacer(Modifier.width(16.dp))
             SwitchMMD(
                 checked = !settings.manualLocation,
                 onCheckedChange = {

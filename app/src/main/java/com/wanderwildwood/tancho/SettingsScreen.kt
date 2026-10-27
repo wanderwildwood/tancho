@@ -364,6 +364,7 @@ private fun SwitchRow(
                 TextMMD(text = summary, style = MaterialTheme.typography.labelSmall)
             }
         }
+        Spacer(Modifier.width(16.dp))
         SwitchMMD(checked = checked, onCheckedChange = onCheckedChange)
     }
 }
