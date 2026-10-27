@@ -457,7 +457,7 @@ private fun AboutDialog(onDismiss: () -> Unit) {
             style = MaterialTheme.typography.bodySmall,
         )
         Spacer(modifier = Modifier.height(14.dp))
-        Llama()
+        AboutLinks()
 
         Spacer(modifier = Modifier.height(18.dp))
         OutlinedButtonMMD(
@@ -496,67 +496,36 @@ private fun SectionHeading(text: String) {
 }
 
 /**
- * A llama at the foot of the About, which opens the page a donation goes to.
- * It shares one line with the site's name, which opens the site; the llama and its
- * words open the page.
- *
- * Three words rather than an address: a verb and an object, so what happens when you press
- * them is not a surprise even though the page is not named. The drawing is his own, and it is
- * ink rather than an emoji, which is a colour glyph and reaches the panel as a pale smudge.
+ * The foot of the About: the site's name, which opens the site, and the words that open the
+ * text of the licence the model is under. Each opens its page in a browser.
  *
  * The Kompakt may have nothing registered for a web address, so the intent is allowed to fail
  * quietly rather than take the dialog down with it.
  */
 @Composable
-private fun Llama() {
+private fun AboutLinks() {
     val context = LocalContext.current
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth(),
-    ) {
+    fun open(address: String) {
+        runCatching {
+            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(address)))
+        }.onFailure {
+            Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
+        }
+    }
+    Column(modifier = Modifier.fillMaxWidth()) {
+        TextMMD(
+            text = stringResource(R.string.about_model_licence_link),
+            style = MaterialTheme.typography.bodySmall,
+            modifier = Modifier
+                .clickable { open("https://creativecommons.org/licenses/by-nc-sa/4.0/") }
+                .padding(vertical = 4.dp),
+        )
         TextMMD(
             text = "wanderthe.dev",
             style = MaterialTheme.typography.bodySmall,
-            // The site's address opens the site, the way the llama beside it opens its page.
             modifier = Modifier
-                .clickable {
-                    runCatching {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://wanderthe.dev")),
-                        )
-                    }.onFailure {
-                        Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
-                    }
-                }
+                .clickable { open("https://wanderthe.dev") }
                 .padding(vertical = 4.dp),
         )
-        Spacer(Modifier.width(6.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier
-                .clickable {
-                    // Straight to the checkout. The Donate button on the site only leads
-                    // here anyway, so the page in between is a press the reader does not need.
-                    // The short square.link form, not the long checkout.square.site address it
-                    // redirects to -- the short one is what the site itself links to, so a
-                    // regenerated checkout follows it and a published app does not break.
-                    runCatching {
-                        context.startActivity(
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://square.link/u/AGu8oT10")),
-                        )
-                    }.onFailure {
-                        Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
-                    }
-                }
-                .padding(vertical = 4.dp),
-        ) {
-            Image(
-                painter = painterResource(R.drawable.llama),
-                contentDescription = null,
-                modifier = Modifier.size(22.dp),
-            )
-            Spacer(Modifier.width(6.dp))
-            TextMMD(text = stringResource(R.string.about_feed_the_llamas), style = MaterialTheme.typography.bodySmall)
-        }
     }
 }

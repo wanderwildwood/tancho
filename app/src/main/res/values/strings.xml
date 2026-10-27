@@ -87,8 +87,8 @@
     <string name="no_browser">There is no browser on this phone to open that with.</string>
     <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
     <string name="about_title">Birding %1$s</string>
-    <!-- The donation link at the foot of the About, beside a drawing of a llama. A fixed phrase: a verb and an object, so the reader knows what pressing it does -->
-    <string name="about_feed_the_llamas">feed the llamas</string>
+    <!-- A link at the foot of the About to the text of the licence the BirdNET model is under -->
+    <string name="about_model_licence_link">Read the CC BY-NC-SA 4.0 licence</string>
     <string name="heard_not_in_log">That hearing is no longer in the log.</string>
     <string name="list_jump_setting">Letters and page dots</string>
     <string name="list_jump_shown">Shown</string>
