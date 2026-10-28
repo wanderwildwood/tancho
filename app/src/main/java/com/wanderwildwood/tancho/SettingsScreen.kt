@@ -33,7 +33,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
-import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
@@ -107,10 +106,7 @@ fun SettingsScreen(
                     onCycle = settings::cycleHighPass,
                 )
             }
-            item {
-
-                HorizontalDividerMMD()
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
             item {
 
                 SwitchRow(
@@ -176,10 +172,7 @@ fun SettingsScreen(
                     onCheckedChange = { settings.bluetooth = it },
                 )
             }
-            item {
-
-                HorizontalDividerMMD()
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
             item {
 
                 SwitchRow(
@@ -223,10 +216,7 @@ fun SettingsScreen(
                     )
                 }
             }
-            item {
-
-                HorizontalDividerMMD()
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
             item {
 
                 // The names the birds are read out under. Not "Language": the app's own words
@@ -237,10 +227,7 @@ fun SettingsScreen(
                     onClick = onChooseLanguage,
                 )
             }
-            item {
-
-                HorizontalDividerMMD()
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
             item {
 
                 // A heading groups them; the labels carry the rest. A row that needs a
@@ -265,10 +252,7 @@ fun SettingsScreen(
             item {
                 DeleteRow(onConfirmed = onDeleteLog)
             }
-            item {
-
-                HorizontalDividerMMD()
-            }
+            item { Spacer(modifier = Modifier.height(12.dp)) }
             item {
 
                 // Resetting throws away every choice on this screen, so it asks the way

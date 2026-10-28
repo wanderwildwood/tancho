@@ -18,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 
@@ -55,7 +54,6 @@ fun LanguageScreen(chosen: String, inUse: String, onChoose: (String) -> Unit) {
                     chosen = chosen == BirdNames.FOLLOW_PHONE,
                     onClick = { onChoose(BirdNames.FOLLOW_PHONE) },
                 )
-                HorizontalDividerMMD()
             }
             items(BirdNames.languages) { language ->
                 LanguageRow(
