@@ -56,7 +56,7 @@
     <string name="photo_description">Photo of the bird</string>
     <string name="wikipedia">Wikipedia</string>
     <string name="log_heading">The log</string>
-    <string name="export_log">Send the log somewhere</string>
+    <string name="export_log">Save the log as a file</string>
     <string name="save_backup">Save a backup</string>
     <string name="restore_backup">Restore a backup</string>
     <string name="restore_backup_confirm">Restore — this replaces the log; tap again</string>

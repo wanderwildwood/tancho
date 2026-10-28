@@ -80,13 +80,29 @@ class SettingsActivity : BaseActivity() {
         }
     }
 
-    /** Every observation as text, handed to whatever the reader wants to send it with. */
+    /** Every observation as a CSV file, saved wherever the reader chooses with the file picker. */
     private fun exportLog() {
-        val database = BirdDBHelper.getInstance(this)
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.setType("text/plain")
-        intent.putExtra(Intent.EXTRA_TEXT, database.exportAllEntriesAsCSV().joinToString("\n"))
-        startActivity(Intent.createChooser(intent, ""))
+        val stamp = LocalDateTime.now()
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd_HH-mm", Locale.ROOT))
+        exportLauncher.launch(
+            LogExport.fileName(resources.getString(R.string.app_name), stamp)
+        )
+    }
+
+    private val exportLauncher =
+        registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+            if (uri != null) performExport(uri)
+        }
+
+    private fun performExport(uri: Uri) {
+        try {
+            val lines = BirdDBHelper.getInstance(this).exportAllEntriesAsCSV()
+            contentResolver.openOutputStream(uri)!!.use {
+                it.write(LogExport.text(lines).toByteArray(Charsets.UTF_8))
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+        }
     }
 
     /** The database itself, zipped, wherever the reader chooses to put it. */
