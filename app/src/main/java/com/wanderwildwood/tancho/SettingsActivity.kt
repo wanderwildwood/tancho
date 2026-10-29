@@ -69,10 +69,12 @@ class SettingsActivity : BaseActivity() {
                         settings = settings,
                         birdNames = remember(chosen) { BirdNames.nameInUse(activity) },
                         onChooseLanguage = { showLanguages = true },
-                        onExportLog = ::exportLog,
-                        onSaveBackup = ::saveBackup,
-                        onRestoreBackup = ::restoreBackup,
+                        onExportLog = { settleLog(); exportLog() },
+                        onSaveBackup = { settleLog(); saveBackup() },
+                        onRestoreBackup = { settleLog(); restoreBackup() },
                         onDeleteLog = ::deleteLog,
+                        logGone = logGone.value,
+                        onUndoLog = ::undoLog,
                     )
                 }
               }
@@ -123,11 +125,35 @@ class SettingsActivity : BaseActivity() {
         resultLauncher.launch(intent)
     }
 
-    /** Confirmed on the row itself before it gets here. There is no undo. */
+    /** The log just deleted, held (rows, and the recordings left alone) until the reader moves on. */
+    private val undoLogWindow = UndoWindow<List<BirdObservation>>()
+    private val logGone = androidx.compose.runtime.mutableStateOf(false)
+
+    /** Confirmed on the row itself before it gets here. Undo is on offer until the reader moves on. */
     private fun deleteLog() {
-        BirdDBHelper.getInstance(this).clearAllEntries()
-        WavUtils.sweepOrphans(this, emptySet())
-        Toast.makeText(this, getString(R.string.clear_db), Toast.LENGTH_SHORT).show()
+        settleLog()
+        val db = BirdDBHelper.getInstance(this)
+        undoLogWindow.hold(db.allRows())
+        db.clearAllEntries()
+        logGone.value = true
+    }
+
+    private fun undoLog() {
+        val rows = undoLogWindow.release() ?: return
+        logGone.value = false
+        BirdDBHelper.getInstance(this).restoreRows(rows)
+    }
+
+    /** Makes a deleted log final: the recordings go now. */
+    private fun settleLog() {
+        logGone.value = false
+        if (undoLogWindow.release() == null) return
+        WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
+    }
+
+    override fun onStop() {
+        super.onStop()
+        settleLog()
     }
 
     /**

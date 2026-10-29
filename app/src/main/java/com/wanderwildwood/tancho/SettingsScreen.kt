@@ -64,6 +64,8 @@ fun SettingsScreen(
     onSaveBackup: () -> Unit,
     onRestoreBackup: () -> Unit,
     onDeleteLog: () -> Unit,
+    logGone: Boolean = false,
+    onUndoLog: () -> Unit = {},
 ) {
     var showAbout by remember { mutableStateOf(false) }
     if (showAbout) {
@@ -269,6 +271,7 @@ fun SettingsScreen(
             }
         }
 
+        if (logGone) UndoStrip(stringResource(R.string.deleted_log), onUndo = onUndoLog)
         DestinationRowCompose(current = Destination.SETTINGS)
     }
 }

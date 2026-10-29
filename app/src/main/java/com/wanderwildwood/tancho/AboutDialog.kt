@@ -55,6 +55,7 @@ fun AboutDialog(onDismiss: () -> Unit) {
                     Body(R.string.about_terms)
                 }
             }
+            item { LicencesLink() }
             item {
                 Column {
                     Heading(R.string.about_credits_title)

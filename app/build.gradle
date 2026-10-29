@@ -23,8 +23,8 @@ android {
         applicationId "com.wanderwildwood.tancho"
         minSdk 26
         targetSdk 35
-        versionCode 42
-        versionName "1.7.24"
+        versionCode 44
+        versionName "1.7.26"
     }
 
     lintOptions{

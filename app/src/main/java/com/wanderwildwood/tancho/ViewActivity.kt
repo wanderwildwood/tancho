@@ -66,6 +66,10 @@ class ViewActivity : BaseActivity() {
     private lateinit var mContext: Context
     private var photoUrl: String? = null
 
+    /** The line just deleted, kept (rows and recordings) until the reader moves on. */
+    private val undo = UndoWindow<List<BirdObservation>>()
+    private val undoText = mutableStateOf<String?>(null)
+
     /**
      * No ActionBar. It carried the app's name and nothing else - the row along the bottom
      * already says which screen this is - and on a 480x800 panel that is a row of the log
@@ -103,6 +107,12 @@ class ViewActivity : BaseActivity() {
         loadAssetList(this)
         loadEbirdList(this)
         wireList()
+        binding.undoStrip.setContent {
+            ThemeMMD(colorScheme = monochrome) {
+                val text = undoText.value
+                if (text != null) UndoStrip(text, onUndo = ::undoDelete)
+            }
+        }
         focus = focusOf(intent)
     }
 
@@ -125,6 +135,26 @@ class ViewActivity : BaseActivity() {
     override fun onPause() {
         super.onPause()
         WavUtils.stopPlaying()
+    }
+
+    /** Leaving the screen makes a delete final: only now do its recordings go. */
+    override fun onStop() {
+        super.onStop()
+        settleDelete()
+    }
+
+    /** Forgets what Undo could bring back, and sweeps the recordings nothing in the log names. */
+    private fun settleDelete() {
+        undoText.value = null
+        if (undo.release() == null) return
+        Thread { WavUtils.sweepOrphans(this, database.allTimestamps()) }.start()
+    }
+
+    private fun undoDelete() {
+        val rows = undo.release() ?: return
+        undoText.value = null
+        database.restoreRows(rows)
+        reloadObservations()
     }
 
     private fun focusOf(intent: Intent?): Focus? {
@@ -239,12 +269,18 @@ class ViewActivity : BaseActivity() {
                                 onClick = {
                                     if (isArmed) {
                                         armed = null
+                                        // The recordings stay until the reader moves on, so Undo has them.
+                                        val gone = database.rowsById(row.coveredIds)
                                         database.removeEntries(row.coveredIds)
-                                        Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps()) }.start()
+                                        if (undo.hold(gone) != null) {
+                                            Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps() + gone.map { it.millis }) }.start()
+                                        }
+                                        undoText.value = getString(R.string.deleted_observation, row.name)
                                         clearPhoto()
                                         reloadObservations()
                                     } else {
                                         armed = null
+                                        settleDelete()
                                         openObservation(row)
                                     }
                                 },

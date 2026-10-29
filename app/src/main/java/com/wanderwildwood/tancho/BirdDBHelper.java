@@ -94,6 +94,50 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         return out;
     }
 
+    /** The rows with these ids exactly as stored, so a removal can be put back. */
+    public synchronized List<BirdObservation> rowsById(List<Integer> ids) {
+        List<BirdObservation> out = new ArrayList<>();
+        if (ids == null || ids.isEmpty()) return out;
+        Set<Integer> want = new HashSet<>(ids);
+        for (BirdObservation o : allRows()) if (want.contains(o.getId())) out.add(o);
+        return out;
+    }
+
+    /** Every row, one per reading, unmerged. */
+    public synchronized List<BirdObservation> allRows() {
+        List<BirdObservation> out = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        try (Cursor c = db.rawQuery("SELECT * FROM " + TABLE_NAME, null)) {
+            while (c.moveToNext()) {
+                out.add(new BirdObservation(c.getInt(0), c.getLong(1), c.getFloat(2), c.getFloat(3),
+                        c.getString(4), c.getInt(5), c.getFloat(6)));
+            }
+        }
+        return out;
+    }
+
+    /** Writes removed rows back under the ids they had, which keeps the log in its order. */
+    public synchronized void restoreRows(List<BirdObservation> rows) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.beginTransaction();
+        try {
+            for (BirdObservation o : rows) {
+                ContentValues cv = new ContentValues();
+                cv.put(COLUMN_ID, o.getId());
+                cv.put(COLUMN_NAME, o.getName());
+                cv.put(COLUMN_MILLIS, o.getMillis());
+                cv.put(COLUMN_LATITUDE, o.getLatitude());
+                cv.put(COLUMN_LONGITUDE, o.getLongitude());
+                cv.put(COLUMN_SPECIES_ID, o.getSpeciesId());
+                cv.put(COLUMN_PROBABILITY, o.getProbability());
+                db.insertWithOnConflict(TABLE_NAME, null, cv, SQLiteDatabase.CONFLICT_REPLACE);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public synchronized void clearAllEntries() {
         SQLiteDatabase db = getWritableDatabase();
         String CLEAR_TABLE = "DELETE FROM "+ TABLE_NAME;
