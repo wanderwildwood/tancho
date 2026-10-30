@@ -44,7 +44,7 @@ object BirdPhoto {
     private val newest = AtomicLong(0)
 
     /**
-     * The credit line printed under every photograph. The image host gives no photographer
+     * The credit line printed on the bottom-left corner of every photograph. The image host gives no photographer
      * with the picture, so in practice this is the Library's line alone; a name, when one
      * is ever supplied, goes first.
      */

@@ -32,6 +32,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -215,7 +218,6 @@ private fun PhotoBand(assetId: String?) {
         .aspectRatio(1.8f)
 
     val current = bitmap
-    Column {
     if (current == null) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_monochrome),
@@ -224,18 +226,29 @@ private fun PhotoBand(assetId: String?) {
             modifier = modifier,
         )
     } else {
-        Image(
-            bitmap = current,
-            contentDescription = stringResource(R.string.photo_description),
-            contentScale = ContentScale.Crop,
-            modifier = modifier,
-        )
-        TextMMD(
-            text = BirdPhoto.creditLine(null, stringResource(R.string.photo_credit_by), stringResource(R.string.photo_credit)),
-            fontSize = 14.sp,
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
-        )
-    }
+        Box(modifier = modifier) {
+            Image(
+                bitmap = current,
+                contentDescription = stringResource(R.string.photo_description),
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+            )
+            // The credit sits on the photo's bottom-left corner: white, black outline, so it
+            // reads on any grey. Overlaid, so the photo keeps the whole band.
+            TextMMD(
+                text = BirdPhoto.creditLine(null, stringResource(R.string.photo_credit_by), stringResource(R.string.photo_credit)),
+                fontSize = 14.sp,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(4.dp)
+                    .background(Color.White, RoundedCornerShape(4.dp))
+                    .border(1.dp, Color.Black, RoundedCornerShape(4.dp))
+                    .padding(horizontal = 4.dp, vertical = 2.dp),
+            )
+        }
     }
 }
 
