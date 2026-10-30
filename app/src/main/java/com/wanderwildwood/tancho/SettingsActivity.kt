@@ -103,7 +103,7 @@ class SettingsActivity : BaseActivity() {
                 it.write(LogExport.text(lines).toByteArray(Charsets.UTF_8))
             }
         } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.export_failed, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -231,7 +231,7 @@ class SettingsActivity : BaseActivity() {
             WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
             Toast.makeText(this, getString(R.string.restore_done), Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.restore_failed, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         } finally {
             staged.delete()
@@ -263,8 +263,9 @@ class SettingsActivity : BaseActivity() {
             srcStream.close()
             dstStream.close()
             tmpFile.delete()
+            Toast.makeText(this, R.string.backup_saved, Toast.LENGTH_SHORT).show()
         } catch (e: Exception) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, R.string.backup_failed, Toast.LENGTH_LONG).show()
             e.printStackTrace()
         }
     }

@@ -15,7 +15,7 @@
             android:id="@+id/icon"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:foregroundGravity="top"
             android:focusableInTouchMode="true"
             android:focusable="true"
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="4">
+            android:layout_weight="5">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -73,6 +73,28 @@
                     android:onClick="download"
                     />
 
+                <!-- Shown only while a download runs. -->
+                <Button
+                    android:id="@+id/download_cancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:visibility="gone"
+                    android:text="@string/cancel"
+                    android:onClick="cancel"
+                    android:textSize="18sp" />
+
+                <!-- Why a download did not work, where it can be read: a Toast is gone before it is. -->
+                <TextView
+                    android:id="@+id/download_error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:visibility="gone"
+                    android:textColor="?colorPrimary"
+                    android:gravity="center"
+                    android:textSize="18sp" />
+
                 <!-- Invisible, not gone: the bar has to hold its place from the start, or
                      the card grows the moment a download begins and the whole panel
                      repaints to move everything above it. -->
@@ -93,4 +115,21 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!-- Privacy, Terms and Licences before anything is downloaded or asked. -->
+    <ImageButton
+        android:id="@+id/about_button"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:background="@null"
+        android:src="@drawable/ic_info_24dp"
+        android:contentDescription="@string/about"
+        android:onClick="about" />
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/about_host"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

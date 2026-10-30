@@ -47,7 +47,10 @@ you a species from another continent.
 ## Network
 
 1. **The model, once.** On first run the app downloads the BirdNET model files (~39MB, or
-   ~63MB for 32-bit) from `raw.githubusercontent.com`. After that it identifies birds with
+   ~63MB for 32-bit) from `raw.githubusercontent.com`, from one fixed commit of the
+   whoBIRD-TFlite repository, and checks each against a SHA-256 built into the app; a file
+   that does not match is deleted. GitHub sees your internet address. The download screen has
+   an About button (Privacy, Terms, Licences), and a Cancel button while it runs. After that it identifies birds with
    no network at all — aeroplane mode included.
 2. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
    server (`cdn.download.ams.birds.cornell.edu`) as a single jpeg, and kept in the app's
@@ -62,6 +65,18 @@ you a species from another continent.
 
 There is no analytics, no crash reporting and no update check. The HTTP library the app
 carried but never called has been removed.
+
+## Backups by the phone
+
+Android's own backup (to your Google account or by `adb backup`) is switched off for this
+app (`allowBackup="false"`), so your log, with the place of each hearing, is not copied
+anywhere by the system. Use Settings > Backup if you want a copy, and keep it where you choose.
+
+## Photographs
+
+Every photograph belongs to its photographer and is published by the Macaulay Library of the
+Cornell Lab of Ornithology. The app shows it so that you can tell the bird, keeps it in its
+cache, and grants no other use of it.
 
 ## What is stored, and where
 

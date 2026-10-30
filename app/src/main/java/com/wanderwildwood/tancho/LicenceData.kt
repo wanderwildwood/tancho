@@ -16,6 +16,8 @@ val LIBRARIES: List<Library> =
     listOf(
         Library("whoBIRD", "woheller69", "GPL-3.0", "https://github.com/woheller69/whoBIRD"),
         Library("BirdNET model and framework", "Stefan Kahl and the Cornell Lab of Ornithology (downloaded once, not in the APK)", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
+        Library("BirdNET species names in other languages (labels_xx.txt)", "The BirdNET project and its translators", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
+        Library("Bird photographs, fetched when shown, not in the APK", "Their photographers, through the Macaulay Library, Cornell Lab of Ornithology", "Copyright of the photographers", "https://www.macaulaylibrary.org"),
         Library("TensorFlow Lite examples", "The TensorFlow Authors", "Apache-2.0", "https://www.tensorflow.org/lite/examples"),
         Library("LiteRT", "Google", "Apache-2.0", "https://ai.google.dev/edge/litert"),
         Library("AndroidX AppCompat, ConstraintLayout, Preference; Material Components", "Google", "Apache-2.0", "https://developer.android.com/jetpack"),

@@ -29,4 +29,8 @@ class LicencesTest {
     @Test fun `paragraphs are joined without losing words`() {
         assertEquals(listOf("one two", "three"), licenceParagraphs("one\ntwo\n\nthree\n"))
     }
+
+    @Test fun `the model licence text is bundled`() {
+        assertTrue(licenceParagraphs(raw("cc_by_nc_sa_4_0.txt")).any { it.contains("Attribution-NonCommercial-ShareAlike") })
+    }
 }

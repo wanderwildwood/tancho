@@ -70,6 +70,7 @@ fun LicencesScreen(onBack: () -> Unit) {
     val gpl by produceTexts(context, R.raw.gpl_3_0)
     val apache by produceTexts(context, R.raw.apache_2_0)
     val ofl by produceTexts(context, R.raw.ofl_1_1)
+    val cc by produceTexts(context, R.raw.cc_by_nc_sa_4_0)
 
     Dialog(onDismissRequest = onBack, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.surface) {
@@ -99,6 +100,8 @@ fun LicencesScreen(onBack: () -> Unit) {
                     apache.forEach { item { Paragraph(it) } }
                     item { Heading(stringResource(R.string.licences_ofl)) }
                     ofl.forEach { item { Paragraph(it) } }
+                    item { Heading(stringResource(R.string.licences_cc)) }
+                    cc.forEach { item { Paragraph(it) } }
                 }
                 OutlinedButtonMMD(
                     onClick = onBack,

@@ -5,6 +5,8 @@
     <string name="download_model">Download the model</string>
     <string name="download_model_text">Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="error_download">Download error</string>
+    <string name="download_failed">The model could not be downloaded. Check that the phone is online and try again.</string>
+    <string name="error_download_wrong">The file that arrived is not the model this version expects, so it was thrown away. Try again, or look for an update.</string>
     <string name="clear_db">Observations deleted</string>
     <string name="delete">Delete all observations?</string>
     <string name="settings_threshold">Threshold</string>
@@ -69,6 +71,11 @@
     <string name="summary_show_spectrogram">Draw the shape of the recording under the photograph when a row is opened: time across, pitch up, loud dark.</string>
     <string name="clear_recordings">Keep recordings for this session only</string>
     <string name="about">About</string>
+    <string name="cancel">Cancel</string>
+    <string name="export_failed">The log could not be saved there.</string>
+    <string name="backup_failed">The backup could not be saved there.</string>
+    <string name="backup_saved">Backup saved.</string>
+    <string name="licences_cc">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (the BirdNET model and its species names)</string>
     <string name="close">Close</string>
     <!-- The recogniser's threshold in settings. %1$s is a whole number from the list the row cycles through, e.g. 30 -->
     <string name="settings_threshold_value">%1$s%%</string>
@@ -92,7 +99,7 @@
     <string name="about_terms_title">Terms</string>
     <string name="about_terms">Birding is free software under the GNU General Public License v3. It comes with no warranty: use it at your own risk. The name it gives a bird is a model\'s guess and can be wrong. The BirdNET model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="about_credits_title">Made from</string>
-    <string name="about_credits">A fork of whoBIRD by woheller69.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
+    <string name="about_credits">A fork of whoBIRD by woheller69.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl and Holger Klinck, of the Cornell Lab of Ornithology and Chemnitz University of Technology.\n\nPhotographs \u2014 Macaulay Library, Cornell Lab of Ornithology. Each picture belongs to its photographer. It is fetched from Cornell\'s server to show you the bird, kept in this app\'s cache, and is not licensed for any other use.</string>
     <string name="share_place">Include the place when sharing</string>
     <string name="summary_share_place">Add the latitude and longitude to a hearing sent from the log. Off, it says what and when, and not where you stood.</string>
     <string name="no_microphone">No microphone</string>
