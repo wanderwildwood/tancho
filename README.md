@@ -11,8 +11,8 @@ Fork of [whoBIRD](https://github.com/woheller69/whoBIRD) by woheller69.
 
 | | |
 |---|---|
-| ![Listening, with what it hears named as it hears it](screenshots/1-listening.png) | ![The log of what was heard](screenshots/2-heard.png) |
-| ![The species list](screenshots/3-species.png) | ![Settings, including which language the bird names are in](screenshots/4-settings.png) |
+| ![Listening: what it hears is named here as it is heard](screenshots/1-listening.png) | ![The species list, a bird's photograph with its credit](screenshots/2-species.png) |
+| ![Settings, with the threshold and the audio source](screenshots/3-settings.png) | ![About, with Privacy, Terms and Licences](screenshots/4-about.png) |
 
 ## How it works
 
