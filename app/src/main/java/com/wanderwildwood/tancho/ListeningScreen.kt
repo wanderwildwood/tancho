@@ -40,6 +40,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
 import kotlinx.coroutines.delay
@@ -214,6 +215,7 @@ private fun PhotoBand(assetId: String?) {
         .aspectRatio(1.8f)
 
     val current = bitmap
+    Column {
     if (current == null) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_monochrome),
@@ -228,6 +230,12 @@ private fun PhotoBand(assetId: String?) {
             contentScale = ContentScale.Crop,
             modifier = modifier,
         )
+        TextMMD(
+            text = BirdPhoto.creditLine(null, stringResource(R.string.photo_credit_by), stringResource(R.string.photo_credit)),
+            fontSize = 14.sp,
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 2.dp),
+        )
+    }
     }
 }
 

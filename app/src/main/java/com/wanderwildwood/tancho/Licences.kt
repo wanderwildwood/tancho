@@ -94,6 +94,8 @@ fun LicencesScreen(onBack: () -> Unit) {
                     LIBRARIES.forEach { library ->
                         item { Link("${library.name}, ${library.by}: ${library.licence}", library.link) }
                     }
+                    item { Heading(stringResource(R.string.licences_photos_heading)) }
+                    item { Paragraph(stringResource(R.string.licences_photos)) }
                     item { Heading(stringResource(R.string.licences_gpl)) }
                     gpl.forEach { item { Paragraph(it) } }
                     item { Heading(stringResource(R.string.licences_apache)) }

@@ -74,9 +74,11 @@ anywhere by the system. Use Settings > Backup if you want a copy, and keep it wh
 
 ## Photographs
 
+The photograph is fetched from the Macaulay Library's image host when you open a species.
+
 Every photograph belongs to its photographer and is published by the Macaulay Library of the
 Cornell Lab of Ornithology. The app shows it so that you can tell the bird, keeps it in its
-cache, and grants no other use of it.
+cache, and grants no other use of it. A credit line naming the Library is printed under every photograph.
 
 ## What is stored, and where
 

@@ -184,10 +184,13 @@ class BirdInfoActivity : BaseActivity() {
             if (bitmap == null) {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
                 binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
+                binding.photoCredit.setVisibility(View.GONE)
                 Toast.makeText(applicationContext, getString(R.string.error_download), Toast.LENGTH_SHORT).show()
             } else {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_CROP)
                 binding.photo.setImageBitmap(bitmap)
+                binding.photoCredit.setText(BirdPhoto.creditLine(null, getString(R.string.photo_credit_by), getString(R.string.photo_credit)))
+                binding.photoCredit.setVisibility(View.VISIBLE)
             }
         }
     }
@@ -196,6 +199,7 @@ class BirdInfoActivity : BaseActivity() {
         photoUrl = null
         binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
         binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
+        binding.photoCredit.setVisibility(View.GONE)
         binding.photoName.setText("")
         binding.photoName.setVisibility(View.GONE)
         binding.photoLatinname.setText("")

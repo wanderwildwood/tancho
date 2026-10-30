@@ -56,6 +56,10 @@
     <string name="destination_settings">Settings</string>
     <string name="download_the_model">Download the model</string>
     <string name="photo_description">Photo of the bird</string>
+    <string name="photo_credit">Macaulay Library, Cornell Lab of Ornithology</string>
+    <string name="photo_credit_by">Photo: %1$s, Macaulay Library, Cornell Lab of Ornithology</string>
+    <string name="licences_photos_heading">Bird photographs</string>
+    <string name="licences_photos">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s licence.</string>
     <string name="wikipedia">Wikipedia</string>
     <string name="log_heading">The log</string>
     <string name="export_log">Save the log as a file</string>

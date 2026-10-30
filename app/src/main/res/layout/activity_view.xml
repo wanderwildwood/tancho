@@ -101,6 +101,15 @@
                 android:textColor="?colorPrimary"
                 android:textSize="14sp" />
         </RelativeLayout>
+        <TextView
+            android:id="@+id/photo_credit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="2dp"
+            android:textColor="?colorPrimary"
+            android:textSize="14sp" />
         <!-- The shape of what was heard, under the bird it was. Height is set in code so
              it keeps a fixed slice of the panel; gone rather than invisible because unlike
              the photograph this one is absent for most rows, and a permanent empty band

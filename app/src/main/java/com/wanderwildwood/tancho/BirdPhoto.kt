@@ -43,6 +43,14 @@ object BirdPhoto {
      */
     private val newest = AtomicLong(0)
 
+    /**
+     * The credit line printed under every photograph. The image host gives no photographer
+     * with the picture, so in practice this is the Library's line alone; a name, when one
+     * is ever supplied, goes first.
+     */
+    fun creditLine(photographer: String?, withName: String, withoutName: String): String =
+        if (photographer.isNullOrBlank()) withoutName else String.format(withName, photographer.trim())
+
     fun url(assetId: String) =
         "https://cdn.download.ams.birds.cornell.edu/api/v2/asset/$assetId/$WIDTH"
 
