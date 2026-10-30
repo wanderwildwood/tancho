@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Birding</string>
+    <string name="samples_zero">Kein Ton erreicht das Mikrofon</string>
+    <string name="download_model">Modell herunterladen</string>
+    <string name="download_model_text">Birding braucht das BirdNET-Modell, etwa 39 MB. Es wird einmal heruntergeladen und funktioniert danach ohne Netz.\n\nDas Modell steht unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden.</string>
+    <string name="error_download">Fehler beim Herunterladen</string>
+    <string name="clear_db">Beobachtungen gelöscht</string>
+    <string name="delete">Alle Beobachtungen löschen?</string>
+    <string name="settings_threshold">Schwelle</string>
+    <string name="settings_highpass">Hochpassfilter</string>
+    <string name="source_unprocessed">Unbearbeitet</string>
+    <string name="source_microphone">Mikrofon</string>
+    <string name="source_voicerecognition">Spracherkennung</string>
+    <string name="settings_audiosource">Tonquelle</string>
+    <string name="settings_notification_sound">Ton bei jeder Erkennung</string>
+    <string name="save_wav">Aufnahmen speichern</string>
+    <string name="summary_save_wav">Behält den Klang jeder Erkennung, sodass ein Tippen auf die Zeile wiedergibt, was gehört wurde. Etwa 288 KB pro Aufnahme, im Speicher der App statt in deiner Musik.</string>
+    <string name="bird_names">Vogelnamen</string>
+    <string name="bird_names_phone">Wie das Telefon</string>
+    <string name="settings_reset">Einstellungen zurücksetzen</string>
+    <string name="settings_reset_confirm">Einstellungen zurücksetzen — tippe erneut</string>
+    <string name="bluetooth_connection">Bluetooth verwenden</string>
+    <string name="manual_location">Ort festlegen</string>
+    <string name="error_invalid_GPS">Ungültiges GPS-Format</string>
+    <string name="listening">Hört zu</string>
+    <string name="stopped">Gestoppt</string>
+    <string name="start_listening">Zuhören starten</string>
+    <string name="stop_listening">Zuhören beenden</string>
+    <string name="nothing_heard_yet">Noch nichts gehört.</string>
+    <string name="stopped_explainer">Kein Zuhören. Es wird nichts aufgenommen.</string>
+    <string name="list_repeats">Jede Wiederholung</string>
+    <string name="summary_list_repeats">Einen immer wieder gehörten Vogel als eine Zeile für den Durchlauf auflisten oder als jeden Eintrag mit eigener Uhrzeit.</string>
+    <string name="summary_settings_audiosource">Von welchem Mikrofoneingang aufgenommen wird. Unbearbeitet ist am rohesten und das, was die Erkennung erwartet.</string>
+    <string name="summary_settings_threshold">Wie sicher die Erkennung sein muss, bevor ein Vogel notiert wird. Niedriger fängt mehr und liegt öfter falsch.</string>
+    <string name="summary_settings_highpass">Wirft vor dem Zuhören alles unterhalb dieser Tonhöhe weg, gegen Verkehr oder Wind. 0 lässt den Klang unangetastet.</string>
+    <string name="summary_bluetooth_connection">Nimmt den Ton von einem verbundenen Bluetooth-Mikrofon statt vom Telefon selbst.</string>
+    <string name="summary_manual_location">Gibt einen festen Breiten- und Längengrad an, statt GPS zu nutzen. Damit fragt die App nie nach der Standortberechtigung.</string>
+    <string name="photo_while_listening">Foto beim Zuhören</string>
+    <string name="summary_photo_while_listening">Zeigt oben auf dem Zuhörbildschirm das Bild des letzten klar gehörten Vogels. Es bleibt dort, bis ein anderer Vogel ebenso klar gehört wird.</string>
+    <string name="ignore_non_birds">Nur Vögel</string>
+    <string name="summary_ignore_non_birds">Wirft die Nicht-Vogel-Antworten des Modells weg: Menschen, Hunde, Motoren, Sirenen, Werkzeuge und bloßes Rauschen.</string>
+    <string name="place_and_date">Ort und Datum</string>
+    <string name="place_title">Ort</string>
+    <string name="place_use_gps">GPS verwenden</string>
+    <string name="place_manual_hint">Breiten- und Längengrad, etwa 37.42/-122.08.</string>
+    <string name="place_and_date_unknown">Ort unbekannt</string>
+    <string name="place_and_date_off">Alle Vögel</string>
+    <string name="place_and_date_some">Erwartete zuerst</string>
+    <string name="place_and_date_full">Nur erwartete</string>
+    <string name="destination_listening">Zuhören</string>
+    <string name="destination_observations">Gehört</string>
+    <string name="destination_species">Arten</string>
+    <string name="destination_settings">Einstellungen</string>
+    <string name="download_the_model">Modell herunterladen</string>
+    <string name="photo_description">Foto des Vogels</string>
+    <string name="wikipedia">Wikipedia</string>
+    <string name="log_heading">Das Protokoll</string>
+    <string name="export_log">Protokoll als Datei speichern</string>
+    <string name="save_backup">Sicherung erstellen</string>
+    <string name="restore_backup">Sicherung wiederherstellen</string>
+    <string name="restore_backup_confirm">Wiederherstellen — ersetzt das Protokoll; tippe erneut</string>
+    <string name="restore_done">Protokoll wiederhergestellt</string>
+    <string name="restore_failed">Diese Datei ist keine Sicherung aus dieser App</string>
+    <string name="delete_observation_confirm">Entfernen — tippe erneut</string>
+    <string name="delete_log">Protokoll löschen</string>
+    <string name="delete_log_confirm">Protokoll löschen — tippe erneut</string>
+    <string name="show_spectrogram">Den Klang anzeigen</string>
+    <string name="summary_show_spectrogram">Zeichnet beim Öffnen einer Zeile die Form der Aufnahme unter dem Foto: Zeit nach rechts, Tonhöhe nach oben, laut dunkel.</string>
+    <string name="clear_recordings">Aufnahmen nur für diese Sitzung behalten</string>
+    <string name="about">Über</string>
+    <string name="close">Schließen</string>
+    <!-- The recogniser's threshold in settings. %1$s is a whole number from the list the row cycles through, e.g. 30 -->
+    <string name="settings_threshold_value">%1$s %%</string>
+    <!-- The high-pass filter in settings. %1$s is a whole number of hertz, e.g. 200 -->
+    <string name="settings_highpass_value">%1$s Hz</string>
+    <!-- Beside a bird heard more than once in a row. %1$s is how many times, 2 or more -->
+    <string name="times_heard">×%1$s</string>
+    <!-- Toast when GPS is off in the phone's settings -->
+    <string name="error_no_gps">Fehler: kein GPS</string>
+    <!-- Checkbox on the first screen: download the larger, 32-bit model instead -->
+    <string name="download_32bit">32 Bit (~63 MB)</string>
+    <!-- Toast when a web link cannot be opened -->
+    <string name="no_browser">Auf diesem Telefon gibt es keinen Browser, um das zu öffnen.</string>
+    <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
+    <string name="about_title">Birding %1$s</string>
+    <!-- A link at the foot of the About to the text of the licence the BirdNET model is under -->
+    <string name="about_model_licence_link">Lizenz CC BY-NC-SA 4.0 lesen</string>
+    <string name="about_privacy_title">Datenschutz</string>
+    <string name="about_privacy">Dein Protokoll bleibt auf diesem Telefon, und die Erkennung eines Vogels geschieht hier. Die App geht nur für zwei Dinge online: das BirdNET-Modell, einmal von GitHub geladen (etwa 39 MB), und das Foto eines Vogels von Cornells Bildserver, für eine Zeile, die du öffnest, oder während ein Vogel gehört wird, wenn Foto beim Zuhören an ist. Diese Anfragen enthalten nichts, was du gehört oder geschrieben hast; die Server sehen deine Internetadresse und nach welchem Vogelbild gefragt wurde. eBird und Wikipedia öffnen sich nur in deinem Browser, wenn du sie antippst.</string>
+    <string name="about_privacy_more">Das Mikrofon ist nur offen, während Birding zuhört, und der Klang wird nicht behalten, solange du nicht Aufnahmen speichern einschaltest. Der Standort dient nur dazu, abzuwägen, welche Vögel wo wahrscheinlich sind, wenn du ihn erlaubst oder einen Ort eintippst. Der Ort wird mit jedem Eintrag in deinem Protokoll gespeichert und geht so mit einem versendeten Protokoll oder einer Sicherung hinaus; ein geteilter Eintrag enthält ihn nur, wenn du das in den Einstellungen einschaltest. Es gibt keine Werbung, keine Analysen und kein Tracking. Sicherungen und Exporte gehen nur dorthin, wo du sie speicherst.</string>
+    <string name="about_terms_title">Bedingungen</string>
+    <string name="about_terms">Birding ist freie Software unter der GNU General Public License v3. Sie kommt ohne Gewährleistung: Nutzung auf eigene Gefahr. Der Name, den sie einem Vogel gibt, ist die Vermutung eines Modells und kann falsch sein. Das BirdNET-Modell steht unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden.</string>
+    <string name="about_credits_title">Basiert auf</string>
+    <string name="about_credits">Ein Fork von whoBIRD von woheller69.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl und Holger Klinck, vom Cornell Lab of Ornithology und der Technischen Universität Chemnitz.\n\nFotos \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
+    <string name="share_place">Ort beim Teilen mitgeben</string>
+    <string name="summary_share_place">Hängt Breiten- und Längengrad an einen aus dem Protokoll geteilten Eintrag. Aus sagt er, was und wann, aber nicht, wo du standst.</string>
+    <string name="no_microphone">Kein Mikrofon</string>
+    <string name="no_microphone_explainer">Birding braucht das Mikrofon, um Vögel zu hören. Tippe oben auf Kein Mikrofon, um es zu erlauben.</string>
+    <string name="ask_microphone_title">Mikrofon erlauben</string>
+    <string name="ask_microphone_body">Birding hört über das Mikrofon, um Vögel zu hören. Der Klang wird auf diesem Telefon erkannt und weder behalten noch irgendwohin gesendet, solange du nicht Aufnahmen speichern einschaltest.</string>
+    <string name="ask_location_title">Standort erlauben</string>
+    <string name="ask_location_body">Birding nutzt, wo du bist, nur auf diesem Telefon, um abzuwägen, welche Vögel hier wahrscheinlich sind. Der Ort wird mit jedem Eintrag in deinem Protokoll gespeichert. Du kannst ablehnen und stattdessen in den Einstellungen einen Ort eintippen.</string>
+    <string name="ask_continue">Weiter</string>
+    <string name="ask_not_now">Jetzt nicht</string>
+    <string name="open_app_settings">Öffne die Einstellungen des Telefons für Birding und erlaube das Mikrofon unter Berechtigungen.</string>
+    <string name="search_birds_hint">Vögel suchen</string>
+    <string name="reload_photo">Foto neu laden</string>
+    <string name="share_hearing">Diesen Eintrag teilen</string>
+    <string name="ebird_page">Diesen Vogel auf eBird öffnen</string>
+    <string name="wikipedia_page">Diesen Vogel auf Wikipedia öffnen</string>
+    <string name="heard_not_in_log">Dieser Eintrag ist nicht mehr im Protokoll.</string>
+    <string name="deleted_observation">%1$s wurde gelöscht.</string>
+    <string name="deleted_log">Das Protokoll wurde gelöscht.</string>
+    <string name="deleted_undo">Rückgängig</string>
+    <!-- Licences page, reached from About -->
+    <string name="licences_title">Lizenzen</string>
+    <string name="licences_source_heading">Quellcode</string>
+    <string name="licences_source">Quelle: %1$s</string>
+    <string name="licences_licence_heading">Lizenz</string>
+    <string name="licences_licence">Birding ist freie Software unter der GNU General Public License, Version 3. Copyright wander wildwood, und woheller69 für die Teile, die von whoBIRD stammen. Das BirdNET-Modell, das sie herunterlädt, ist ein eigenes Werk unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden.</string>
+    <string name="licences_built_heading">Baut auf</string>
+    <string name="licences_gpl">GNU General Public License, Version 3</string>
+    <string name="licences_apache">Apache License, Version 2.0</string>
+    <string name="licences_ofl">SIL Open Font License, Version 1.1</string>
+    <string name="licences_no_browser">Es ist kein Browser installiert.</string>
+    <string name="licences_close">Schließen</string>
+
+    <!-- The folio at the foot of a paged list, "2 / 6"; a tap on it asks for a page -->
+    <string name="folio_of">%1$d / %2$d</string>
+    <string name="folio_go_title">Zu Seite springen</string>
+    <string name="folio_page">Seite %1$d von %2$d</string>
+    <string name="folio_go">Los</string>
+    <string name="folio_cancel">Abbrechen</string>
+</resources>
