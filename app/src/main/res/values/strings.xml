@@ -58,8 +58,6 @@
     <string name="photo_description">Photo of the bird</string>
     <string name="photo_credit">Macaulay Library, Cornell Lab of Ornithology</string>
     <string name="photo_credit_by">Photo: %1$s, Macaulay Library, Cornell Lab of Ornithology</string>
-    <string name="licences_photos_heading">Bird photographs</string>
-    <string name="licences_photos">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s licence.</string>
     <string name="wikipedia">Wikipedia</string>
     <string name="log_heading">The log</string>
     <string name="export_log">Save the log as a file</string>
@@ -79,7 +77,6 @@
     <string name="export_failed">The log could not be saved there.</string>
     <string name="backup_failed">The backup could not be saved there.</string>
     <string name="backup_saved">Backup saved.</string>
-    <string name="licences_cc">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 (the BirdNET model and its species names)</string>
     <string name="close">Close</string>
     <!-- The recogniser's threshold in settings. %1$s is a whole number from the list the row cycles through, e.g. 30 -->
     <string name="settings_threshold_value">%1$s%%</string>
@@ -125,22 +122,18 @@
     <string name="deleted_log">The log was deleted.</string>
     <string name="deleted_undo">Undo</string>
     <!-- Licences page, reached from About -->
+    <string name="about_no_browser_address">No browser is installed. The address is %1$s.</string>
     <string name="licences_title">Licences</string>
-    <string name="licences_source_heading">Source code</string>
-    <string name="licences_source">Source: %1$s</string>
-    <string name="licences_licence_heading">Licence</string>
+    <string name="licences_back">Back</string>
+    <string name="licences_source_head">Source code</string>
+    <string name="licences_licence_head">Licence</string>
     <string name="licences_licence">Birding is free software under the GNU General Public License, version 3. Copyright wander wildwood, and woheller69 for the parts that come from whoBIRD. The BirdNET model it downloads is a separate work under CC BY-NC-SA 4.0 and may not be used commercially.</string>
-    <string name="licences_built_heading">Built with</string>
-    <string name="licences_gpl">GNU General Public License, version 3</string>
-    <string name="licences_apache">Apache License, version 2.0</string>
-    <string name="licences_ofl">SIL Open Font License, version 1.1</string>
-    <string name="licences_no_browser">No browser is installed.</string>
-    <string name="licences_close">Close</string>
-
-    <!-- The folio at the foot of a paged list, "2 / 6"; a tap on it asks for a page -->
-    <string name="folio_of">%1$d / %2$d</string>
-    <string name="folio_go_title">Go to page</string>
-    <string name="folio_page">Page %1$d of %2$d</string>
-    <string name="folio_go">Go</string>
-    <string name="folio_cancel">Cancel</string>
+    <string name="licences_built_head">Built with</string>
+    <string name="licences_fetched_head">Downloaded or fetched</string>
+    <string name="licences_fetched">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s licence.</string>
+    <string name="licences_full_head">Full texts</string>
+    <string name="licences_full_gpl">GNU General Public License, version 3 (full text)</string>
+    <string name="licences_full_apache">Apache License 2.0 (full text)</string>
+    <string name="licences_full_ofl">SIL Open Font License 1.1 (full text)</string>
+    <string name="licences_full_cc">Creative Commons Attribution-NonCommercial-ShareAlike 4.0, for the BirdNET model and its species names (full text)</string>
 </resources>

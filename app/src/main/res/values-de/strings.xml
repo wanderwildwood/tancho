@@ -114,22 +114,18 @@
     <string name="deleted_log">Das Protokoll wurde gelöscht.</string>
     <string name="deleted_undo">Rückgängig</string>
     <!-- Licences page, reached from About -->
+    <string name="about_no_browser_address">Es ist kein Browser installiert. Die Adresse lautet %1$s.</string>
     <string name="licences_title">Lizenzen</string>
-    <string name="licences_source_heading">Quellcode</string>
-    <string name="licences_source">Quelle: %1$s</string>
-    <string name="licences_licence_heading">Lizenz</string>
+    <string name="licences_back">Zurück</string>
+    <string name="licences_source_head">Quellcode</string>
+    <string name="licences_licence_head">Lizenz</string>
     <string name="licences_licence">Birding ist freie Software unter der GNU General Public License, Version 3. Copyright wander wildwood, und woheller69 für die Teile, die von whoBIRD stammen. Das BirdNET-Modell, das sie herunterlädt, ist ein eigenes Werk unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden.</string>
-    <string name="licences_built_heading">Baut auf</string>
-    <string name="licences_gpl">GNU General Public License, Version 3</string>
-    <string name="licences_apache">Apache License, Version 2.0</string>
-    <string name="licences_ofl">SIL Open Font License, Version 1.1</string>
-    <string name="licences_no_browser">Es ist kein Browser installiert.</string>
-    <string name="licences_close">Schließen</string>
-
-    <!-- The folio at the foot of a paged list, "2 / 6"; a tap on it asks for a page -->
-    <string name="folio_of">%1$d / %2$d</string>
-    <string name="folio_go_title">Zu Seite springen</string>
-    <string name="folio_page">Seite %1$d von %2$d</string>
-    <string name="folio_go">Los</string>
-    <string name="folio_cancel">Abbrechen</string>
+    <string name="licences_built_head">Baut auf</string>
+    <string name="licences_fetched_head">Heruntergeladen oder abgerufen</string>
+    <string name="licences_fetched">Die Vogelfotos stammen aus der Macaulay Library des Cornell Lab of Ornithology. Die Rechte bleiben bei den Fotografen und bei Cornell. Die App zeigt sie unverändert, ruft eines ab, wenn Sie eine Art öffnen, und hält es nur im eigenen Zwischenspeicher. Sie gehören nicht zur Lizenz dieser App.</string>
+    <string name="licences_full_head">Volle Texte</string>
+    <string name="licences_full_gpl">GNU General Public License, Version 3 (voller Text)</string>
+    <string name="licences_full_apache">Apache License 2.0 (voller Text)</string>
+    <string name="licences_full_ofl">SIL Open Font License 1.1 (voller Text)</string>
+    <string name="licences_full_cc">Creative Commons Attribution-NonCommercial-ShareAlike 4.0, für das BirdNET-Modell und seine Artennamen (voller Text)</string>
 </resources>
