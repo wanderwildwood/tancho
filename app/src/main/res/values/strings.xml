@@ -123,6 +123,7 @@
     <string name="deleted_undo">Undo</string>
     <!-- Licences page, reached from About -->
     <string name="about_no_browser_address">No browser is installed. The address is %1$s.</string>
+    <string name="about_feed_the_llamas">Feed the llamas</string>
     <string name="licences_title">Licences</string>
     <string name="licences_back">Back</string>
     <string name="licences_source_head">Source code</string>

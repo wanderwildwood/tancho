@@ -115,6 +115,7 @@
     <string name="deleted_undo">Rückgängig</string>
     <!-- Licences page, reached from About -->
     <string name="about_no_browser_address">Es ist kein Browser installiert. Die Adresse lautet %1$s.</string>
+    <string name="about_feed_the_llamas">Füttere die Lamas</string>
     <string name="licences_title">Lizenzen</string>
     <string name="licences_back">Zurück</string>
     <string name="licences_source_head">Quellcode</string>
