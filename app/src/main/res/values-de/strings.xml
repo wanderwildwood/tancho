@@ -118,9 +118,7 @@
     <string name="licences_title">Lizenzen</string>
     <string name="licences_back">Zurück</string>
     <string name="licences_source_head">Quellcode</string>
-    <string name="licences_licence_head">Lizenz</string>
     <string name="licences_licence">Birding ist freie Software unter der GNU General Public License, Version 3. Copyright wander wildwood, und woheller69 für die Teile, die von whoBIRD stammen. Das BirdNET-Modell, das sie herunterlädt, ist ein eigenes Werk unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden.</string>
-    <string name="licences_built_head">Baut auf</string>
     <string name="licences_fetched_head">Heruntergeladen oder abgerufen</string>
     <string name="licences_fetched">Die Vogelfotos stammen aus der Macaulay Library des Cornell Lab of Ornithology. Die Rechte bleiben bei den Fotografen und bei Cornell. Die App zeigt sie unverändert, ruft eines ab, wenn Sie eine Art öffnen, und hält es nur im eigenen Zwischenspeicher. Sie gehören nicht zur Lizenz dieser App.</string>
     <string name="licences_full_head">Volle Texte</string>
