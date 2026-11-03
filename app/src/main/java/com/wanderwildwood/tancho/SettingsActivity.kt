@@ -3,7 +3,6 @@ package com.wanderwildwood.tancho
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
@@ -15,7 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalCursorBlinkEnabled
 import com.mudita.mmd.ThemeMMD
-import net.lingala.zip4j.ZipFile
+import androidx.preference.PreferenceManager
 import java.io.File
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -161,10 +160,14 @@ class SettingsActivity : BaseActivity() {
     /**
      * Reads a backup back in.
      *
-     * The zip holds the databases folder and nothing else, so this replaces the log rather
-     * than merging into it - there is no sensible way to reconcile two logs of the same
-     * mornings. Recordings are not in a backup and are not restored: a row whose recording
-     * is gone still reads, it just has nothing to play.
+     * The zip holds the databases folder, the recordings the log named and the settings, so
+     * this replaces the log and the settings rather than merging - there is no sensible way to
+     * reconcile two logs of the same mornings. Recordings join the ones already kept; a backup
+     * from before they were included has none, and a row whose recording is gone still reads,
+     * it just has nothing to play.
+     *
+     * The whole file is unpacked and the log opened before anything changes, and the work is
+     * done off the main thread: a backup with a season of recordings is hundreds of megabytes.
      */
     private fun restoreBackup() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
@@ -175,100 +178,121 @@ class SettingsActivity : BaseActivity() {
 
     private val restoreLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) result.data?.data?.let { performRestore(it) }
+            if (result.resultCode == RESULT_OK) result.data?.data?.let { uri ->
+                Toast.makeText(this, R.string.restore_working, Toast.LENGTH_SHORT).show()
+                val app = applicationContext
+                Thread {
+                    val (message, restored) = performRestore(app, uri)
+                    runOnUiThread {
+                        Toast.makeText(app, message, Toast.LENGTH_LONG).show()
+                        // The settings on screen were read before the restore; read them again.
+                        if (restored && !isFinishing && !isDestroyed) recreate()
+                    }
+                }.start()
+            }
         }
 
-    private fun performRestore(uri: Uri) {
-        val databases = File(Environment.getDataDirectory(), "//data//$packageName//databases//")
-        val staged = File(cacheDir, "restore.zip")
+    /** Does the restore and says how it went: the sentence to show, and whether anything changed. */
+    private fun performRestore(context: android.content.Context, uri: Uri): Pair<String, Boolean> {
+        val databases = context.getDatabasePath(BirdDBHelper.DB_NAME).parentFile!!
+        val staging = File(context.cacheDir, "restore-staging")
         try {
-            contentResolver.openInputStream(uri).use { input ->
-                staged.outputStream().use { output -> input!!.copyTo(output) }
+            val unpacked = try {
+                context.contentResolver.openInputStream(uri)?.use { input ->
+                    BackupArchive.unpack(input, staging, BirdDBHelper.DB_NAME)
+                } ?: return context.getString(R.string.restore_unreadable) to false
+            } catch (e: BackupArchive.Refused) {
+                return context.getString(
+                    if (e.kind == BackupArchive.Refused.Kind.NOT_A_BACKUP) R.string.restore_failed else R.string.restore_damaged
+                ) to false
+            } catch (e: java.io.IOException) {
+                return context.getString(R.string.restore_unreadable) to false
             }
 
-            // Refuse anything that is not one of ours before touching the live database.
-            val zip = ZipFile(staged)
-            val looksRight = zip.fileHeaders.any { it.fileName.endsWith(BirdDBHelper.DB_NAME) }
-            if (!looksRight) {
-                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
-                return
-            }
-
-            // ⚠ Unpacked and checked beside the log, then swapped in -- never deleted first,
-            // which is what this did: every file in the databases folder went, then the backup
-            // was extracted, so a damaged backup or a full disk part way through left no log
-            // at all and only part of the new one.
-            val staging = File(cacheDir, "restore-staging").apply { deleteRecursively(); mkdirs() }
-            zip.extractAll(staging.path)
-            val stagedDb = staging.walkTopDown().firstOrNull { it.name == BirdDBHelper.DB_NAME }
-            val opens = stagedDb != null && runCatching {
+            val stagedDb = File(unpacked.databases, BirdDBHelper.DB_NAME)
+            val opens = runCatching {
                 android.database.sqlite.SQLiteDatabase.openDatabase(
                     stagedDb.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY
                 ).use { db -> db.rawQuery("SELECT count(*) FROM sqlite_master", null).use { it.moveToFirst() } }
             }.getOrDefault(false)
-            if (!opens) {
-                staging.deleteRecursively()
-                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
-                return
-            }
+            if (!opens) return context.getString(R.string.restore_damaged) to false
 
             // Close the open handle first: moving a database out from under SQLite leaves the
             // process holding a file that no longer exists.
-            BirdDBHelper.getInstance(this).close()
+            // ⚠ Unpacked and checked beside the log, then swapped in -- never deleted first,
+            // so a damaged backup or a full disk part way through leaves the log as it was.
+            BirdDBHelper.getInstance(context).close()
             val previous = File(databases.parentFile, "databases-before-restore").apply { deleteRecursively() }
             val setAside = !databases.exists() || databases.renameTo(previous)
-            val placed = setAside && stagedDb!!.parentFile!!.renameTo(databases)
+            val placed = setAside && unpacked.databases.renameTo(databases)
             if (!placed) {
                 // Whatever happened, the log that was there goes back where it was.
                 if (!databases.exists() && previous.exists()) previous.renameTo(databases)
-                staging.deleteRecursively()
-                BirdDBHelper.reopen(this)
-                Toast.makeText(this, getString(R.string.restore_failed), Toast.LENGTH_LONG).show()
-                return
+                BirdDBHelper.reopen(context)
+                return context.getString(R.string.restore_unreadable) to false
             }
             previous.deleteRecursively()
-            staging.deleteRecursively()
-            BirdDBHelper.reopen(this)
-            // Recordings belong to lines; those the restored log has no line for go.
-            WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
-            Toast.makeText(this, getString(R.string.restore_done), Toast.LENGTH_SHORT).show()
+            BirdDBHelper.reopen(context)
+
+            val recordingsDir = WavUtils.recordingsDir(context)
+            val sounds = if (recordingsDir == null) 0 else BackupArchive.placeRecordings(unpacked.recordings, recordingsDir)
+            unpacked.settings?.let { applySettings(context, it) }
+            val lines = BirdDBHelper.getInstance(context).allTimestamps().size
+            return context.getString(R.string.restore_done_counts, lines, sounds) to true
         } catch (e: Exception) {
-            Toast.makeText(this, R.string.restore_failed, Toast.LENGTH_LONG).show()
             e.printStackTrace()
+            return context.getString(R.string.restore_unreadable) to false
         } finally {
-            staged.delete()
+            staging.deleteRecursively()
         }
+    }
+
+    private fun applySettings(context: android.content.Context, values: Map<String, Any>) {
+        val edit = PreferenceManager.getDefaultSharedPreferences(context).edit()
+        for ((key, value) in values) when (value) {
+            is Boolean -> edit.putBoolean(key, value)
+            is Int -> edit.putInt(key, value)
+            is Float -> edit.putFloat(key, value)
+            is String -> edit.putString(key, value)
+        }
+        edit.commit()
     }
 
     private val resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
-                result.data?.data?.let { performBackup(it) }
+                result.data?.data?.let { uri ->
+                    Toast.makeText(this, R.string.backup_working, Toast.LENGTH_SHORT).show()
+                    val app = applicationContext
+                    Thread {
+                        val ok = performBackup(app, uri)
+                        runOnUiThread {
+                            Toast.makeText(app, if (ok) R.string.backup_saved else R.string.backup_failed,
+                                if (ok) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
+                        }
+                    }.start()
+                }
             }
         }
 
-    private fun performBackup(uri: Uri) {
-        val intData = File(
-            Environment.getDataDirectory().toString() + "//data//" + this.packageName + "//databases//"
-        )
-        try {
-            val tmpFile = File(cacheDir, "backup.zip")
-            if (tmpFile.exists()) tmpFile.delete()
-            ZipFile(tmpFile).addFolder(intData)
-            val srcStream = tmpFile.inputStream()
-            val dstStream = contentResolver.openOutputStream(uri)!!
-            val buffer = ByteArray(1024)
-            var read: Int
-            while ((srcStream.read(buffer).also { read = it }) != -1) {
-                dstStream.write(buffer, 0, read)
+    /**
+     * The log's database folder, the recordings its lines name and the settings, zipped straight
+     * into the file the reader chose (no copy in the cache first: the recordings can be large).
+     */
+    private fun performBackup(context: android.content.Context, uri: Uri): Boolean {
+        val databases = context.getDatabasePath(BirdDBHelper.DB_NAME).parentFile!!
+        return try {
+            val logged = BirdDBHelper.getInstance(context).allTimestamps()
+            val recordings = BackupArchive.recordingsInLog(WavUtils.recordings(context).toList(), logged)
+            val settings = BackupArchive.settingsText(PreferenceManager.getDefaultSharedPreferences(context).all)
+            context.contentResolver.openOutputStream(uri, "wt")!!.use { out ->
+                BackupArchive.write(out.buffered(), databases, recordings, settings)
             }
-            srcStream.close()
-            dstStream.close()
-            tmpFile.delete()
-            Toast.makeText(this, R.string.backup_saved, Toast.LENGTH_SHORT).show()
+            true
         } catch (e: Exception) {
-            Toast.makeText(this, R.string.backup_failed, Toast.LENGTH_LONG).show()
             e.printStackTrace()
+            runCatching { android.provider.DocumentsContract.deleteDocument(context.contentResolver, uri) }
+            false
         }
     }
 }

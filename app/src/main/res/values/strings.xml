@@ -63,9 +63,13 @@
     <string name="export_log">Save the log as a file</string>
     <string name="save_backup">Save a backup</string>
     <string name="restore_backup">Restore a backup</string>
-    <string name="restore_backup_confirm">Restore — this replaces the log; tap again</string>
-    <string name="restore_done">Log restored</string>
-    <string name="restore_failed">That file is not a backup this app wrote</string>
+    <string name="restore_backup_confirm">Restore — this replaces the log and settings; tap again</string>
+    <string name="restore_done_counts">Restored. %1$d hearings in the log, %2$d recordings added.</string>
+    <string name="restore_failed">That file is not a backup this app wrote. Nothing was changed.</string>
+    <string name="restore_damaged">That backup is damaged, so it was not used. Nothing was changed.</string>
+    <string name="restore_unreadable">That file could not be read. Nothing was changed.</string>
+    <string name="restore_working">Restoring the backup…</string>
+    <string name="backup_working">Saving the backup…</string>
     <string name="delete_observation_confirm">Remove this — tap again</string>
     <string name="delete_log">Delete the log</string>
     <string name="delete_log_confirm">Delete the log — tap again</string>

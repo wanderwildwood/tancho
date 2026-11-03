@@ -59,8 +59,7 @@
     <string name="export_log">Protokoll als Datei speichern</string>
     <string name="save_backup">Sicherung erstellen</string>
     <string name="restore_backup">Sicherung wiederherstellen</string>
-    <string name="restore_backup_confirm">Wiederherstellen — ersetzt das Protokoll; tippe erneut</string>
-    <string name="restore_done">Protokoll wiederhergestellt</string>
+    <string name="restore_backup_confirm">Wiederherstellen — ersetzt Protokoll und Einstellungen; tippe erneut</string>
     <string name="restore_failed">Diese Datei ist keine Sicherung aus dieser App</string>
     <string name="delete_observation_confirm">Entfernen — tippe erneut</string>
     <string name="delete_log">Protokoll löschen</string>

@@ -71,6 +71,8 @@ carried but never called has been removed.
 Android's own backup (to your Google account or by `adb backup`) is switched off for this
 app (`allowBackup="false"`), so your log, with the place of each hearing, is not copied
 anywhere by the system. Use Settings > Backup if you want a copy, and keep it where you choose.
+The backup holds the log, the recordings its lines name, and the settings (including a place you
+typed in, if you did).
 
 ## Photographs
 
