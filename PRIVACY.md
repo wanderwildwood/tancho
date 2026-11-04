@@ -15,7 +15,7 @@ seconds. Nothing is uploaded, because there is no code that could upload it.
 
 Audio is written to disk only if you turn on **Save recordings** in Settings, which is off
 by default. Those files go to the app's own folder on external storage, not into your music.
-A morning outdoors can write hundreds of megabytes — the recogniser runs every 800ms and every
+A morning outdoors can write hundreds of megabytes — the recognizer runs every 800ms and every
 detection above the threshold writes a file — and a music library is the wrong place for that:
 every player, scanner and backup would find them and offer them as songs.
 
@@ -50,8 +50,8 @@ you a species from another continent.
    ~63MB for 32-bit) from `raw.githubusercontent.com`, from one fixed commit of the
    whoBIRD-TFlite repository, and checks each against a SHA-256 built into the app; a file
    that does not match is deleted. GitHub sees your internet address. The download screen has
-   an About button (Privacy, Terms, Licences), and a Cancel button while it runs. After that it identifies birds with
-   no network at all — aeroplane mode included.
+   an About button (Privacy, Terms, Licenses), and a Cancel button while it runs. After that it identifies birds with
+   no network at all — airplane mode included.
 2. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
    server (`cdn.download.ams.birds.cornell.edu`) as a single jpeg, and kept in the app's
    cache so a species is fetched once. On the listening screen this is off by default
@@ -100,4 +100,32 @@ database can be exported, backed up, restored or deleted from inside the app, un
 | `INTERNET` | The three uses above. |
 | `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` | The location model. Optional. |
 | `BLUETOOTH_CONNECT` | To record from a Bluetooth microphone if you select one. |
-| `MODIFY_AUDIO_SETTINGS` | To choose the audio input the recogniser reads. |
+| `MODIFY_AUDIO_SETTINGS` | To choose the audio input the recognizer reads. |
+
+<!-- shared-about privacy section -->
+## Who we are
+
+Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. Birding keeps what you put in it on your phone, apart from what it sends to GitHub and the Cornell Lab of Ornithology as described above, and sends nothing to the developer, so the developer holds no data about you.
+
+## How to contact us
+
+Write to email@wanderthe.dev about your data, this policy or anything else. The same address is in the app, under About.
+
+## Your rights
+
+If you are in the EU, the EEA or the UK, the GDPR gives you the right to:
+
+- see the personal data held about you (access)
+- have it corrected (rectification) or deleted (erasure)
+- limit how it is used (restriction)
+- object to its use (objection)
+- get a copy to take elsewhere (portability)
+- withdraw your consent at any time, where something rests on it
+- complain to a data protection supervisory authority, for example the one where you live
+
+Similar laws elsewhere, such as the CCPA in California, give you the right to know, delete and correct, and to opt out of the sale or sharing of your data. Nothing from Birding is sold or shared.
+
+Since Birding keeps what it stores only on your phone, you can exercise most of these rights yourself: export, back up, restore or delete the log under Settings, clear the app's data in Android's settings, or uninstall the app, which deletes all of it. For anything you cannot do yourself, write to the address above.
+
+Birding connects to GitHub and the Cornell Lab of Ornithology. They are separate from this app and from its developer, and what they receive is covered by their own privacy policies; ask them about what they hold.
+<!-- /shared-about privacy section -->
