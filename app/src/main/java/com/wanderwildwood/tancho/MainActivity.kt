@@ -107,47 +107,49 @@ class MainActivity : BaseActivity() {
 
     setContent {
       ThemeMMD(colorScheme = monochrome) {
-       // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
-       CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
-        val isListening by state.isListening.collectAsStateWithLifecycle()
-        val micAllowed by state.micAllowed.collectAsStateWithLifecycle()
-        val heard by state.heard.collectAsStateWithLifecycle()
-        val photo by state.photo.collectAsStateWithLifecycle()
-        var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
-        // Re-read whenever the screen comes back, because a fix can arrive while it is up.
-        val placeKnown by state.placeKnown.collectAsStateWithLifecycle()
-        val settings = remember { Settings(this@MainActivity) }
+          ArmedScope {
+           // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
+           CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
+            val isListening by state.isListening.collectAsStateWithLifecycle()
+            val micAllowed by state.micAllowed.collectAsStateWithLifecycle()
+            val heard by state.heard.collectAsStateWithLifecycle()
+            val photo by state.photo.collectAsStateWithLifecycle()
+            var placeAndDate by remember { mutableStateOf(PlaceAndDate.nearest(storedInfluence)) }
+            // Re-read whenever the screen comes back, because a fix can arrive while it is up.
+            val placeKnown by state.placeKnown.collectAsStateWithLifecycle()
+            val settings = remember { Settings(this@MainActivity) }
 
-        ListeningScreen(
-          isListening = isListening,
-          micAllowed = micAllowed,
-          onAllowMicrophone = { allowMicrophone() },
-          placeKnown = placeKnown,
-          settings = settings,
-          // Re-reads the preference and tells the screen what it now knows, so turning GPS
-          // back on stops saying "Place not known" without leaving the screen.
-          onPlaceChanged = {
-            // Switching GPS on is the moment to ask for the permission it needs, with the
-            // reason first, if it was not given before.
-            if (!settings.manualLocation && !checkLocationPermission()) asking = Ask.LOCATION
-            LocationHelper.requestLocation(this@MainActivity, soundClassifier)
-          },
-          heard = heard,
-          placeAndDate = placeAndDate,
-          showPhoto = photoWhileListening,
-          photoAssetId = photo?.assetId,
-          onToggleListening = { setListening(!isListening) },
-          onCyclePlaceAndDate = {
-            placeAndDate = placeAndDate.next()
-            state.metaInfluence.value = placeAndDate.influence
-            sharedPref.edit()
-              .putFloat("meta_model_influence", placeAndDate.influence * 100f)
-              .apply()
-          },
-          onOpenHeard = { openInLog(it) },
-        )
-        PermissionAsk()
-       }
+            ListeningScreen(
+              isListening = isListening,
+              micAllowed = micAllowed,
+              onAllowMicrophone = { allowMicrophone() },
+              placeKnown = placeKnown,
+              settings = settings,
+              // Re-reads the preference and tells the screen what it now knows, so turning GPS
+              // back on stops saying "Place not known" without leaving the screen.
+              onPlaceChanged = {
+                // Switching GPS on is the moment to ask for the permission it needs, with the
+                // reason first, if it was not given before.
+                if (!settings.manualLocation && !checkLocationPermission()) asking = Ask.LOCATION
+                LocationHelper.requestLocation(this@MainActivity, soundClassifier)
+              },
+              heard = heard,
+              placeAndDate = placeAndDate,
+              showPhoto = photoWhileListening,
+              photoAssetId = photo?.assetId,
+              onToggleListening = { setListening(!isListening) },
+              onCyclePlaceAndDate = {
+                placeAndDate = placeAndDate.next()
+                state.metaInfluence.value = placeAndDate.influence
+                sharedPref.edit()
+                  .putFloat("meta_model_influence", placeAndDate.influence * 100f)
+                  .apply()
+              },
+              onOpenHeard = { openInLog(it) },
+            )
+            PermissionAsk()
+           }
+          }
       }
     }
 

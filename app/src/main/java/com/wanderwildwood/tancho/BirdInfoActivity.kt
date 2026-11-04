@@ -52,7 +52,9 @@ class BirdInfoActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) { DestinationRowCompose(Destination.SPECIES) } }
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) {
+            ArmedScope { DestinationRowCompose(Destination.SPECIES) }
+        } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -83,15 +85,17 @@ class BirdInfoActivity : BaseActivity() {
         shown.value = allBirdsList
         binding.speciesList.setContent {
             ThemeMMD(colorScheme = monochrome) {
-                val birds by shown
-                val state = rememberLazyListState()
-                PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
-                    items(birds, key = { it.first }) { (speciesId, label) ->
-                        BirdRow(
-                            name = label.split("_").last(),
-                            latinName = label.split("_").first(),
-                            modifier = Modifier.clickable { showSpecies(speciesId) },
-                        )
+                ArmedScope {
+                    val birds by shown
+                    val state = rememberLazyListState()
+                    PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
+                        items(birds, key = { it.first }) { (speciesId, label) ->
+                            BirdRow(
+                                name = label.split("_").last(),
+                                latinName = label.split("_").first(),
+                                modifier = Modifier.clickable { showSpecies(speciesId) },
+                            )
+                        }
                     }
                 }
             }

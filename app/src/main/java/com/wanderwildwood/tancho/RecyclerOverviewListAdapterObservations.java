@@ -21,11 +21,6 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     private final Context context;
     private final List<BirdObservation> birdObservations;
 
-    /** How long a row stays armed before it forgets it was asked. Birding's other rows too. */
-    private static final long ARMED_MS = 4000L;
-
-    private final android.os.Handler handler = new android.os.Handler(android.os.Looper.getMainLooper());
-    private final Runnable disarm = this::disarm;
     private int armedPosition = -1;
 
     public RecyclerOverviewListAdapterObservations(Context context, List<BirdObservation> birdObservations) {
@@ -37,8 +32,8 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
      * Asks, on the row, before taking a reading out of the log.
      *
      * A long press arms; the row says so in place of the bird's name; a tap then removes it.
-     * The question withdraws itself after a few seconds, so a row armed by accident is not
-     * left live in a list somebody is scrolling.
+     * The row stays armed, with no timer, until the caller disarms it (the next other touch,
+     * Back or leaving), like every other question these apps ask.
      *
      * No delete control sits on the rows themselves. This log runs to hundreds of lines and
      * a glyph repeated down all of them is a lot of ink to spend on an act that is rare and
@@ -47,14 +42,11 @@ public class RecyclerOverviewListAdapterObservations extends RecyclerView.Adapte
     public void arm(int position) {
         armedPosition = position;
         notifyItemChanged(position);
-        handler.removeCallbacks(disarm);
-        handler.postDelayed(disarm, ARMED_MS);
     }
 
     public void disarm() {
         int was = armedPosition;
         armedPosition = -1;
-        handler.removeCallbacks(disarm);
         if (was >= 0 && was < birdObservations.size()) notifyItemChanged(was);
     }
 

@@ -26,11 +26,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 
@@ -86,7 +84,9 @@ class ViewActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) { DestinationRowCompose(Destination.HEARD) } }
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) {
+            ArmedScope { DestinationRowCompose(Destination.HEARD) }
+        } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -109,8 +109,10 @@ class ViewActivity : BaseActivity() {
         wireList()
         binding.undoStrip.setContent {
             ThemeMMD(colorScheme = monochrome) {
-                val text = undoText.value
-                if (text != null) UndoStrip(text, onUndo = ::undoDelete)
+                ArmedScope {
+                    val text = undoText.value
+                    if (text != null) UndoStrip(text, onUndo = ::undoDelete)
+                }
             }
         }
         focus = focusOf(intent)
@@ -201,9 +203,6 @@ class ViewActivity : BaseActivity() {
         }
     }
 
-    /** How long a row stays armed before it forgets it was asked. Six, as everywhere. */
-    private val ARMED_MS = 6000L
-
     /** Reads the log in and puts it on screen. Run on the way in, and after a row is removed. */
     private fun reloadObservations() {
         // Asked for again rather than kept. Restoring a backup closes this helper and opens
@@ -233,64 +232,62 @@ class ViewActivity : BaseActivity() {
     private fun wireList() {
         binding.observationList.setContent {
             ThemeMMD(colorScheme = monochrome) {
-                val rows by observations
-                var armed by remember { mutableStateOf<Int?>(null) }
+                ArmedScope {
+                    val rows by observations
+                    var armed by rememberArmedKey<Int>()
 
-                // The question withdraws itself, like every other one these apps ask.
-                LaunchedEffect(armed) {
-                    if (armed == null) return@LaunchedEffect
-                    delay(ARMED_MS)
-                    armed = null
-                }
+                    // Stays armed until the next other touch, Back or leaving, like every other
+                    // question these apps ask. No timer.
 
-                val target by scrollTarget
-                LaunchedEffect(target) {
-                    val index = target ?: return@LaunchedEffect
-                    listState.scrollToItem(index)
-                    scrollTarget.value = null
-                }
+                    val target by scrollTarget
+                    LaunchedEffect(target) {
+                        val index = target ?: return@LaunchedEffect
+                        listState.scrollToItem(index)
+                        scrollTarget.value = null
+                    }
 
-                PagedColumn(state = listState, modifier = Modifier.fillMaxSize()) {
-                    itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
-                        val day = dateText(row.millis)
-                        if (index == 0 || dateText(rows[index - 1].millis) != day) {
-                            DayHeading(day)
-                        }
-                        val isArmed = armed == row.id
-                        BirdRow(
-                            name = if (isArmed) stringResource(R.string.delete_observation_confirm)
-                                else row.name,
-                            latinName = if (isArmed) ""
-                                else labelList[row.speciesId].split("_").first(),
-                            time = timeText(row.millis),
-                            percent = (row.probability * 20f).roundToInt() * 5,
-                            bold = isArmed,
-                            modifier = Modifier.combinedClickable(
-                                onClick = {
-                                    if (isArmed) {
-                                        armed = null
-                                        // The recordings stay until the reader moves on, so Undo has them.
-                                        val gone = database.rowsById(row.coveredIds)
-                                        database.removeEntries(row.coveredIds)
-                                        if (undo.hold(gone) != null) {
-                                            Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps() + gone.map { it.millis }) }.start()
+                    PagedColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+                        itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
+                            val day = dateText(row.millis)
+                            if (index == 0 || dateText(rows[index - 1].millis) != day) {
+                                DayHeading(day)
+                            }
+                            val isArmed = armed == row.id
+                            BirdRow(
+                                name = if (isArmed) stringResource(R.string.delete_observation_confirm)
+                                    else row.name,
+                                latinName = if (isArmed) ""
+                                    else labelList[row.speciesId].split("_").first(),
+                                time = timeText(row.millis),
+                                percent = (row.probability * 20f).roundToInt() * 5,
+                                bold = isArmed,
+                                modifier = Modifier.combinedClickable(
+                                    onClick = {
+                                        if (isArmed) {
+                                            armed = null
+                                            // The recordings stay until the reader moves on, so Undo has them.
+                                            val gone = database.rowsById(row.coveredIds)
+                                            database.removeEntries(row.coveredIds)
+                                            if (undo.hold(gone) != null) {
+                                                Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps() + gone.map { it.millis }) }.start()
+                                            }
+                                            undoText.value = getString(R.string.deleted_observation, row.name)
+                                            clearPhoto()
+                                            reloadObservations()
+                                        } else {
+                                            armed = null
+                                            settleDelete()
+                                            openObservation(row)
                                         }
-                                        undoText.value = getString(R.string.deleted_observation, row.name)
-                                        clearPhoto()
-                                        reloadObservations()
-                                    } else {
-                                        armed = null
-                                        settleDelete()
-                                        openObservation(row)
-                                    }
-                                },
-                                // A recogniser is wrong sometimes, and until there was this
-                                // the only answer to a wrong line was to throw the whole log
-                                // away -- so keeping a record you knew to be untrue was the
-                                // cheaper option.
-                                onLongClick = { armed = row.id },
-                            ),
-                        )
+                                    },
+                                    // A recogniser is wrong sometimes, and until there was this
+                                    // the only answer to a wrong line was to throw the whole log
+                                    // away -- so keeping a record you knew to be untrue was the
+                                    // cheaper option.
+                                    onLongClick = { armed = row.id },
+                                ),
+                            )
+                        }
                     }
                 }
             }

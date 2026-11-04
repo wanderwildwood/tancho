@@ -19,7 +19,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,7 +36,6 @@ import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
 import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
-import kotlinx.coroutines.delay
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.layout.width
@@ -359,8 +357,8 @@ private fun SwitchRow(
 /**
  * Clearing the log cannot be undone, so it asks first - but on the row itself rather than
  * in a dialog. A dialog is two full-panel repaints to ask one question; this is one row
- * changing what it says. The question withdraws itself after a few seconds, so a row armed
- * by a stray tap is not left armed for the next person to walk into.
+ * changing what it says. The row stays armed, with no timer, until the next other touch,
+ * Back or leaving the screen; Back only disarms it.
  */
 @Composable
 private fun DeleteRow(onConfirmed: () -> Unit) =
@@ -369,13 +367,7 @@ private fun DeleteRow(onConfirmed: () -> Unit) =
 /** A row that asks once. See the note above DeleteRow for why this is not a dialog. */
 @Composable
 private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) {
-    var armed by remember { mutableStateOf(false) }
-
-    LaunchedEffect(armed) {
-        if (!armed) return@LaunchedEffect
-        delay(ARMED_MS)
-        armed = false
-    }
+    var armed by rememberArmedFlag()
 
     Row(
         modifier = Modifier
@@ -397,9 +389,6 @@ private fun ConfirmingRow(label: Int, armedLabel: Int, onConfirmed: () -> Unit) 
         )
     }
 }
-
-/** How long a tap on the delete row stays armed before it forgets it was asked. */
-private const val ARMED_MS = 6000L
 
 /**
  * The only heading this app draws. The listening screen wants every pixel and says what it

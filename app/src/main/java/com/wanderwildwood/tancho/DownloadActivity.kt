@@ -31,6 +31,9 @@ class DownloadActivity  : BaseActivity() {
         // Privacy, Terms and Licences are readable here, before the first download.
         binding!!.aboutHost.setContent {
             ThemeMMD(colorScheme = monochrome) {
+                // No ArmedScope here: this ComposeView lies over the whole screen, and a scope's
+                // touch watcher would take the taps meant for the buttons under it. The About
+                // dialog is its own window and has no armed row.
                 CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
                     if (showAbout) AboutDialog(onDismiss = { showAbout = false })
                 }

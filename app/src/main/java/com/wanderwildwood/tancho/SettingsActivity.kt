@@ -44,40 +44,42 @@ class SettingsActivity : BaseActivity() {
         val activity = this
         setContent {
             ThemeMMD(colorScheme = monochrome) {
-              // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
-              CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
-                // The one place in the app with a screen behind a screen, so it is held
-                // here rather than by a second activity: one window, and back is back.
-                var showLanguages by remember { mutableStateOf(false) }
-                // Held out here so that choosing a language comes back to the row you
-                // chose it from, near the bottom, rather than to the top of the list.
-                var chosen by remember { mutableStateOf(BirdNames.chosen(activity)) }
+                ArmedScope {
+                  // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
+                  CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
+                    // The one place in the app with a screen behind a screen, so it is held
+                    // here rather than by a second activity: one window, and back is back.
+                    var showLanguages by remember { mutableStateOf(false) }
+                    // Held out here so that choosing a language comes back to the row you
+                    // chose it from, near the bottom, rather than to the top of the list.
+                    var chosen by remember { mutableStateOf(BirdNames.chosen(activity)) }
 
-                if (showLanguages) {
-                    BackHandler { showLanguages = false }
-                    LanguageScreen(
-                        chosen = chosen,
-                        inUse = remember(chosen) { BirdNames.inUse(activity) },
-                        onChoose = { code ->
-                            BirdNames.choose(activity, code)
-                            chosen = code
-                            showLanguages = false
-                        },
-                    )
-                } else {
-                    SettingsScreen(
-                        settings = settings,
-                        birdNames = remember(chosen) { BirdNames.nameInUse(activity) },
-                        onChooseLanguage = { showLanguages = true },
-                        onExportLog = { settleLog(); exportLog() },
-                        onSaveBackup = { settleLog(); saveBackup() },
-                        onRestoreBackup = { settleLog(); restoreBackup() },
-                        onDeleteLog = ::deleteLog,
-                        logGone = logGone.value,
-                        onUndoLog = ::undoLog,
-                    )
+                    if (showLanguages) {
+                        BackHandler { showLanguages = false }
+                        LanguageScreen(
+                            chosen = chosen,
+                            inUse = remember(chosen) { BirdNames.inUse(activity) },
+                            onChoose = { code ->
+                                BirdNames.choose(activity, code)
+                                chosen = code
+                                showLanguages = false
+                            },
+                        )
+                    } else {
+                        SettingsScreen(
+                            settings = settings,
+                            birdNames = remember(chosen) { BirdNames.nameInUse(activity) },
+                            onChooseLanguage = { showLanguages = true },
+                            onExportLog = { settleLog(); exportLog() },
+                            onSaveBackup = { settleLog(); saveBackup() },
+                            onRestoreBackup = { settleLog(); restoreBackup() },
+                            onDeleteLog = ::deleteLog,
+                            logGone = logGone.value,
+                            onUndoLog = ::undoLog,
+                        )
+                    }
+                  }
                 }
-              }
             }
         }
     }
