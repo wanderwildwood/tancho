@@ -33,8 +33,8 @@
     <string name="stopped_explainer">Not listening. Nothing is being recorded.</string>
     <string name="list_repeats">Every repeat</string>
     <string name="summary_list_repeats">List a bird heard over and over as one line for the run, or as every hearing with its own time.</string>
-    <string name="summary_settings_audiosource">Which microphone input to record from. Unprocessed is the rawest, and the one the recogniser expects.</string>
-    <string name="summary_settings_threshold">How sure the recogniser has to be before a bird is written down. Lower catches more, and is wrong more often.</string>
+    <string name="summary_settings_audiosource">Which microphone input to record from. Unprocessed is the rawest, and the one the recognizer expects.</string>
+    <string name="summary_settings_threshold">How sure the recognizer has to be before a bird is written down. Lower catches more, and is wrong more often.</string>
     <string name="summary_settings_highpass">Throw away everything below this pitch before listening, against traffic or wind. 0 leaves the sound alone.</string>
     <string name="summary_bluetooth_connection">Take the audio from a connected Bluetooth microphone rather than from the phone itself.</string>
     <string name="summary_manual_location">Give a fixed latitude and longitude instead of using GPS. With this on the app never asks for location permission at all.</string>
@@ -93,7 +93,7 @@
     <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
     <string name="about_title">Birding %1$s</string>
     <!-- A link at the foot of the About to the text of the licence the BirdNET model is under -->
-    <string name="about_model_licence_link">Read the CC BY-NC-SA 4.0 licence</string>
+    <string name="about_model_licence_link">Read the CC BY-NC-SA 4.0 license</string>
     <string name="about_privacy_title">Privacy</string>
     <string name="about_privacy">Your log stays on this phone, and identifying a bird happens here. The app goes online for two things only: the BirdNET model, downloaded once from GitHub (about 39MB), and a bird\'s photograph from Cornell\'s image server, for a row you open, or as a bird is heard if Photo while listening is on. Those requests carry nothing you have heard or written; the servers see your internet address and which bird\'s picture was asked for. eBird and Wikipedia open in your browser only when you press them.</string>
     <string name="about_privacy_more">The microphone is open only while Birding is listening, and the sound is not kept unless you turn on Save recordings. Location is used only to weigh which birds are likely where you are, if you allow it or type a place in. The place is stored with each hearing in your log, so it goes out with a sent log or a backup; a shared hearing includes it only if you switch that on in Settings. There are no ads, no analytics and no tracking. Backups and exports go only where you choose to save them.</string>
@@ -124,13 +124,13 @@
     <!-- Licences page, reached from About -->
     <string name="about_no_browser_address">No browser is installed. The address is %1$s.</string>
     <string name="about_feed_the_llamas">Feed the llamas</string>
-    <string name="licences_title">Licences</string>
+    <string name="licences_title">Licenses</string>
     <string name="licences_back">Back</string>
     <string name="licences_source_head">Source code</string>
-    <string name="licences_no_text">%s needs no licence text here.</string>
+    <string name="licences_no_text">%s needs no license text here.</string>
     <string name="licences_licence">Birding is free software under the GNU General Public License, version 3. Copyright wander wildwood, and woheller69 for the parts that come from whoBIRD. The BirdNET model it downloads is a separate work under CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="licences_fetched_head">Downloaded or fetched</string>
-    <string name="licences_fetched">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s licence.</string>
+    <string name="licences_fetched">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s license.</string>
     <string name="licences_full_head">Full texts</string>
     <string name="licences_full_gpl">GNU General Public License, version 3 (full text)</string>
     <string name="licences_full_apache">Apache License 2.0 (full text)</string>
