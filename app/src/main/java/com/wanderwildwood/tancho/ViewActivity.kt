@@ -84,7 +84,7 @@ class ViewActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) {
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
             ArmedScope { DestinationRowCompose(Destination.HEARD) }
         } }
         //Set aspect ratio for the photo
@@ -108,7 +108,7 @@ class ViewActivity : BaseActivity() {
         loadEbirdList(this)
         wireList()
         binding.undoStrip.setContent {
-            ThemeMMD(colorScheme = monochrome) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
                 ArmedScope {
                     val text = undoText.value
                     if (text != null) UndoStrip(text, onUndo = ::undoDelete)
@@ -231,7 +231,7 @@ class ViewActivity : BaseActivity() {
      */
     private fun wireList() {
         binding.observationList.setContent {
-            ThemeMMD(colorScheme = monochrome) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
                 ArmedScope {
                     val rows by observations
                     var armed by rememberArmedKey<Int>()

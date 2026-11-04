@@ -43,7 +43,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mudita.mmd.components.divider.HorizontalDividerMMD
 import com.mudita.mmd.components.text.TextMMD
 import kotlinx.coroutines.delay
@@ -237,7 +236,7 @@ private fun PhotoBand(assetId: String?) {
             // reads on any grey. Overlaid, so the photo keeps the whole band.
             TextMMD(
                 text = BirdPhoto.creditLine(null, stringResource(R.string.photo_credit_by), stringResource(R.string.photo_credit)),
-                fontSize = 14.sp,
+                fontSize = HouseTypeFloor,
                 color = Color.Black,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

@@ -52,7 +52,7 @@ class BirdInfoActivity : BaseActivity() {
         mContext = this
         setContentView(binding.root)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome) {
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
             ArmedScope { DestinationRowCompose(Destination.SPECIES) }
         } }
         //Set aspect ratio for the photo
@@ -84,7 +84,7 @@ class BirdInfoActivity : BaseActivity() {
 
         shown.value = allBirdsList
         binding.speciesList.setContent {
-            ThemeMMD(colorScheme = monochrome) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
                 ArmedScope {
                     val birds by shown
                     val state = rememberLazyListState()

@@ -43,7 +43,7 @@ class SettingsActivity : BaseActivity() {
         val settings = Settings(this)
         val activity = this
         setContent {
-            ThemeMMD(colorScheme = monochrome) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
                 ArmedScope {
                   // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
                   CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {

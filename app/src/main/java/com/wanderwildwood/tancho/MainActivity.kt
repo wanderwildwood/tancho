@@ -106,7 +106,7 @@ class MainActivity : BaseActivity() {
     soundClassifier = SoundClassifier(this, state, SoundClassifier.Options())
 
     setContent {
-      ThemeMMD(colorScheme = monochrome) {
+      ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
           ArmedScope {
            // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
            CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
