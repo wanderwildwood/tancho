@@ -1,0 +1,8 @@
+{
+  "uniqueId": "whobird",
+  "name": "whoBIRD",
+  "description": "Birding is a fork of whoBIRD: its recognition, recording and log code is carried on here.",
+  "developers": [{ "name": "woheller69" }],
+  "website": "https://github.com/woheller69/whoBIRD",
+  "licenses": ["GPL-3.0-only"]
+}

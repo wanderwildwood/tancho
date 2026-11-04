@@ -1,0 +1,14 @@
+{
+  "uniqueId": "ruy",
+  "name": "ruy (native, inside LiteRT)",
+  "description": "Built into LiteRT's native library (libtensorflowlite_jni.so); Gradle does not list it on its own.",
+  "developers": [
+    {
+      "name": "Google"
+    }
+  ],
+  "website": "https://github.com/google/ruy",
+  "licenses": [
+    "Apache-2.0"
+  ]
+}

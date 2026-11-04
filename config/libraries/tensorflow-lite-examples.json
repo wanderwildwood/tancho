@@ -1,0 +1,8 @@
+{
+  "uniqueId": "tensorflow-lite-examples",
+  "name": "TensorFlow Lite examples",
+  "description": "The audio classification code whoBIRD started from (the TensorFlow Lite examples).",
+  "developers": [{ "name": "The TensorFlow Authors" }],
+  "website": "https://github.com/tensorflow/examples",
+  "licenses": ["Apache-2.0"]
+}

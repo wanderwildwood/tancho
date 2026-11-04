@@ -6,26 +6,14 @@ import androidx.compose.ui.res.stringResource
 /** The address of the app's own source code. */
 const val SOURCE_URL = "https://github.com/wanderwildwood/tancho"
 
-/** What the APK carries that is not this app's own code, and the licence each project declares. */
-val LICENCE_COMPONENTS: List<LicenceComponent> = listOf(
-    LicenceComponent("whoBIRD", "woheller69", "GPL-3.0", "https://github.com/woheller69/whoBIRD"),
-    LicenceComponent("TensorFlow Lite examples", "The TensorFlow Authors", "Apache-2.0", "https://www.tensorflow.org/lite/examples"),
-    LicenceComponent("LiteRT", "Google", "Apache-2.0", "https://ai.google.dev/edge/litert"),
-    LicenceComponent("AndroidX AppCompat, ConstraintLayout, Preference; Material Components", "Google", "Apache-2.0", "https://developer.android.com/jetpack"),
-    LicenceComponent("Zip4j", "Srikanth Reddy Lingala", "Apache-2.0", "https://github.com/srikanth-lingala/zip4j"),
-    LicenceComponent("iirj, IIR filters", "Bernd Porr", "Apache-2.0", "https://github.com/berndporr/iirj"),
-    LicenceComponent("Mudita Mindful Design (MMD)", "Mudita", "Apache-2.0", "https://github.com/mudita/MMD"),
-    LicenceComponent("Lato typeface, inside MMD", "tyPoland Lukasz Dziedzic", "OFL-1.1", "https://www.latofonts.com"),
-    LicenceComponent("Jetpack Compose (UI, Foundation, Material 3), Activity, Lifecycle, Core", "Google", "Apache-2.0", "https://developer.android.com/jetpack"),
-    LicenceComponent("Kotlin standard library and coroutines", "JetBrains", "Apache-2.0", "https://kotlinlang.org"),
-    LicenceComponent("Material Symbols icons", "Google", "Apache-2.0", "https://fonts.google.com/icons"),
-)
-
-/** What the app downloads or fetches when it is used: not in the APK. */
-val LICENCE_DOWNLOADED: List<LicenceComponent> = listOf(
+/**
+ * What the app downloads or fetches when it is used: not in the APK. The photographs are under
+ * no licence at all, so their page shows [photoTerms] (the terms the app keeps to) as its text.
+ */
+fun licenceDownloaded(photoTerms: LicenceText): List<LicenceComponent> = listOf(
     LicenceComponent("BirdNET model and framework (downloaded once, not in the APK)", "Stefan Kahl and the Cornell Lab of Ornithology", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
     LicenceComponent("BirdNET species names in other languages (labels_xx.txt)", "The BirdNET project and its translators", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
-    LicenceComponent("Bird photographs, fetched when shown, not in the APK", "Their photographers, through the Macaulay Library, Cornell Lab of Ornithology", "Copyright of the photographers", "https://www.macaulaylibrary.org"),
+    LicenceComponent("Bird photographs, fetched when shown, not in the APK", "Their photographers, through the Macaulay Library, Cornell Lab of Ornithology", "Copyright of the photographers", "https://www.macaulaylibrary.org", texts = listOf(photoTerms)),
 )
 
 /** Each distinct licence text once: family id and the raw resource. */
@@ -41,7 +29,8 @@ fun rememberLicencesData(): LicencesData = LicencesData(
     appName = "Birding",
     sourceUrl = SOURCE_URL,
     licenceLine = stringResource(R.string.licences_licence),
-    components = LICENCE_COMPONENTS,
+    // One row per artifact in the APK, listed by the build (config/libraries adds what Gradle cannot see).
+    components = rememberGeneratedComponents(R.raw.aboutlibraries),
     texts = LICENCE_RAW.map { (id, raw) ->
         LicenceText(id, stringResource(when (id) {
             "gpl" -> R.string.licences_full_gpl
@@ -51,7 +40,8 @@ fun rememberLicencesData(): LicencesData = LicencesData(
             else -> R.string.licences_full_head
         }), raw)
     },
-    extraGroups = listOf(ComponentGroup(stringResource(R.string.licences_fetched_head), stringResource(R.string.licences_fetched), LICENCE_DOWNLOADED)),
+    extraGroups = listOf(ComponentGroup(stringResource(R.string.licences_fetched_head), stringResource(R.string.licences_fetched),
+        licenceDownloaded(LicenceText("photos", stringResource(R.string.licences_photos_terms_title), 0, stringResource(R.string.licences_fetched))))),
 )
 
 @Composable

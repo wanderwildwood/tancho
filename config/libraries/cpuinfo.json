@@ -1,0 +1,14 @@
+{
+  "uniqueId": "cpuinfo",
+  "name": "cpuinfo (native, inside LiteRT)",
+  "description": "Built into LiteRT's native library (libtensorflowlite_jni.so); Gradle does not list it on its own.",
+  "developers": [
+    {
+      "name": "Meta, Google and the Georgia Institute of Technology"
+    }
+  ],
+  "website": "https://github.com/pytorch/cpuinfo",
+  "licenses": [
+    "cpuinfo-bsd"
+  ]
+}

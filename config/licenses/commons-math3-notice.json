@@ -1,0 +1,5 @@
+{
+  "hash": "commons-math3-notice",
+  "name": "NOTICE file of Commons Math",
+  "content": "Apache Commons Math\nCopyright 2001-2016 The Apache Software Foundation\n\nThis product includes software developed at\nThe Apache Software Foundation (http://www.apache.org/).\n\nThis product includes software developed for Orekit by\nCS Systèmes d'Information (http://www.c-s.fr/)\nCopyright 2010-2012 CS Systèmes d'Information\n"
+}

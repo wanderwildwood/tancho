@@ -1,0 +1,6 @@
+{
+  "hash": "fft2d-ooura",
+  "name": "Ooura FFT license (fft2d's own notice)",
+  "url": "https://github.com/tensorflow/tensorflow/blob/master/third_party/fft2d/LICENSE",
+  "content": "Copyright(C) 1997,2001 Takuya OOURA (email: ooura@kurims.kyoto-u.ac.jp).\nYou may use, copy, modify this code for any purpose and \nwithout fee. You may distribute this ORIGINAL package.\n"
+}

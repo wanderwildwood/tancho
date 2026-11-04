@@ -1,0 +1,14 @@
+{
+  "uniqueId": "pthreadpool",
+  "name": "pthreadpool (native, inside LiteRT)",
+  "description": "Built into LiteRT's native library (libtensorflowlite_jni.so); Gradle does not list it on its own.",
+  "developers": [
+    {
+      "name": "Google, Meta and the Georgia Institute of Technology"
+    }
+  ],
+  "website": "https://github.com/google/pthreadpool",
+  "licenses": [
+    "pthreadpool-bsd"
+  ]
+}

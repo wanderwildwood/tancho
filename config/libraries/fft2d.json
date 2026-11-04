@@ -1,0 +1,14 @@
+{
+  "uniqueId": "fft2d",
+  "name": "fft2d, Ooura FFT (native, inside LiteRT)",
+  "description": "Built into LiteRT's native library (libtensorflowlite_jni.so); Gradle does not list it on its own.",
+  "developers": [
+    {
+      "name": "Takuya Ooura"
+    }
+  ],
+  "website": "https://www.kurims.kyoto-u.ac.jp/~ooura/fft.html",
+  "licenses": [
+    "fft2d-ooura"
+  ]
+}
