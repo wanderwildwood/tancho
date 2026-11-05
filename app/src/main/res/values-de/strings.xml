@@ -86,6 +86,7 @@
     <string name="about_title">Birding %1$s</string>
     <!-- A link at the foot of the About to the text of the licence the BirdNET model is under -->
     <string name="about_model_licence_link">Lizenz CC BY-NC-SA 4.0 lesen</string>
+    <string name="about_what">Nennt die Vögel, die zu hören sind, offline, mit BirdNET direkt auf dem Telefon. Wo du bist und die Woche des Jahres lassen Vögel weg, die hier nicht sein können.</string>
     <string name="about_privacy_title">Datenschutz</string>
     <string name="about_privacy">Dein Protokoll bleibt auf diesem Telefon, und die Erkennung eines Vogels geschieht hier. Die App geht nur für zwei Dinge online: das BirdNET-Modell, einmal von GitHub geladen (etwa 39 MB), und das Foto eines Vogels von Cornells Bildserver, für eine Zeile, die du öffnest, oder während ein Vogel gehört wird, wenn Foto beim Zuhören an ist. Diese Anfragen enthalten nichts, was du gehört oder geschrieben hast; die Server sehen deine Internetadresse und nach welchem Vogelbild gefragt wurde. eBird und Wikipedia öffnen sich nur in deinem Browser, wenn du sie antippst.</string>
     <string name="about_privacy_more">Das Mikrofon ist nur offen, während Birding zuhört, und der Klang wird nicht behalten, solange du nicht Aufnahmen speichern einschaltest. Der Standort dient nur dazu, abzuwägen, welche Vögel wo wahrscheinlich sind, wenn du ihn erlaubst oder einen Ort eintippst. Der Ort wird mit jedem Eintrag in deinem Protokoll gespeichert und geht so mit einem versendeten Protokoll oder einer Sicherung hinaus; ein geteilter Eintrag enthält ihn nur, wenn du das in den Einstellungen einschaltest. Es gibt keine Werbung, keine Analysen und kein Tracking. Sicherungen und Exporte gehen nur dorthin, wo du sie speicherst.</string>
@@ -131,6 +132,10 @@
     <!-- shared-about: contact row + privacy section (edit in /opt/projects/shared-about) -->
     <string name="about_write_to">Schreib an %1$s</string>
     <string name="about_no_mail_app">Keine E-Mail-App installiert. Die Adresse ist %1$s.</string>
+    <string name="about_open_drawer">%1$s öffnen</string>
+    <string name="about_close_drawer">%1$s schließen</string>
+    <string name="about_contact_head">Kontakt</string>
+    <string name="about_links_head">Links</string>
     <string name="privacy_who_title">Wer wir sind</string>
     <string name="privacy_who">Diese App stammt von wander wildwood, einem unabhängigen Entwickler: eine Person, keine Firma. Damit ist wander wildwood Verantwortlicher für alles, was die App selbst verarbeitet, und das ist sehr wenig: Was du eingibst, bleibt auf diesem Telefon, außer du schickst es selbst woandershin. Hinaus gehen nur die oben beschriebenen Anfragen: das einmalige Laden des BirdNET-Modells von GitHub und eine Anfrage an den Bildserver des Cornell Lab of Ornithology nach dem Foto eines Vogels, die diese Art nennt. Keine davon enthält etwas, was du gehört oder geschrieben hast, oder wo du warst, und der Entwickler erhält nichts.</string>
     <string name="privacy_contact_title">So erreichst du uns</string>
