@@ -18,6 +18,7 @@ import com.wanderwildwood.tancho.databinding.ActivityViewBinding
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import java.util.Locale
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -469,6 +470,12 @@ class ViewActivity : BaseActivity() {
                 .getBoolean(Settings.SHARE_PLACE, false)
             if (withPlace && (row.latitude != 0.0f || row.longitude != 0.0f)) {
                 append(", ").append(row.latitude).append(", ").append(row.longitude)
+                // A map link any phone or computer can open, whatever map app it has.
+                val lat = String.format(Locale.US, "%.5f", row.latitude)
+                val lon = String.format(Locale.US, "%.5f", row.longitude)
+                append("\nhttps://www.openstreetmap.org/?mlat=").append(lat)
+                    .append("&mlon=").append(lon)
+                    .append("#map=15/").append(lat).append("/").append(lon)
             }
         }
 
