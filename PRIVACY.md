@@ -105,7 +105,7 @@ database can be exported, backed up, restored or deleted from inside the app, un
 <!-- shared-about privacy section -->
 ## Who we are
 
-Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. Birding keeps what you put in it on your phone, apart from what it sends to GitHub and the Cornell Lab of Ornithology as described above, and sends nothing to the developer, so the developer holds no data about you.
+Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. What you put in Birding stays on your phone. The only things that go out are the requests described above: the one-time download of the BirdNET model from GitHub, and a request to the Cornell Lab of Ornithology's image server for a bird's photograph, which names that species. Neither carries anything you heard, recorded or wrote, or where you were. The developer receives nothing, so the developer holds no data about you.
 
 ## How to contact us
 

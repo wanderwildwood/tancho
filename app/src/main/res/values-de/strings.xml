@@ -132,7 +132,7 @@
     <string name="about_write_to">Schreib an %1$s</string>
     <string name="about_no_mail_app">Keine E-Mail-App installiert. Die Adresse ist %1$s.</string>
     <string name="privacy_who_title">Wer wir sind</string>
-    <string name="privacy_who">Diese App stammt von wander wildwood, einem unabhängigen Entwickler: eine Person, keine Firma. Damit ist wander wildwood Verantwortlicher für alles, was die App selbst verarbeitet, und das ist sehr wenig: Was du eingibst, bleibt auf diesem Telefon, außer du schickst es selbst woandershin oder die App sendet es wie oben beschrieben an GitHub und das Cornell Lab of Ornithology, und nichts davon erreicht den Entwickler.</string>
+    <string name="privacy_who">Diese App stammt von wander wildwood, einem unabhängigen Entwickler: eine Person, keine Firma. Damit ist wander wildwood Verantwortlicher für alles, was die App selbst verarbeitet, und das ist sehr wenig: Was du eingibst, bleibt auf diesem Telefon, außer du schickst es selbst woandershin. Hinaus gehen nur die oben beschriebenen Anfragen: das einmalige Laden des BirdNET-Modells von GitHub und eine Anfrage an den Bildserver des Cornell Lab of Ornithology nach dem Foto eines Vogels, die diese Art nennt. Keine davon enthält etwas, was du gehört oder geschrieben hast, oder wo du warst, und der Entwickler erhält nichts.</string>
     <string name="privacy_contact_title">So erreichst du uns</string>
     <string name="privacy_contact">Schreib an email@wanderthe.dev, zu deinen Daten oder zu allem anderen.</string>
     <string name="privacy_rights_title">Deine Rechte</string>
