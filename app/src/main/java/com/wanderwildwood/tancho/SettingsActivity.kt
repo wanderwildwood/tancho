@@ -94,7 +94,7 @@ class SettingsActivity : BaseActivity() {
     }
 
     private val exportLauncher =
-        registerForActivityResult(ActivityResultContracts.CreateDocument("text/csv")) { uri ->
+        registerForActivityResult(FilesCreateDocument("text/csv")) { uri ->
             if (uri != null) performExport(uri)
         }
 
@@ -124,7 +124,7 @@ class SettingsActivity : BaseActivity() {
             Intent.EXTRA_TITLE,
             resources.getString(R.string.app_name) + "_" + stamp + ".zip"
         )
-        resultLauncher.launch(intent)
+        resultLauncher.launch(FilesPicker.aim(this, intent, writable = true))
     }
 
     /** The log just deleted, held (rows, and the recordings left alone) until the reader moves on. */
@@ -170,7 +170,7 @@ class SettingsActivity : BaseActivity() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.addCategory(Intent.CATEGORY_OPENABLE)
         intent.setType("application/zip")
-        restoreLauncher.launch(intent)
+        restoreLauncher.launch(FilesPicker.aim(this, intent))
     }
 
     private val restoreLauncher =

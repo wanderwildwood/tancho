@@ -20,6 +20,8 @@
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
         </intent>
+        <!-- Files (Cabinet), so opening and saving a file use its e-ink screens when it is installed. -->
+        <package android:name="com.wanderwildwood.tana" />
     </queries>
 
     <application
