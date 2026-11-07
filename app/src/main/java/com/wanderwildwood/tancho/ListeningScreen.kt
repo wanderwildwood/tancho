@@ -175,6 +175,7 @@ fun ListeningScreen(
                     state = listState,
                     contentPadding = PaddingValues(vertical = 8.dp),
                     modifier = Modifier.fillMaxSize(),
+                    showCutRow = true,
                 ) {
                     items(heard, key = { it.firstHeard }) { entry ->
                         HeardRow(entry, onClick = { onOpenHeard(entry) })

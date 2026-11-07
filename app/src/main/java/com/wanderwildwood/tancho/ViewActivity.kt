@@ -247,7 +247,7 @@ class ViewActivity : BaseActivity() {
                         scrollTarget.value = null
                     }
 
-                    PagedColumn(state = listState, modifier = Modifier.fillMaxSize()) {
+                    PagedColumn(state = listState, modifier = Modifier.fillMaxSize(), showCutRow = true) {
                         itemsIndexed(rows, key = { _, row -> row.id }) { index, row ->
                             val day = dateText(row.millis)
                             if (index == 0 || dateText(rows[index - 1].millis) != day) {

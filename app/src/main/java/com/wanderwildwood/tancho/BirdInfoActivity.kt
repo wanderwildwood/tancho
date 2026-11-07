@@ -88,7 +88,7 @@ class BirdInfoActivity : BaseActivity() {
                 ArmedScope {
                     val birds by shown
                     val state = rememberLazyListState()
-                    PagedColumn(state = state, modifier = Modifier.fillMaxSize()) {
+                    PagedColumn(state = state, modifier = Modifier.fillMaxSize(), showCutRow = true) {
                         items(birds, key = { it.first }) { (speciesId, label) ->
                             BirdRow(
                                 name = label.split("_").last(),

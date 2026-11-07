@@ -42,7 +42,7 @@ import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
 fun LanguageScreen(chosen: String, inUse: String, onChoose: (String) -> Unit) {
     Column(modifier = Modifier.fillMaxSize()) {
         ScreenHeading(stringResource(R.string.bird_names))
-        PagedColumn(modifier = Modifier.weight(1f)) {
+        PagedColumn(modifier = Modifier.weight(1f), showCutRow = true) {
             // Following the phone is a choice like any other, and the one everybody
             // starts on, so it is the first row rather than a switch above the list. It
             // carries what it currently comes to, because "same as the phone" does not
