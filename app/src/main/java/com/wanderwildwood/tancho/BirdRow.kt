@@ -35,6 +35,8 @@ import com.mudita.mmd.components.text.TextMMD
  * One composable now, so they cannot drift again. What varies between the screens is what
  * there is to say: the species list has no time and no confidence, because browsing a list of
  * every bird in the world is not a record of hearing one.
+ *
+ * Each row ends in the house dotted rule (3 Nov 2026), inset to the text.
  */
 @Composable
 fun BirdRow(
@@ -46,40 +48,43 @@ fun BirdRow(
     times: Int = 1,
     bold: Boolean = false,
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 10.dp),
-    ) {
-        TextMMD(
-            text = name,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
-        )
-        if (latinName.isNotBlank()) {
+    Column {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 10.dp),
+        ) {
             TextMMD(
-                text = latinName,
-                style = MaterialTheme.typography.labelSmall,
+                text = name,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = if (bold) FontWeight.Bold else FontWeight.Normal,
             )
-        }
-        if (time != null || percent != null || times > 1) {
-            Spacer(modifier = Modifier.height(6.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (time != null) {
-                    TextMMD(text = time, style = MaterialTheme.typography.labelSmall)
-                    Spacer(modifier = Modifier.width(12.dp))
-                }
-                // Blocks, and no number beside them. What BirdNET reports is a softmax
-                // output, not a calibrated probability: "85%" reads as "wrong about one time
-                // in seven", which is a promise nothing here can keep. Five squares say how
-                // sure it sounds without saying how often it is right.
-                if (percent != null) ConfidenceBlocks(percent = percent)
-                if (times > 1) {
-                    Spacer(modifier = Modifier.width(12.dp))
-                    TextMMD(text = stringResource(R.string.times_heard, times.toString()), style = MaterialTheme.typography.labelSmall)
+            if (latinName.isNotBlank()) {
+                TextMMD(
+                    text = latinName,
+                    style = MaterialTheme.typography.labelSmall,
+                )
+            }
+            if (time != null || percent != null || times > 1) {
+                Spacer(modifier = Modifier.height(6.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (time != null) {
+                        TextMMD(text = time, style = MaterialTheme.typography.labelSmall)
+                        Spacer(modifier = Modifier.width(12.dp))
+                    }
+                    // Blocks, and no number beside them. What BirdNET reports is a softmax
+                    // output, not a calibrated probability: "85%" reads as "wrong about one time
+                    // in seven", which is a promise nothing here can keep. Five squares say how
+                    // sure it sounds without saying how often it is right.
+                    if (percent != null) ConfidenceBlocks(percent = percent)
+                    if (times > 1) {
+                        Spacer(modifier = Modifier.width(12.dp))
+                        TextMMD(text = stringResource(R.string.times_heard, times.toString()), style = MaterialTheme.typography.labelSmall)
+                    }
                 }
             }
         }
+        DottedRule()
     }
 }
 
