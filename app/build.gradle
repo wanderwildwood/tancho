@@ -26,6 +26,15 @@ android {
         targetSdk 35
         versionCode 59
         versionName "1.7.41"
+
+        // A release carries arm64 alone, the only ABI the phone runs: the other three added
+        // 12 MB to the APK. Other builds keep every ABI so they run on an emulator.
+        // -Pabis=arm64-v8a,x86_64 sets the list for any build.
+        def abiList = project.findProperty('abis') ?:
+                (gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') } ? 'arm64-v8a' : null)
+        if (abiList != null) {
+            ndk { abiFilters.addAll(abiList.toString().split(',')) }
+        }
     }
 
     lintOptions{
