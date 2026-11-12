@@ -12,7 +12,7 @@ Fork of [whoBIRD](https://github.com/woheller69/whoBIRD) by woheller69.
 | | |
 |---|---|
 | ![Listening: what it hears is named here as it is heard](screenshots/1-listening.png) | ![The species list, a bird's photograph with its credit](screenshots/2-species.png) |
-| ![Settings, with the threshold and the audio source](screenshots/3-settings.png) | ![About, with Privacy, Terms and Licences](screenshots/4-about.png) |
+| ![Settings, with the threshold and the audio source](screenshots/3-settings.png) | ![About, with Privacy, Terms and Licenses](screenshots/4-about.png) |
 
 ## How it works
 
@@ -55,10 +55,10 @@ For updates without doing this by hand, add this repository to
 It will offer each new release as it appears. **The application id is settled** — updates
 install over what you have, keeping your settings and anything the app has stored.
 
-## Licence
+## License
 
 GPLv3. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
-under that licence, and the rest is too.
+under that license, and the rest is too.
 
 - Built on the [BirdNET framework](https://github.com/kahst/BirdNET-Analyzer) by
   [@kahst](https://github.com/kahst), published under CC BY-NC-SA 4.0.
