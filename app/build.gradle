@@ -24,8 +24,8 @@ android {
         applicationId "com.wanderwildwood.tancho"
         minSdk 26
         targetSdk 35
-        versionCode 60
-        versionName "1.7.42"
+        versionCode 61
+        versionName "1.7.43"
 
         // A release carries arm64 alone, the only ABI the phone runs: the other three added
         // 12 MB to the APK. Other builds keep every ABI so they run on an emulator.
