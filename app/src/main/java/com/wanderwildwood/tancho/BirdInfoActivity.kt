@@ -51,6 +51,7 @@ class BirdInfoActivity : BaseActivity() {
         database = BirdDBHelper.getInstance(this)
         mContext = this
         setContentView(binding.root)
+        DarkMode.keep(binding.photo)
 
         binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
             ArmedScope { DestinationRowCompose(Destination.SPECIES) }

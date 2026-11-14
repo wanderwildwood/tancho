@@ -226,7 +226,7 @@ private fun PhotoBand(assetId: String?) {
             modifier = modifier,
         )
     } else {
-        Box(modifier = modifier) {
+        Box(modifier = modifier.keepColors()) {
             Image(
                 bitmap = current,
                 contentDescription = stringResource(R.string.photo_description),

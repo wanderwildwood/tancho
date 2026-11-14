@@ -65,6 +65,7 @@ fun SettingsScreen(
     logGone: Boolean = false,
     onUndoLog: () -> Unit = {},
 ) {
+    val context = LocalContext.current
     var showAbout by remember { mutableStateOf(false) }
     if (showAbout) {
         AboutDialog(onDismiss = { showAbout = false })
@@ -130,6 +131,14 @@ fun SettingsScreen(
                     summary = stringResource(R.string.summary_photo_while_listening),
                     checked = settings.photoWhileListening,
                     onCheckedChange = { settings.photoWhileListening = it },
+                )
+            }
+            item {
+                SwitchRow(
+                    label = stringResource(R.string.settings_dark),
+                    summary = stringResource(R.string.settings_dark_note),
+                    checked = DarkMode.on,
+                    onCheckedChange = { DarkMode.set(context, it) },
                 )
             }
             item {
