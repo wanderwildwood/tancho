@@ -18,7 +18,10 @@
     </style>
 
     <!-- Android 12 and later add the launch screen to this; see values-v31. -->
-    <style name="AppTheme" parent="Base.AppTheme" />
+    <style name="AppTheme" parent="Base.AppTheme">
+        <!-- No start-up window: in dark mode it would flash white before the first frame. -->
+        <item name="android:windowDisablePreview">true</item>
+    </style>
 
 
     <!-- The listening screen draws its own bar with MMD. -->
