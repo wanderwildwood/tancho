@@ -52,6 +52,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import com.mudita.mmd.components.buttons.OutlinedButtonMMD
 import com.mudita.mmd.components.switcher.SwitchMMD
 import com.mudita.mmd.components.text_field.TextFieldMMD
+import androidx.compose.foundation.text.KeyboardActions
 
 /**
  * The listening screen.
@@ -358,6 +359,8 @@ private fun PlaceDialog(settings: Settings, onChanged: () -> Unit, onDismiss: ()
                     keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Done,
                 ),
+                // What is typed is kept as it is typed, so Done is Close.
+                keyboardActions = KeyboardActions(onDone = { onDismiss() }),
                 modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
             )
             TextMMD(
