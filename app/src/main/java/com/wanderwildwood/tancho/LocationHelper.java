@@ -8,7 +8,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
@@ -186,7 +185,7 @@ public class LocationHelper {
     public static boolean checkLocationProvider(Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(context, context.getString(R.string.error_no_gps), Toast.LENGTH_SHORT).show();
+            FootNotice.INSTANCE.say(context, context.getString(R.string.error_no_gps));
             return false;
         } else {
             return true;

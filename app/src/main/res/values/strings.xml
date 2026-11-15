@@ -123,6 +123,8 @@
     <string name="ebird_page">Open this bird on eBird</string>
     <string name="wikipedia_page">Open this bird on Wikipedia</string>
     <string name="heard_not_in_log">That hearing is no longer in the log.</string>
+    <string name="recording_cannot_play">This recording cannot be played.</string>
+    <string name="chime_cannot_play">The sound for a bird heard cannot be played.</string>
     <string name="deleted_observation">%1$s was deleted.</string>
     <string name="deleted_log">The log was deleted.</string>
     <string name="deleted_undo">Undo</string>

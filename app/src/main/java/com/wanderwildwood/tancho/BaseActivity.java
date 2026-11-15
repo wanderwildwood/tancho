@@ -17,6 +17,20 @@ public class BaseActivity extends AppCompatActivity {
         applyTheme();
     }
 
+    // A notice from somewhere with no screen of its own (the listener, the location) is said on
+    // the screen in front; see FootNotice.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FootNotice.INSTANCE.resumed(this);
+    }
+
+    @Override
+    protected void onPause() {
+        FootNotice.INSTANCE.paused(this);
+        super.onPause();
+    }
+
     /**
      * Called before anything is drawn, and after the manifest's theme has been applied, so
      * this is what an activity overrides to choose its own. Whatever android:theme says is

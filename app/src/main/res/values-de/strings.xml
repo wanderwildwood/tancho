@@ -110,6 +110,8 @@
     <string name="ebird_page">Diesen Vogel auf eBird öffnen</string>
     <string name="wikipedia_page">Diesen Vogel auf Wikipedia öffnen</string>
     <string name="heard_not_in_log">Dieser Eintrag ist nicht mehr im Protokoll.</string>
+    <string name="recording_cannot_play">Diese Aufnahme lässt sich nicht abspielen.</string>
+    <string name="chime_cannot_play">Der Ton für einen gehörten Vogel lässt sich nicht abspielen.</string>
     <string name="deleted_observation">%1$s wurde gelöscht.</string>
     <string name="deleted_log">Das Protokoll wurde gelöscht.</string>
     <string name="deleted_undo">Rückgängig</string>

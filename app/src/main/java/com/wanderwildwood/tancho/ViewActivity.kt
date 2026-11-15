@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudita.mmd.ThemeMMD
@@ -202,7 +201,7 @@ class ViewActivity : BaseActivity() {
             scrollTarget.value = 0
             WavUtils.stopPlaying()
             showBird(focus.speciesId, null)
-            Toast.makeText(this, getString(R.string.heard_not_in_log), Toast.LENGTH_SHORT).show()
+            FootNotice.say(this, getString(R.string.heard_not_in_log))
         }
     }
 
@@ -391,7 +390,7 @@ class ViewActivity : BaseActivity() {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
                 binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
                 binding.photoCredit.setVisibility(View.GONE)
-                Toast.makeText(applicationContext, getString(R.string.error_download), Toast.LENGTH_SHORT).show()
+                FootNotice.say(this, getString(R.string.error_download))
             } else {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_CROP)
                 binding.photo.setImageBitmap(bitmap)

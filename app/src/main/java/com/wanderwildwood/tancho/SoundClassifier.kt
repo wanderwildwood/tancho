@@ -23,11 +23,8 @@ import android.location.Location
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import android.os.Handler
-import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
-import android.widget.Toast
 import androidx.preference.PreferenceManager
 import org.tensorflow.lite.Interpreter
 import uk.me.berndporr.iirj.Butterworth
@@ -500,9 +497,8 @@ class SoundClassifier(
 
       if (samplesAreAllZero) {
         Log.w(TAG, mContext.resources.getString(R.string.samples_zero))
-        Handler(Looper.getMainLooper()).post {
-          Toast.makeText(mContext,mContext.resources.getString(R.string.samples_zero),Toast.LENGTH_SHORT).show()
-        }
+        // Said on the screen in front until the next press; the same words again leave it be.
+        FootNotice.say(mContext, mContext.resources.getString(R.string.samples_zero))
 
         return@task
       }

@@ -3,7 +3,6 @@ package com.wanderwildwood.tancho
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +34,14 @@ class SettingsActivity : BaseActivity() {
     /** Drawn in Compose, and with no title bar anywhere in the app. */
     override fun applyTheme() {
         setTheme(R.style.AppTheme_NoActionBar)
+    }
+
+    /** How a restore went, kept across the recreate that shows the restored settings. */
+    private var sayAfterRecreate: String? = null
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        sayAfterRecreate?.let { outState.putString(SAY_AFTER_RECREATE, it) }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +88,7 @@ class SettingsActivity : BaseActivity() {
                 }
             }
         }
+        savedInstanceState?.getString(SAY_AFTER_RECREATE)?.let { FootNotice.say(this, it) }
     }
 
     /** Every observation as a CSV file, saved wherever the reader chooses with the file picker. */
@@ -104,7 +112,7 @@ class SettingsActivity : BaseActivity() {
                 it.write(LogExport.text(lines).toByteArray(Charsets.UTF_8))
             }
         } catch (e: Exception) {
-            Toast.makeText(this, R.string.export_failed, Toast.LENGTH_LONG).show()
+            FootNotice.say(this, getString(R.string.export_failed))
         }
     }
 
@@ -179,14 +187,19 @@ class SettingsActivity : BaseActivity() {
     private val restoreLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK) result.data?.data?.let { uri ->
-                Toast.makeText(this, R.string.restore_working, Toast.LENGTH_SHORT).show()
+                FootNotice.say(this, getString(R.string.restore_working))
                 val app = applicationContext
                 Thread {
                     val (message, restored) = performRestore(app, uri)
                     runOnUiThread {
-                        Toast.makeText(app, message, Toast.LENGTH_LONG).show()
-                        // The settings on screen were read before the restore; read them again.
-                        if (restored && !isFinishing && !isDestroyed) recreate()
+                        // The settings on screen were read before the restore; read them again,
+                        // and say how it went on the screen that comes back.
+                        if (restored && !isFinishing && !isDestroyed) {
+                            sayAfterRecreate = message
+                            recreate()
+                        } else {
+                            FootNotice.say(this, message)
+                        }
                     }
                 }.start()
             }
@@ -262,13 +275,12 @@ class SettingsActivity : BaseActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == RESULT_OK && result.data != null) {
                 result.data?.data?.let { uri ->
-                    Toast.makeText(this, R.string.backup_working, Toast.LENGTH_SHORT).show()
+                    FootNotice.say(this, getString(R.string.backup_working))
                     val app = applicationContext
                     Thread {
                         val ok = performBackup(app, uri)
                         runOnUiThread {
-                            Toast.makeText(app, if (ok) R.string.backup_saved else R.string.backup_failed,
-                                if (ok) Toast.LENGTH_SHORT else Toast.LENGTH_LONG).show()
+                            FootNotice.say(this, getString(if (ok) R.string.backup_saved else R.string.backup_failed))
                         }
                     }.start()
                 }
@@ -294,5 +306,9 @@ class SettingsActivity : BaseActivity() {
             runCatching { android.provider.DocumentsContract.deleteDocument(context.contentResolver, uri) }
             false
         }
+    }
+
+    private companion object {
+        const val SAY_AFTER_RECREATE = "say_after_recreate"
     }
 }

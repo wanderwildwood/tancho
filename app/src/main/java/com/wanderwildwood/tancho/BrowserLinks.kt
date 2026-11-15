@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.widget.Toast
 
 /**
  * Opens a web address in the browser the phone actually has, and says so when there is none.
@@ -62,7 +61,7 @@ object BrowserLinks {
     fun open(context: Context, address: String): Boolean = open(context, Uri.parse(address))
 
     private fun failed(context: Context): Boolean {
-        Toast.makeText(context, context.getString(R.string.no_browser), Toast.LENGTH_SHORT).show()
+        FootNotice.say(context, context.getString(R.string.no_browser))
         return false
     }
 }

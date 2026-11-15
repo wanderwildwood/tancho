@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.widget.doOnTextChanged
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mudita.mmd.ThemeMMD
@@ -190,7 +189,7 @@ class BirdInfoActivity : BaseActivity() {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_INSIDE)
                 binding.photo.setImageResource(R.drawable.ic_launcher_monochrome)
                 binding.photoCredit.setVisibility(View.GONE)
-                Toast.makeText(applicationContext, getString(R.string.error_download), Toast.LENGTH_SHORT).show()
+                FootNotice.say(this, getString(R.string.error_download))
             } else {
                 binding.photo.setScaleType(ImageView.ScaleType.CENTER_CROP)
                 binding.photo.setImageBitmap(bitmap)

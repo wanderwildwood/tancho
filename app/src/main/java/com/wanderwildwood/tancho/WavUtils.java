@@ -103,17 +103,23 @@ public class WavUtils {
         playing = null;
     }
 
+    /**
+     * Plays the recording of the reading at [timestamp], if there is one: none is the normal
+     * answer for a row heard while recordings were off. A recording that is there but will not
+     * play is said on screen ([FootNotice]) rather than left as silence.
+     */
     public static synchronized void playWaveFile(Context context, long timestamp) {
         stopPlaying();
         File path = new File(recordingsDir(context), timestamp + ".wav");
-        Log.d(TAG,"Play "+path.getAbsolutePath());
         if (path.exists()){
             Log.d(TAG,"Play "+path.getAbsolutePath());
             MediaPlayer mediaPlayer = MediaPlayer.create(context, Uri.parse(path.getAbsolutePath()));
-            if (mediaPlayer == null) return;
+            if (mediaPlayer == null) {
+                cannotPlay(context);
+                return;
+            }
             playing = mediaPlayer;
             mediaPlayer.setVolume(1, 1);
-            mediaPlayer.start();
             mediaPlayer.setOnCompletionListener(mp -> {
                 synchronized (WavUtils.class) {
                     if (playing == mp) playing = null;
@@ -121,7 +127,21 @@ public class WavUtils {
                 mp.reset();
                 mp.release();
             });
+            mediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                Log.w(TAG, "Recording would not play: " + what + "/" + extra);
+                synchronized (WavUtils.class) {
+                    if (playing == mp) playing = null;
+                }
+                mp.release();
+                cannotPlay(context);
+                return true;
+            });
+            mediaPlayer.start();
         }
+    }
+
+    private static void cannotPlay(Context context) {
+        FootNotice.INSTANCE.say(context, context.getString(R.string.recording_cannot_play));
     }
 
     /**
