@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.os.Handler
+import android.os.Looper
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -48,15 +50,17 @@ object FootNotice {
         val activity = context.activity()?.takeUnless { it.isFinishing }
             ?: front?.get()?.takeUnless { it.isFinishing }
         if (activity == null) {
-            // Nowhere on screen to say it: said the old way rather than not at all.
-            Toast.makeText(context.applicationContext, text, Toast.LENGTH_LONG).show()
+            // Nowhere on screen to say it: said the old way rather than not at all. The toast is
+            // made on the main thread, since a caller may be the listening timer's own thread.
+            val app = context.applicationContext
+            Handler(Looper.getMainLooper()).post { Toast.makeText(app, text, Toast.LENGTH_LONG).show() }
             return
         }
         activity.runOnUiThread { show(activity, text) }
     }
 
     /** The screen in front, for a notice from somewhere with no screen of its own. */
-    private var front: WeakReference<Activity>? = null
+    @Volatile private var front: WeakReference<Activity>? = null
 
     fun resumed(activity: Activity) { front = WeakReference(activity) }
 
