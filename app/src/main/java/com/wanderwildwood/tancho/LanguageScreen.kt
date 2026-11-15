@@ -20,6 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mudita.mmd.components.text.TextMMD
 import com.mudita.mmd.components.top_app_bar.TopAppBarMMD
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 
 /**
  * The language the birds are named in.
@@ -81,6 +85,7 @@ private fun LanguageRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .semantics { role = Role.RadioButton; selected = chosen }
             .clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 12.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
