@@ -106,7 +106,6 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:2.2.1"
     implementation 'com.google.ai.edge.litert:litert:1.2.0'
     implementation "androidx.preference:preference:1.2.1"
-    implementation "net.lingala.zip4j:zip4j:2.9.1"
     implementation 'uk.me.berndporr:iirj:1.7'
 
     // Compose and Mudita's own design system, pinned to the combination the other

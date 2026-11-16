@@ -29,7 +29,7 @@ class LicencesTest {
     /** What must be on the page whatever else changes: group:artifact, or a config/libraries name. */
     private val EXPECTED = listOf<String>(
         // Group:artifact ids (or config/libraries names) that must be on the page.
-        "com.google.ai.edge.litert:litert", "net.lingala.zip4j:zip4j", "uk.me.berndporr:iirj",
+        "com.google.ai.edge.litert:litert", "uk.me.berndporr:iirj",
         "com.mudita:MMD", "whoBIRD", "Lato typeface", "Material Symbols icons",
         "XNNPACK (native, inside LiteRT)", "Eigen (native, inside LiteRT)",
     )

@@ -69,6 +69,5 @@ under that license, and the rest is too.
   [permission from the author](https://github.com/woheller69/whoBIRD/issues/1).
 - Uses code from the [TensorFlow Lite examples](https://www.tensorflow.org/lite/examples),
   Apache 2.0.
-- Uses [Zip4j](https://github.com/srikanth-lingala/zip4j), Apache 2.0.
 - Uses [iirj](https://github.com/berndporr/iirj), Apache 2.0.
 - The launcher icon is from a CC0 photograph; see `misc/`.
