@@ -136,7 +136,6 @@ fun SettingsScreen(
             item {
                 SwitchRow(
                     label = stringResource(R.string.settings_dark),
-                    summary = stringResource(R.string.settings_dark_note),
                     checked = DarkMode.on,
                     onCheckedChange = { DarkMode.set(context, it) },
                 )
