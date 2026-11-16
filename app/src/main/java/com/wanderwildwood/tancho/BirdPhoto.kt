@@ -30,6 +30,12 @@ object BirdPhoto {
     /** The image host offers several widths; this is the panel's own, so none is wasted. */
     private const val WIDTH = 480
 
+    /**
+     * A 480-wide jpeg is tens of kilobytes. Anything past this is not one, and is dropped before
+     * it reaches the decoder or fills the cache.
+     */
+    private const val MAX_BYTES = 2L * 1024 * 1024
+
     /** Photos are worth keeping between sessions, but not without end. */
     private const val KEEP = 200
 
@@ -99,12 +105,33 @@ object BirdPhoto {
                 throw IOException("HTTP ${connection.responseCode}")
             }
             val partial = File(file.path + ".part")
-            connection.inputStream.use { input ->
-                partial.outputStream().use { output -> input.copyTo(output) }
+            val whole = try {
+                connection.inputStream.use { input ->
+                    partial.outputStream().use { output -> copyCapped(input, output) }
+                }
+            } catch (e: IOException) {
+                partial.delete()
+                throw e
             }
-            if (!partial.renameTo(file)) partial.delete()
+            if (!whole || !partial.renameTo(file)) {
+                partial.delete()
+                if (!whole) throw IOException("larger than $MAX_BYTES bytes")
+            }
         } finally {
             connection.disconnect()
+        }
+    }
+
+    /** Copies at most [MAX_BYTES]; false if there was more. */
+    private fun copyCapped(input: java.io.InputStream, output: java.io.OutputStream): Boolean {
+        val buffer = ByteArray(16 * 1024)
+        var got = 0L
+        while (true) {
+            val n = input.read(buffer)
+            if (n < 0) return true
+            got += n
+            if (got > MAX_BYTES) return false
+            output.write(buffer, 0, n)
         }
     }
 

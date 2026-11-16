@@ -149,12 +149,12 @@ public class Downloader {
                 if (!(model.exists() && modelHashOk(sha256(model)))) {
                     model.delete();
                     fetch(activity, binding, big ? model32URL : model16URL, model,
-                            big ? model32SHA256 : model16SHA256, 0, total);
+                            big ? model32SHA256 : model16SHA256, modelSize, 0, total);
                 }
                 done = modelSize;
                 if (!(meta.exists() && metaHashOk(sha256(meta)))) {
                     meta.delete();
-                    fetch(activity, binding, metaModelURL, meta, metaModelSHA256, done, total);
+                    fetch(activity, binding, metaModelURL, meta, metaModelSHA256, metaModelSize, done, total);
                 }
                 running = false;
                 activity.runOnUiThread(() -> ready(activity));
@@ -178,9 +178,13 @@ public class Downloader {
     private static class Wrong extends IOException {
     }
 
-    /** One file: to a part file first, so a stopped download never leaves something that looks whole. */
+    /**
+     * One file: to a part file first, so a stopped download never leaves something that looks whole.
+     * Anything longer than {@code size} is wrong already, so it is stopped there rather than allowed to
+     * fill the phone before the hash says so.
+     */
     private static void fetch(Activity activity, ActivityDownloadBinding binding, String address,
-                              File target, String expected, long before, long total) throws IOException {
+                              File target, String expected, long size, long before, long total) throws IOException {
         File part = new File(target.getPath() + ".part");
         try {
             URLConnection connection = new URL(address).openConnection();
@@ -194,8 +198,9 @@ public class Downloader {
                 int n;
                 while ((n = in.read(buf)) != -1) {
                     if (cancelled) throw new Cancelled();
-                    out.write(buf, 0, n);
                     got += n;
+                    if (got > size) throw new Wrong();
+                    out.write(buf, 0, n);
                     // One redraw per whole percent: the panel cannot take one per chunk.
                     final int percent = (int) (((before + got) * 100L) / total);
                     if (percent != shown) {
