@@ -17,14 +17,18 @@ Fork of [whoBIRD](https://github.com/woheller69/whoBIRD) by woheller69.
 ## How it works
 
 Recognition is [BirdNET](https://github.com/kahst/BirdNET-Analyzer), running on the phone.
-Nothing is sent away to be identified. The model file is about 39MB and is downloaded once,
-on first run; after that the app works with no network at all.
+Nothing is sent away to be identified. The model (about 41 MB with the location model below)
+is part of the app, so it works from the first run with no network at all. It is checked
+against its SHA-256 each time the app starts. The only thing the app fetches is a bird's
+photograph, when one is shown (see below).
 
 A second, much smaller model narrows the answer by where you are and what week of the year
 it is, so a bird that cannot be here now is not offered. That is what the location permission
 is for, and it can be turned off in settings.
 
-A bird's photograph carries two buttons: one opens its eBird page, the other its Wikipedia
+Photographs come from the Macaulay Library's image server when you open a species, or as a
+bird is heard if **Photo while listening** is on in Settings; they are the one reason the app
+has the internet permission. A bird's photograph carries two buttons: one opens its eBird page, the other its Wikipedia
 article, in the language the bird names are set to. Both open in your browser; the app does
 not fetch or keep either page.
 
@@ -33,7 +37,12 @@ app. What the app records, stores and sends is set out in [PRIVACY.md](PRIVACY.m
 
 ## Building
 
+    sh models/fetch.sh        # once: fetches the two BirdNET models and checks them by hash
     ./gradlew assembleRelease
+
+The models are not committed (about 41 MB). `models/fetch.sh` takes them from one fixed commit
+of whoBIRD-TFlite and refuses them unless each matches its SHA-256; the build checks the same
+hashes again before packing them, and fails if they are missing.
 
 Release builds are signed with a keystore in `signing/`, which is gitignored. There is no
 fallback: without it `assembleRelease` produces an *unsigned* APK, which will not install
@@ -62,8 +71,10 @@ under that license, and the rest is too.
 
 - Built on the [BirdNET framework](https://github.com/kahst/BirdNET-Analyzer) by
   [@kahst](https://github.com/kahst), published under CC BY-NC-SA 4.0.
-- On first run it downloads the BirdNET TFLite models from
-  [whoBIRD-TFlite](https://github.com/woheller69/whoBIRD-TFlite), also CC BY-NC-SA 4.0.
+- Carries the BirdNET TFLite models (`BirdNET_GLOBAL_6K_V2.4_Model_FP16.tflite` and
+  `BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite`) from
+  [whoBIRD-TFlite](https://github.com/woheller69/whoBIRD-TFlite) at commit
+  `a79d101796654cf22f46383328547def828510e8`, also CC BY-NC-SA 4.0.
   **No commercial use.**
 - Label files from BirdNET are used under GPLv3, with
   [permission from the author](https://github.com/woheller69/whoBIRD/issues/1).

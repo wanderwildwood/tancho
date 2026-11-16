@@ -46,20 +46,19 @@ you a species from another continent.
 
 ## Network
 
-1. **The model, once.** On first run the app downloads the BirdNET model files (~39MB, or
-   ~63MB for 32-bit) from `raw.githubusercontent.com`, from one fixed commit of the
-   whoBIRD-TFlite repository, and checks each against a SHA-256 built into the app; a file
-   that does not match is deleted. GitHub sees your internet address. The download screen has
-   an About button (Privacy, Terms, Licenses), and a Cancel button while it runs. After that it identifies birds with
-   no network at all — airplane mode included.
-2. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
+The BirdNET models are part of the app (earlier versions downloaded them on first
+run), so nothing is downloaded to make it work, and it identifies birds with no network
+at all, airplane mode included. Each time it starts, it checks both models against a SHA-256
+built into it and will not use one that does not match.
+
+1. **Bird photographs, when shown.** Images are fetched straight from Cornell's image
    server (`cdn.download.ams.birds.cornell.edu`) as a single jpeg, and kept in the app's
    cache so a species is fetched once. On the listening screen this is off by default
    (**Photo while listening** in Settings). In the observation and species lists, tapping an entry
    loads its photograph. Cornell's server therefore learns your IP address and which
    species you looked at. There is no web page involved — no scripts, no cookies — and no
    account or identifier is sent by the app (`BirdPhoto.kt`).
-3. **eBird and Wikipedia, only if you tap them.** The eBird and Wikipedia buttons on a bird's photograph
+2. **eBird and Wikipedia, only if you tap them.** The eBird and Wikipedia buttons on a bird's photograph
    open its `ebird.org` page, and its Wikipedia page in the language the bird names are
    set to, in your own browser. The app itself fetches neither.
 
@@ -87,7 +86,6 @@ cache, and grants no other use of it. A credit line naming the Library is printe
 | | |
 |---|---|
 | `databases/BirdDatabase.db` | Your detections: time, species, probability, and coordinates if you granted location. App-private. |
-| `files/` | The downloaded model files. App-private. |
 | Shared preferences | Your settings. App-private. |
 | `files/Recordings/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
 
@@ -99,7 +97,7 @@ database can be exported, backed up, restored or deleted from inside the app, un
 | Permission | Why |
 |---|---|
 | `RECORD_AUDIO` | To hear birds. This is the app. |
-| `INTERNET` | The three uses above. |
+| `INTERNET` | Bird photographs, above. Nothing else. |
 | `ACCESS_FINE_LOCATION` / `ACCESS_COARSE_LOCATION` | The location model. Optional. |
 | `BLUETOOTH_CONNECT` | To record from a Bluetooth microphone if you select one. |
 | `MODIFY_AUDIO_SETTINGS` | To choose the audio input the recognizer reads. |
@@ -107,7 +105,7 @@ database can be exported, backed up, restored or deleted from inside the app, un
 <!-- shared-about privacy section -->
 ## Who we are
 
-Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. What you put in Birding stays on your phone. The only things that go out are the requests described above: the one-time download of the BirdNET model from GitHub, and a request to the Cornell Lab of Ornithology's image server for a bird's photograph, which names that species. Neither carries anything you heard, recorded or wrote, or where you were. The developer receives nothing, so the developer holds no data about you.
+Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. What you put in Birding stays on your phone. The only thing that goes out is the request described above: a request to the Cornell Lab of Ornithology's image server for a bird's photograph, which names that species. It carries anything you heard, recorded or wrote, or where you were. The developer receives nothing, so the developer holds no data about you.
 
 ## How to contact us
 
@@ -129,5 +127,5 @@ Similar laws elsewhere, such as the CCPA in California, give you the right to kn
 
 Since Birding keeps what it stores only on your phone, you can exercise most of these rights yourself: export, back up, restore or delete the log under Settings, clear the app's data in Android's settings, or uninstall the app, which deletes all of it. For anything you cannot do yourself, write to the address above.
 
-Birding connects to GitHub and the Cornell Lab of Ornithology. They are separate from this app and from its developer, and what they receive is covered by their own privacy policies; ask them about what they hold.
+Birding connects to the Cornell Lab of Ornithology, for photographs. It is separate from this app and from its developer, and what it receives is covered by its own privacy policy; ask it about what it holds.
 <!-- /shared-about privacy section -->

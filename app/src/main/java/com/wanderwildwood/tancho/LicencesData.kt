@@ -7,12 +7,11 @@ import androidx.compose.ui.res.stringResource
 const val SOURCE_URL = "https://github.com/wanderwildwood/tancho"
 
 /**
- * What the app downloads or fetches when it is used: not in the APK. The photographs are under
- * no licence at all, so their page shows [photoTerms] (the terms the app keeps to) as its text.
+ * What the app fetches when it is used: not in the APK. The photographs are under no licence at
+ * all, so their page shows [photoTerms] (the terms the app keeps to) as its text. The BirdNET
+ * models and species names are in the APK and are listed from config/libraries.
  */
 fun licenceDownloaded(photoTerms: LicenceText): List<LicenceComponent> = listOf(
-    LicenceComponent("BirdNET model and framework (downloaded once, not in the APK)", "Stefan Kahl and the Cornell Lab of Ornithology", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
-    LicenceComponent("BirdNET species names in other languages (labels_xx.txt)", "The BirdNET project and its translators", "CC BY-NC-SA 4.0", "https://creativecommons.org/licenses/by-nc-sa/4.0/"),
     LicenceComponent("Bird photographs, fetched when shown, not in the APK", "Their photographers, through the Macaulay Library, Cornell Lab of Ornithology", "Copyright of the photographers", "https://www.macaulaylibrary.org", texts = listOf(photoTerms)),
 )
 

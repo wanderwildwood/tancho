@@ -1,0 +1,8 @@
+{
+  "uniqueId": "birdnet-model",
+  "name": "BirdNET models",
+  "description": "Carried in the APK: BirdNET_GLOBAL_6K_V2.4_Model_FP16.tflite and BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite, from the whoBIRD-TFlite repository at commit a79d101796654cf22f46383328547def828510e8 (models/fetch.sh). May not be used commercially.",
+  "developers": [{ "name": "Stefan Kahl and the Cornell Lab of Ornithology" }],
+  "website": "https://github.com/woheller69/whoBIRD-TFlite",
+  "licenses": ["CC-BY-NC-SA-4.0"]
+}

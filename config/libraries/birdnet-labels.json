@@ -1,0 +1,8 @@
+{
+  "uniqueId": "birdnet-labels",
+  "name": "BirdNET species names in other languages",
+  "description": "Carried in the APK as labels_xx.txt: the names BirdNET gives each species, from the BirdNET project and its translators.",
+  "developers": [{ "name": "The BirdNET project and its translators" }],
+  "website": "https://github.com/kahst/BirdNET-Analyzer",
+  "licenses": ["CC-BY-NC-SA-4.0"]
+}
