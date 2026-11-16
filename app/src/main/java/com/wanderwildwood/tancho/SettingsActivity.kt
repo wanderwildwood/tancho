@@ -49,7 +49,7 @@ class SettingsActivity : BaseActivity() {
         val settings = Settings(this)
         val activity = this
         setContent {
-            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 ArmedScope {
                   // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
                   CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
@@ -86,7 +86,7 @@ class SettingsActivity : BaseActivity() {
                     }
                   }
                 }
-            }
+            } }
         }
         savedInstanceState?.getString(SAY_AFTER_RECREATE)?.let { FootNotice.say(this, it) }
     }

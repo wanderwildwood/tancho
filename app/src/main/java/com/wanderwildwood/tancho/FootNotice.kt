@@ -90,7 +90,7 @@ object FootNotice {
 
         private val words = ComposeView(activity).apply {
             setContent {
-                ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+                ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                     Box(Modifier.fillMaxSize().navigationBarsPadding().imePadding(), contentAlignment = Alignment.BottomCenter) {
                         Column(
                             Modifier.fillMaxWidth()
@@ -109,7 +109,7 @@ object FootNotice {
                             )
                         }
                     }
-                }
+                } }
             }
         }
 

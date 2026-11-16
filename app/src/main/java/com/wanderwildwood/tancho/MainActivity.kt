@@ -106,7 +106,7 @@ class MainActivity : BaseActivity() {
     soundClassifier = SoundClassifier(this, state, SoundClassifier.Options())
 
     setContent {
-      ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+      ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
           ArmedScope {
            // A blinking cursor repaints its field twice a second on a panel that cannot afford it.
            CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
@@ -150,7 +150,7 @@ class MainActivity : BaseActivity() {
             PermissionAsk()
            }
           }
-      }
+      } }
     }
 
     state.setMicAllowed(checkMicrophonePermission())

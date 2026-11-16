@@ -52,9 +52,9 @@ class BirdInfoActivity : BaseActivity() {
         setContentView(binding.root)
         DarkMode.keep(binding.photo)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
             ArmedScope { DestinationRowCompose(Destination.SPECIES) }
-        } }
+        } } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -84,7 +84,7 @@ class BirdInfoActivity : BaseActivity() {
 
         shown.value = allBirdsList
         binding.speciesList.setContent {
-            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 ArmedScope {
                     val birds by shown
                     val state = rememberLazyListState()
@@ -98,7 +98,7 @@ class BirdInfoActivity : BaseActivity() {
                         }
                     }
                 }
-            }
+            } }
         }
         binding.searchEdit.doOnTextChanged { text, _, _, _ ->
             shown.value = labelList.mapIndexed { index, element -> Pair(index, element) }

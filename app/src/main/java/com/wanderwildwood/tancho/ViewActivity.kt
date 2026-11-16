@@ -86,9 +86,9 @@ class ViewActivity : BaseActivity() {
         DarkMode.keep(binding.photo)
         DarkMode.keep(binding.spectrogram)
 
-        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+        binding.destinationRow.setContent { ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
             ArmedScope { DestinationRowCompose(Destination.HEARD) }
-        } }
+        } } }
         //Set aspect ratio for the photo
         val width = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             val windowMetrics = windowManager.currentWindowMetrics
@@ -110,12 +110,12 @@ class ViewActivity : BaseActivity() {
         loadEbirdList(this)
         wireList()
         binding.undoStrip.setContent {
-            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 ArmedScope {
                     val text = undoText.value
                     if (text != null) UndoStrip(text, onUndo = ::undoDelete)
                 }
-            }
+            } }
         }
         focus = focusOf(intent)
     }
@@ -233,7 +233,7 @@ class ViewActivity : BaseActivity() {
      */
     private fun wireList() {
         binding.observationList.setContent {
-            ThemeMMD(colorScheme = monochrome, typography = houseTypography) {
+            ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 ArmedScope {
                     val rows by observations
                     var armed by rememberArmedKey<Int>()
@@ -292,7 +292,7 @@ class ViewActivity : BaseActivity() {
                         }
                     }
                 }
-            }
+            } }
         }
     }
 
