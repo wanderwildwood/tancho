@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    No cleartext anywhere. The app fetches from two fixed hosts, both over https: GitHub, for the
-    BirdNET model files (Downloader.java, each checked against a SHA-256 before it is used), and
-    the Macaulay Library's image host, for a bird's photograph (BirdPhoto.kt).
+    No cleartext anywhere. The app fetches from one fixed host, over https: the Macaulay Library's
+    image host, for a bird's photograph (BirdPhoto.kt). The BirdNET models are in the APK.
 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />

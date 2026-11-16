@@ -5,3 +5,7 @@
 /local.properties
 /signing/
 /.kotlin/
+
+# The BirdNET models are fetched and checked by hash, not committed: models/fetch.sh.
+/models/*.tflite
+/models/*.part

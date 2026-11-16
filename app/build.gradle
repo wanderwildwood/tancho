@@ -5,6 +5,35 @@ plugins {
     id 'com.mikepenz.aboutlibraries.plugin.android'
 }
 
+// The two BirdNET models go into the APK as assets, so the app works from the first run with no
+// network. They are fetched by models/fetch.sh rather than committed, and checked here by hash as
+// well: a build that quietly packed a different model, or half of one, would still say BUILD
+// SUCCESSFUL. The app checks the same hashes again when it starts (ModelFiles.kt).
+def birdnetModels = [
+        'model.tflite'    : ['BirdNET_GLOBAL_6K_V2.4_Model_FP16.tflite', '5c64ba3ffab264ccbfafe784896392051a86be63b0cc507e7683db7df114546b'],
+        'metaModel.tflite': ['BirdNET_GLOBAL_6K_V2.4_MData_Model_V2_FP16.tflite', '1226f23fc20362617deb09178f366111b70cf085c2c82893f2814e5acedce6c2'],
+]
+def modelAssets = layout.buildDirectory.dir('generated/model-assets')
+
+def stageModels = tasks.register('stageModels') {
+    birdnetModels.each { asset, source -> inputs.file(rootProject.file("models/${source[0]}")).optional() }
+    outputs.dir(modelAssets)
+    doLast {
+        def out = modelAssets.get().asFile
+        out.deleteDir()
+        out.mkdirs()
+        birdnetModels.each { asset, source ->
+            def file = rootProject.file("models/${source[0]}")
+            if (!file.isFile()) throw new GradleException("models/${source[0]} is missing. Run models/fetch.sh first.")
+            def digest = java.security.MessageDigest.getInstance('SHA-256')
+            file.eachByte(1 << 20) { buffer, n -> digest.update(buffer, 0, n) }
+            def actual = digest.digest().encodeHex().toString()
+            if (actual != source[1]) throw new GradleException("models/${source[0]} has sha256 $actual, expected ${source[1]}.")
+            java.nio.file.Files.copy(file.toPath(), new File(out, asset).toPath())
+        }
+    }
+}
+
 // A real keystore in signing/ signs every build type when it is present, so the very first
 // install is already release-signed and a later update can never hit
 // INSTALL_FAILED_UPDATE_INCOMPATIBLE. It is gitignored: a fresh clone falls back to the
@@ -41,8 +70,13 @@ android {
         disable 'MissingTranslation'
     }
 
+    // The models are mapped straight out of the APK, which needs them stored, not deflated.
     aaptOptions {
         noCompress "tflite"
+    }
+
+    sourceSets {
+        main.assets.srcDir(modelAssets)
     }
 
     buildFeatures {
@@ -95,6 +129,8 @@ android {
         generateLocaleConfig true
     }
 }
+
+tasks.named('preBuild') { dependsOn(stageModels) }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])

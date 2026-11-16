@@ -11,6 +11,12 @@ import androidx.compose.ui.platform.LocalCursorBlinkEnabled
 import com.mudita.mmd.ThemeMMD
 import com.wanderwildwood.tancho.databinding.ActivityDownloadBinding
 
+/**
+ * The launcher's entry, still under its old name so a home-screen slot pointing at it keeps
+ * working. The model used to be downloaded here; it is in the APK now, so all this screen does
+ * is check both models against their SHA-256 and go on to listening. Only if a model is not the
+ * file this version was built with does it stay, and say so.
+ */
 class DownloadActivity  : BaseActivity() {
 
     /**
@@ -28,11 +34,11 @@ class DownloadActivity  : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDownloadBinding.inflate(layoutInflater)
         setContentView(binding!!.root)
-        // Privacy, Terms and Licences are readable here, before the first download.
+        // Privacy, Terms and Licences are readable here even when the model is refused.
         binding!!.aboutHost.setContent {
             ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 // No ArmedScope here: this ComposeView lies over the whole screen, and a scope's
-                // touch watcher would take the taps meant for the buttons under it. The About
+                // touch watcher would take the taps meant for the button under it. The About
                 // dialog is its own window and has no armed row.
                 CompositionLocalProvider(LocalCursorBlinkEnabled provides false) {
                     if (showAbout) AboutDialog(onDismiss = { showAbout = false })
@@ -43,18 +49,12 @@ class DownloadActivity  : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
-        if (!Downloader.isRunning() && Downloader.checkModels(this)) {
+        if (ModelFiles.check(this)) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+        } else {
+            binding?.modelDamaged?.visibility = View.VISIBLE
         }
-    }
-
-    fun download(view: View) {
-        binding?.let { Downloader.downloadModels(this, it) }
-    }
-
-    fun cancel(view: View) {
-        Downloader.cancel()
     }
 
     fun about(view: View) {

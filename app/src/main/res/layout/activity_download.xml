@@ -27,12 +27,16 @@
             android:orientation="vertical"
             android:layout_weight="5">
 
+            <!-- Shown only when a model in the APK is not the one this version was built
+                 with (ModelFiles.kt); otherwise this screen goes straight on to listening. -->
             <LinearLayout
+                android:id="@+id/model_damaged"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:orientation="vertical"
+                android:visibility="gone"
                 android:background="@drawable/oval_color_accent_thin"
                 android:gravity="center_horizontal">
 
@@ -42,83 +46,25 @@
                     android:gravity="center"
                     android:textColor="?colorPrimary"
                     android:textSize="22sp"
-                    android:text="@string/download_model" />
+                    android:text="@string/model_damaged_title" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textColor="?colorPrimary"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:text="@string/download_model_text" />
-                <CheckBox
-                    android:id="@+id/option32bit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/download_32bit"
-                    android:textSize="18sp"
-                    android:textColor="?colorPrimary"/>
-
-                <ImageButton
-                    android:id="@+id/download_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:background="?colorPrimary"
-                    android:src="@drawable/ic_download_48dp"
-                    app:tint="@android:color/white"
-                    android:padding="12dp"
-                    android:contentDescription="@string/download_the_model"
-                    android:onClick="download"
-                    />
-
-                <!-- Shown only while a download runs. -->
-                <Button
-                    android:id="@+id/download_cancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="48dp"
-                    android:visibility="gone"
-                    android:text="@string/cancel"
-                    android:onClick="cancel"
-                    android:textSize="18sp" />
-
-                <!-- Why a download did not work, where it can be read: a Toast is gone before it is. -->
-                <TextView
-                    android:id="@+id/download_error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:visibility="gone"
-                    android:textColor="?colorPrimary"
-                    android:gravity="center"
-                    android:textSize="18sp" />
-
-                <!-- Invisible, not gone: the bar has to hold its place from the start, or
-                     the card grows the moment a download begins and the whole panel
-                     repaints to move everything above it. -->
-                <ProgressBar
-                    android:id="@+id/download_progress"
-                    style="@android:style/Widget.ProgressBar.Horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="20dp"
-                    android:visibility="invisible"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
                     android:layout_marginBottom="16dp"
-                    android:progressDrawable="@drawable/progress_track"
-                    tools:progress="0" />
+                    android:textColor="?colorPrimary"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:text="@string/model_damaged_text" />
 
             </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Privacy, Terms and Licences before anything is downloaded or asked. -->
+    <!-- Privacy, Terms and Licences, readable even when the model is refused. -->
     <ImageButton
         android:id="@+id/about_button"
         android:layout_width="48dp"

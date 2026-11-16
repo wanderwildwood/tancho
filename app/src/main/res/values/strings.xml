@@ -2,11 +2,9 @@
 <resources>
     <string name="app_name" translatable="false">Birding</string>
     <string name="samples_zero">No sound is reaching the microphone</string>
-    <string name="download_model">Download the model</string>
-    <string name="download_model_text">Birding needs the BirdNET model, about 39MB. It is downloaded once and then works with no network.\n\nThe model is licensed CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="error_download">Download error</string>
-    <string name="download_failed">The model could not be downloaded. Check that the phone is online and try again.</string>
-    <string name="error_download_wrong">The file that arrived is not the model this version expects, so it was thrown away. Try again, or look for an update.</string>
+    <string name="model_damaged_title">The model is damaged</string>
+    <string name="model_damaged_text">The BirdNET model inside this copy of Birding is not the one it was built with, so it will not be used. Install Birding again from its release page.</string>
     <string name="clear_db">Observations deleted</string>
     <string name="delete">Delete all observations?</string>
     <string name="settings_threshold">Threshold</string>
@@ -54,7 +52,6 @@
     <string name="destination_observations">Heard</string>
     <string name="destination_species">Species</string>
     <string name="destination_settings">Settings</string>
-    <string name="download_the_model">Download the model</string>
     <string name="photo_description">Photo of the bird</string>
     <string name="photo_credit">Macaulay Library, Cornell Lab of Ornithology</string>
     <string name="photo_credit_by">Photo: %1$s, Macaulay Library, Cornell Lab of Ornithology</string>
@@ -90,8 +87,6 @@
     <string name="times_heard">×%1$s</string>
     <!-- Toast when GPS is off in the phone's settings -->
     <string name="error_no_gps">Error no GPS</string>
-    <!-- Checkbox on the first screen: download the larger, 32-bit model instead -->
-    <string name="download_32bit">32bit (~63MB)</string>
     <!-- Toast when a web link cannot be opened -->
     <string name="no_browser">There is no browser on this phone to open that with.</string>
     <!-- Heading of the About. %1$s is the version number, e.g. 1.7.4 -->
@@ -100,7 +95,7 @@
     <string name="about_model_licence_link">Read the CC BY-NC-SA 4.0 license</string>
     <string name="about_what">Names the birds it hears, offline, with BirdNET running on the phone itself. Where you are and the week of the year leave out birds that cannot be here.</string>
     <string name="about_privacy_title">Privacy</string>
-    <string name="about_privacy">Your log stays on this phone, and identifying a bird happens here. The app goes online for two things only: the BirdNET model, downloaded once from GitHub (about 39MB), and a bird\'s photograph from Cornell\'s image server, for a row you open, or as a bird is heard if Photo while listening is on. Those requests carry nothing you have heard or written; the servers see your internet address and which bird\'s picture was asked for. eBird and Wikipedia open in your browser only when you press them. \"Feed the llamas\" in About opens a donation page (square.link) in your browser, only when you press it. The app sends nothing there; if you give, the payment is handled on that page by Square, not by this app.</string>
+    <string name="about_privacy">Your log stays on this phone, and identifying a bird happens here. The BirdNET model is part of the app, so nothing is downloaded to make it work. The app goes online for one thing only: a bird\'s photograph from Cornell\'s image server, for a row you open, or as a bird is heard if Photo while listening is on. That request carries nothing you have heard or written; the server sees your internet address and which bird\'s picture was asked for. eBird and Wikipedia open in your browser only when you press them. \"Feed the llamas\" in About opens a donation page (square.link) in your browser, only when you press it. The app sends nothing there; if you give, the payment is handled on that page by Square, not by this app.</string>
     <string name="about_privacy_more">The microphone is open only while Birding is listening, and the sound is not kept unless you turn on Save recordings. Location is used only to weigh which birds are likely where you are, if you allow it or type a place in. The place is stored with each hearing in your log, so it goes out with a sent log or a backup; a shared hearing includes it only if you switch that on in Settings. There are no ads, no analytics and no tracking. Backups and exports go only where you choose to save them.</string>
     <string name="about_terms_title">Terms</string>
     <string name="about_terms">Birding is free software under the GNU General Public License, version 3 only. It comes with no warranty: use it at your own risk. The name it gives a bird is a model\'s guess and can be wrong. The BirdNET model is licensed CC BY-NC-SA 4.0 and may not be used commercially. A donation through \"Feed the llamas\" is voluntary and unlocks nothing: the app is the same with or without one.</string>
@@ -135,9 +130,9 @@
     <string name="licences_back">Back</string>
     <string name="licences_source_head">Source code</string>
     <string name="licences_no_text">%s needs no license text here.</string>
-    <string name="licences_licence">Birding is free software under the GNU General Public License, version 3 only. Copyright wander wildwood, and woheller69 for the parts that come from whoBIRD. The BirdNET model it downloads is a separate work under CC BY-NC-SA 4.0 and may not be used commercially.</string>
+    <string name="licences_licence">Birding is free software under the GNU General Public License, version 3 only. Copyright wander wildwood, and woheller69 for the parts that come from whoBIRD. The BirdNET model it carries is a separate work under CC BY-NC-SA 4.0 and may not be used commercially.</string>
     <string name="licences_photos_terms_title">How the photographs may be used</string>
-    <string name="licences_fetched_head">Downloaded or fetched</string>
+    <string name="licences_fetched_head">Fetched when shown</string>
     <string name="licences_fetched">The bird photographs come from the Macaulay Library of the Cornell Lab of Ornithology. Their rights stay with the photographers and with Cornell. The app shows them as the Library provides them, without modification, fetches one when you open a species, and keeps it only in its own cache. They are not part of this app\'s license.</string>
     <string name="licences_full_head">Full texts</string>
     <string name="licences_full_gpl">GNU General Public License, version 3 (full text)</string>
@@ -152,11 +147,11 @@
     <string name="about_contact_head">Contact</string>
     <string name="about_links_head">Links</string>
     <string name="privacy_who_title">Who we are</string>
-    <string name="privacy_who">This app is made by wander wildwood, an independent developer: one person, not a company. That makes wander wildwood the data controller for anything the app itself handles, and that is very little: what you put in stays on this phone unless you send it somewhere yourself. The only things that go out are the requests described above: the one-time download of the BirdNET model from GitHub, and a request to the Cornell Lab of Ornithology\'s image server for a bird\'s photograph, which names that species. Neither carries anything you heard or wrote, or where you were, and the developer receives nothing.</string>
+    <string name="privacy_who">This app is made by wander wildwood, an independent developer: one person, not a company. That makes wander wildwood the data controller for anything the app itself handles, and that is very little: what you put in stays on this phone unless you send it somewhere yourself. The only thing that goes out is the request described above: a request to the Cornell Lab of Ornithology\'s image server for a bird\'s photograph, which names that species. It carries nothing anything you heard or wrote, or where you were, and the developer receives nothing.</string>
     <string name="privacy_contact_title">How to contact us</string>
     <string name="privacy_contact">Write to email@wanderthe.dev, about your data or anything else.</string>
     <string name="privacy_rights_title">Your rights</string>
-    <string name="privacy_rights">Under the GDPR you can ask to see the data held about you, to have it corrected or deleted, to limit or object to its use, to take a copy with you, to withdraw consent, and to complain to a data protection authority. Since the app keeps what it stores only on your phone, you can do most of this yourself: export, back up, restore or delete the log under Settings, clear the app\'s data in Android\'s settings, or uninstall the app. What GitHub and the Cornell Lab of Ornithology receive is covered by their own privacy policies.</string>
+    <string name="privacy_rights">Under the GDPR you can ask to see the data held about you, to have it corrected or deleted, to limit or object to its use, to take a copy with you, to withdraw consent, and to complain to a data protection authority. Since the app keeps what it stores only on your phone, you can do most of this yourself: export, back up, restore or delete the log under Settings, clear the app\'s data in Android\'s settings, or uninstall the app. What the Cornell Lab of Ornithology receives is covered by its own privacy policy.</string>
     <!-- /shared-about -->
     <string name="settings_dark">Dark mode</string>
     <string name="page_arrow_previous">Previous page</string>

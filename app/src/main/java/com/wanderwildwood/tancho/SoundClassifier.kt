@@ -29,13 +29,10 @@ import androidx.preference.PreferenceManager
 import org.tensorflow.lite.Interpreter
 import uk.me.berndporr.iirj.Butterworth
 import java.io.BufferedReader
-import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
 import java.nio.ByteBuffer
 import java.nio.FloatBuffer
-import java.nio.channels.FileChannel
-import java.nio.file.StandardOpenOption
 import java.time.LocalDate
 import java.util.Timer
 import java.util.TimerTask
@@ -67,9 +64,9 @@ class SoundClassifier(
     /** Path of the converted .tflite file, relative to the assets/ directory.  */
     val assetFile: String = "assets.txt",
     /** Path of the converted .tflite file, relative to the assets/ directory.  */
-    val modelPath: String = "model.tflite",
+    val modelPath: String = ModelFiles.MODEL,
     /** Path of the meta model .tflite file, relative to the assets/ directory.  */
-    val metaModelPath: String = "metaModel.tflite",
+    val metaModelPath: String = ModelFiles.META_MODEL,
     /** The required audio sample rate in Hz.  */
     val sampleRate: Int = 48000,
     /** Probability value above which a class in the meta model is labeled as active (i.e., detected) the display. (default 0.01) */
@@ -217,13 +214,8 @@ class SoundClassifier(
 
   private fun setupInterpreter(context: Context) {
     try {
-      val modelFilePath = context.getDir("filesdir", Context.MODE_PRIVATE).absolutePath + "/"+ options.modelPath
-      Log.i(TAG, "Trying to create TFLite buffer from $modelFilePath")
-      val modelFile = File(modelFilePath)
-      val tfliteBuffer: ByteBuffer = FileChannel.open(modelFile.toPath(), StandardOpenOption.READ).use { channel ->
-        channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size())
-      }
-      Log.i(TAG, "Done creating TFLite buffer from $modelFilePath")
+      // In the APK, and checked against its SHA-256 before this screen was reached (ModelFiles).
+      val tfliteBuffer: ByteBuffer = ModelFiles.map(context, options.modelPath)
 
       interpreter = Interpreter(tfliteBuffer, Interpreter.Options())
     } catch (e: IOException) {
@@ -255,13 +247,7 @@ class SoundClassifier(
   private fun setupMetaInterpreter(context: Context) {
 
     try {
-      val metaModelFilePath = context.getDir("filesdir", Context.MODE_PRIVATE).absolutePath + "/"+ options.metaModelPath
-      Log.i(TAG, "Trying to create TFLite buffer from $metaModelFilePath")
-      val metaModelFile = File(metaModelFilePath)
-      val tfliteBuffer: ByteBuffer = FileChannel.open(metaModelFile.toPath(), StandardOpenOption.READ).use { channel ->
-        channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size())
-      }
-      Log.i(TAG, "Done creating TFLite buffer from $metaModelFilePath")
+      val tfliteBuffer: ByteBuffer = ModelFiles.map(context, options.metaModelPath)
 
       meta_interpreter = Interpreter(tfliteBuffer, Interpreter.Options())
     } catch (e: IOException) {
