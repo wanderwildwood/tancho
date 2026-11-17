@@ -48,7 +48,9 @@ Release builds are signed with a keystore in `signing/`, which is gitignored. Th
 fallback: without it `assembleRelease` produces an *unsigned* APK, which will not install
 anywhere. That is deliberate — a signing key committed to a public repo is not a signing key,
 it is a formality, and a missing one should stop you rather than quietly hand you something
-installable. (`assembleDebug` still works, signed with the usual Android debug key.)
+installable. (`assembleDebug` still works: signed with the key in `signing/` when it is
+there, so a debug build can update a release one, and with the usual Android debug key when
+it is not.)
 
 ## Getting it, and keeping it
 
@@ -66,7 +68,7 @@ install over what you have, keeping your settings and anything the app has store
 
 ## License
 
-GPLv3. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
+GPL-3.0-only. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
 under that license, and the rest is too.
 
 - Built on the [BirdNET framework](https://github.com/kahst/BirdNET-Analyzer) by

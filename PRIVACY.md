@@ -29,9 +29,11 @@ Only if you grant it. It is used to ask the second, much smaller model whether a
 can plausibly be where you are in the week you are in, which is what stops the app offering
 you a species from another continent.
 
-- It comes from the GPS receiver directly (`LocationManager.GPS_PROVIDER` in
-  `LocationHelper.java`). There is no fused-location provider and no network lookup, so
-  asking for your position does not tell anyone that you asked.
+- Live updates come from the GPS receiver directly (`LocationManager.GPS_PROVIDER` in
+  `LocationHelper.java`). There is no fused-location provider and the app never asks for a
+  network fix, so asking for your position does not tell anyone that you asked. A recent
+  position the phone already remembers, from any of its providers, is used meanwhile while it
+  is fresh.
 - The coordinates are stored with each detection in the app's own database, so a saved
   observation says where it was made. That database is in the app's private storage.
 - You can set the place chip on the listening screen to **Any bird**, which ignores the place,
@@ -87,7 +89,7 @@ cache, and grants no other use of it. A credit line naming the Library is printe
 |---|---|
 | `databases/BirdDatabase.db` | Your detections: time, species, probability, and coordinates if you granted location. App-private. |
 | Shared preferences | Your settings. App-private. |
-| `files/Recordings/*.wav` | Recordings, only if you turned that on. App-private: removed on uninstall, and by the one-session setting. |
+| `files/Recordings/*.wav` | Recordings, only if you turned that on, in the app's own folder on the shared storage (`Android/data/com.wanderwildwood.tancho/files/Recordings`): other apps cannot read it on Android 11 and later, a computer connected over USB can, and it is removed on uninstall and by the one-session setting. |
 
 App-private means other apps cannot read it and it goes away when you uninstall. The
 database can be exported, backed up, restored or deleted from inside the app, under Settings.
