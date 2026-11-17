@@ -127,6 +127,7 @@ class SoundClassifier(
   private var latestPredictionLatencyMs = 0f
 
   private var recognitionTask: TimerTask? = null
+  private var recognitionTimer: Timer? = null
 
   /** Used to record audio samples. */
   private lateinit var audioRecord: AudioRecord
@@ -161,8 +162,13 @@ class SoundClassifier(
   fun stop() {
     if (isClosed || !isRecording) return
     recognitionTask?.cancel()
+    // The timer's own thread too, or each resume leaves one more behind.
+    recognitionTimer?.cancel()
+    recognitionTimer = null
 
-    audioRecord.stop()
+    // Let go of the microphone as well as stopped: a new recorder is made on every start.
+    runCatching { audioRecord.stop() }
+    runCatching { audioRecord.release() }
     isRecording = false
 
   }
@@ -357,13 +363,15 @@ class SoundClassifier(
   @Synchronized
   private fun startAudioRecord() {
     if (isRecording) return
-    setupAudioRecord()
+    // A recorder Android will not make (the microphone held elsewhere, a source this phone
+    // does not have) leaves the app not listening, rather than closing it.
+    if (!runCatching { setupAudioRecord() }.getOrDefault(false)) return
     isClosed = false
     isRecording = true
   }
 
   @SuppressLint("MissingPermission")  //Permission already requested in MainActivity
-  private fun setupAudioRecord() {
+  private fun setupAudioRecord(): Boolean {
     var bufferSize = AudioRecord.getMinBufferSize(
       options.sampleRate,
       AudioFormat.CHANNEL_IN_MONO,
@@ -382,7 +390,7 @@ class SoundClassifier(
     Log.i(TAG, "bufferSize = $bufferSize")
     val sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext)
 
-    val audioSource = Integer.parseInt(sharedPref.getString("audio_source", MediaRecorder.AudioSource.UNPROCESSED.toString())!!)
+    val audioSource = sharedPref.getString("audio_source", null)?.toIntOrNull() ?: MediaRecorder.AudioSource.UNPROCESSED
     val sampleRate = options.sampleRate
     val channelConfig = AudioFormat.CHANNEL_IN_MONO
     val audioFormat = AudioFormat.ENCODING_PCM_16BIT
@@ -402,7 +410,8 @@ class SoundClassifier(
 
     if (audioRecord.state != AudioRecord.STATE_INITIALIZED) {
       Log.e(TAG, "AudioRecord failed to initialize")
-      return
+      audioRecord.release()
+      return false
     }
     Log.i(TAG, "Successfully initialized AudioRecord")
 
@@ -411,6 +420,7 @@ class SoundClassifier(
 
     // Start recognition (model inference) thread.
     startRecognitionLoop()
+    return true
   }
 
   private fun loadAudio(audioBuffer: ShortArray): Int {
@@ -453,7 +463,9 @@ class SoundClassifier(
 
     var j = 0 // Indices for the circular buffer next write
 
-    recognitionTask = Timer().scheduleAtFixedRate(inferenceInterval, inferenceInterval) task@{
+    val timer = Timer()
+    recognitionTimer = timer
+    recognitionTask = timer.scheduleAtFixedRate(inferenceInterval, inferenceInterval) task@{
 
       val recordingBuffer = ShortArray(modelInputLength)
 

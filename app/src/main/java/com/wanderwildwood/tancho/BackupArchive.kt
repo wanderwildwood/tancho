@@ -67,6 +67,9 @@ object BackupArchive {
     private val PLAIN_NAME = Regex("""[A-Za-z0-9._-]+""")
     private const val MAX_SETTINGS_BYTES = 64 * 1024
 
+    /** Left free on the phone however big a backup is. */
+    private const val SPARE_BYTES = 64L * 1024 * 1024
+
     /** The settings worth carrying, from everything stored; anything else, or of the wrong type, is left out. */
     fun settingsText(stored: Map<String, *>): String {
         val p = Properties()
@@ -102,7 +105,8 @@ object BackupArchive {
                 }
                 Type.INT -> raw.toIntOrNull() ?: throw Refused(Refused.Kind.DAMAGED)
                 Type.FLOAT -> raw.toFloatOrNull()?.takeIf { it.isFinite() } ?: throw Refused(Refused.Kind.DAMAGED)
-                Type.STRING -> raw
+                // The microphone source is a number the recorder is built from.
+                Type.STRING -> if (key == "audio_source" && raw.toIntOrNull() == null) throw Refused(Refused.Kind.DAMAGED) else raw
             }
         }
         return out
@@ -144,6 +148,19 @@ object BackupArchive {
         val recDir = File(staging, "Recordings").apply { mkdirs() }
         var settings: Map<String, Any>? = null
         val recordings = mutableListOf<File>()
+        // A backup cannot be bigger than the room the phone has for it: one that claims more
+        // is refused before it fills the storage.
+        var room = staging.usableSpace - SPARE_BYTES
+        fun copyCapped(from: InputStream, to: File) = to.outputStream().use { out ->
+            val buf = ByteArray(64 * 1024)
+            while (true) {
+                val n = from.read(buf)
+                if (n < 0) break
+                room -= n
+                if (room < 0) throw Refused(Refused.Kind.DAMAGED)
+                out.write(buf, 0, n)
+            }
+        }
         try {
             val zip = ZipInputStream(input)
             while (true) {
@@ -154,9 +171,9 @@ object BackupArchive {
                 when {
                     parts.size >= 2 && parts[parts.size - 2] == "databases" && PLAIN_NAME.matches(leaf) &&
                         leaf != "." && leaf != ".." ->
-                        File(dbDir, leaf).outputStream().use { zip.copyTo(it) }
+                        copyCapped(zip, File(dbDir, leaf))
                     parts.size == 2 && parts[0] == "Recordings" && RECORDING_NAME.matches(leaf) ->
-                        recordings += File(recDir, leaf).also { f -> f.outputStream().use { zip.copyTo(it) } }
+                        recordings += File(recDir, leaf).also { f -> copyCapped(zip, f) }
                     parts.size == 1 && leaf == SETTINGS -> {
                         val bytes = readCapped(zip)
                         settings = readSettings(String(bytes, Charsets.ISO_8859_1))

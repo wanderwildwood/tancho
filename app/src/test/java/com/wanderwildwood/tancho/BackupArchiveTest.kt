@@ -142,6 +142,12 @@ class BackupArchiveTest {
     }
 
     @Test
+    fun aMicrophoneSourceThatIsNotANumberRefusesTheFile() {
+        assertEquals(mapOf("audio_source" to "9"), BackupArchive.readSettings("audio_source=9\n"))
+        refusedAs(BackupArchive.Refused.Kind.DAMAGED) { BackupArchive.readSettings("audio_source=mic\n") }
+    }
+
+    @Test
     fun restoredRecordingsJoinTheOnesThereWithoutReplacingAny() {
         val live = tmp.newFolder("live")
         recording(live, 100, "kept as it was")
