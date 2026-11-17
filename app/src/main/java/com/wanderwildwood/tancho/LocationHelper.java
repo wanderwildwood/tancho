@@ -59,6 +59,14 @@ public class LocationHelper {
         return location;
     }
 
+    /** The place not known: what a detection is stamped with when there is none. */
+    private static Location nowhere() {
+        Location l = new Location("GPS");
+        l.setLatitude(0.0);
+        l.setLongitude(0.0);
+        return l;
+    }
+
     /** 0/0 is not a place anyone birds. It is what the app holds when it has been told nothing. */
     private static boolean isNowhere(Location location) {
         return location.getLatitude() == 0.0 && location.getLongitude() == 0.0;
@@ -95,6 +103,8 @@ public class LocationHelper {
         if (oldLocation != null && !fixIsFresh(oldLocationTime, now)) {
             oldLocation = null;
             oldLocationTime = 0;
+            // A detection from now on is not stamped with the place that has gone stale.
+            preciseLocation = nowhere();
         }
         if (oldLocation == null) {
             // The last position the phone itself knows, if it is recent enough.

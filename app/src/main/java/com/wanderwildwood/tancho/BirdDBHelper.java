@@ -162,7 +162,12 @@ public class BirdDBHelper extends SQLiteOpenHelper {
                 int speciesId = cursor.getInt(5);       // id for the species in BirdNET
                 float probability = cursor.getFloat(6); // estimated probability that this observation is correct
                 
-                String csvString = millis + "," + latitude + "," + longitude + "," + nameStr + "," + speciesId + "," + probability;
+                // Some species' names have a comma in them: quoted, as RFC 4180 has it.
+                String name = nameStr == null ? "" : nameStr;
+                if (name.contains(",") || name.contains("\"") || name.contains("\n")) {
+                    name = "\"" + name.replace("\"", "\"\"") + "\"";
+                }
+                String csvString = millis + "," + latitude + "," + longitude + "," + name + "," + speciesId + "," + probability;
 
                 csvDataList.add(csvString);    
             } while (cursor.moveToNext());

@@ -74,15 +74,6 @@ class BirdInfoActivity : BaseActivity() {
             Pair(index, element)
         }.sortedBy { it.second.split("_")[1] }.toCollection(ArrayList())
 
-    }
-
-    /** What the list is showing, which the search field narrows. */
-    private val shown = mutableStateOf<List<Pair<Int, String>>>(emptyList())
-
-    override fun onResume() {
-        super.onResume()
-
-        shown.value = allBirdsList
         binding.speciesList.setContent {
             ThemeMMD(colorScheme = monochrome, typography = houseTypography) { DarkSelection {
                 ArmedScope {
@@ -101,11 +92,24 @@ class BirdInfoActivity : BaseActivity() {
             } }
         }
         binding.searchEdit.doOnTextChanged { text, _, _, _ ->
-            shown.value = labelList.mapIndexed { index, element -> Pair(index, element) }
-                .filter { it.second.contains(text.toString(), ignoreCase = true) }
-                .sortedBy { it.second.split("_")[1] }
+            shown.value = filtered(text.toString())
         }
     }
+
+    /** What the list is showing, which the search field narrows. */
+    private val shown = mutableStateOf<List<Pair<Int, String>>>(emptyList())
+
+    override fun onResume() {
+        super.onResume()
+        // As the search field reads now: the list and its one watcher are set up once, in onCreate.
+        shown.value = filtered(binding.searchEdit.text?.toString().orEmpty())
+    }
+
+    private fun filtered(text: String): List<Pair<Int, String>> =
+        if (text.isEmpty()) allBirdsList
+        else labelList.mapIndexed { index, element -> Pair(index, element) }
+            .filter { it.second.contains(text, ignoreCase = true) }
+            .sortedBy { it.second.split("_")[1] }
 
     /** Puts a bird's photograph up. Was the body of the RecyclerView's tap listener. */
     private fun showSpecies(speciesId: Int) {
