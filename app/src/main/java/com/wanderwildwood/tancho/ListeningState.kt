@@ -92,6 +92,7 @@ class ListeningState {
     fun clear() {
         _heard.value = emptyList()
         _photo.value = null
+        silentTop = null
     }
 
     /**
@@ -123,14 +124,17 @@ class ListeningState {
     ) {
         val existing = _heard.value
         val top = existing.firstOrNull()
+        // The row as it really stands: the published top row with anything held back
+        // folded in, so a run of silent merges keeps its count and its last time.
+        val current = silentTop?.takeIf { top != null && it.isSameRowAs(top) } ?: top
 
-        if (top != null && top.speciesIndex == speciesIndex &&
-            timeMillis - top.lastHeard <= SAME_BIRD_WINDOW_MS
+        if (top != null && current != null && current.speciesIndex == speciesIndex &&
+            timeMillis - current.lastHeard <= SAME_BIRD_WINDOW_MS
         ) {
-            val merged = top.copy(
+            val merged = current.copy(
                 lastHeard = timeMillis,
-                bestProbability = max(top.bestProbability, probability),
-                times = top.times + 1,
+                bestProbability = max(current.bestProbability, probability),
+                times = current.times + 1,
             )
             if (merged.looksSameAs(top)) {
                 // Same bird, same confidence, same minute: nothing to redraw. The count
@@ -150,7 +154,10 @@ class ListeningState {
                 bestProbability = probability,
                 times = 1,
             )
-            _heard.value = (listOf(entry) + existing).take(MAX_ROWS)
+            // The row this one pushes down gets what was held back for it, since the
+            // list is redrawn now anyway.
+            val settled = if (current != null) listOf(current) + existing.drop(1) else existing
+            _heard.value = (listOf(entry) + settled).take(MAX_ROWS)
             silentTop = null
         }
     }
@@ -161,26 +168,29 @@ class ListeningState {
      * something else makes a redraw necessary anyway.
      */
     private var silentTop: Heard? = null
-        set(value) {
-            field = value
-            if (value != null) pendingTop = value
-        }
-
-    private var pendingTop: Heard? = null
 
     /**
      * Publish anything held back. Called when the screen is about to redraw for another
      * reason - stopping, leaving - so the log is not left showing a stale count.
+     *
+     * Only ever over the row it was held back from. A newer run of the same bird starts a
+     * row of its own; writing the old run's copy over it would put two rows with one start
+     * time in the list, and an older count over a newer one.
      */
     @Synchronized
     fun flush() {
-        val pending = pendingTop ?: return
-        pendingTop = null
+        val pending = silentTop ?: return
+        silentTop = null
         val existing = _heard.value
-        if (existing.firstOrNull()?.speciesIndex == pending.speciesIndex) {
+        val top = existing.firstOrNull() ?: return
+        if (pending.isSameRowAs(top)) {
             _heard.value = listOf(pending) + existing.drop(1)
         }
     }
+
+    /** Two versions of one row: the same bird, from the same first hearing. */
+    private fun Heard.isSameRowAs(other: Heard): Boolean =
+        speciesIndex == other.speciesIndex && firstHeard == other.firstHeard
 
     private companion object {
         /** Longer than the gap between two songs from one bird, shorter than a walk. */
