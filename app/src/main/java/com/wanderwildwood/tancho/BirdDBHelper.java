@@ -225,6 +225,33 @@ public class BirdDBHelper extends SQLiteOpenHelper {
      * process would go on holding a handle to a file that no longer exists, and every read
      * after the restore would still be answering from the log that was replaced.
      */
+    /** The columns a log of this version has, every one of them. */
+    static final List<String> COLUMNS = Arrays.asList(
+            COLUMN_ID, COLUMN_MILLIS, COLUMN_LATITUDE, COLUMN_LONGITUDE, COLUMN_NAME, COLUMN_SPECIES_ID, COLUMN_PROBABILITY);
+
+    /**
+     * Whether a database of [userVersion] whose observations table has [columns] is a log this
+     * version can open: the same version (an older or newer one has no migration and would
+     * refuse to open) and every column there. An empty set means the table is missing.
+     */
+    static boolean fits(int userVersion, Collection<String> columns) {
+        if (userVersion != DATABASE_VERSION || columns == null) return false;
+        Set<String> have = new HashSet<>();
+        for (String c : columns) have.add(c.toLowerCase(Locale.ROOT));
+        for (String c : COLUMNS) if (!have.contains(c.toLowerCase(Locale.ROOT))) return false;
+        return true;
+    }
+
+    /** [fits] for a database already open, read from the file itself. */
+    static boolean fits(SQLiteDatabase db) {
+        List<String> columns = new ArrayList<>();
+        try (Cursor c = db.rawQuery("PRAGMA table_info(" + TABLE_NAME + ")", null)) {
+            int name = c.getColumnIndexOrThrow("name");
+            while (c.moveToNext()) columns.add(c.getString(name));
+        }
+        return fits(db.getVersion(), columns);
+    }
+
     public static synchronized void reopen(Context context) {
         if (instance != null) {
             instance.close();

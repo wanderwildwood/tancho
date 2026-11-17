@@ -223,12 +223,17 @@ class SettingsActivity : BaseActivity() {
             }
 
             val stagedDb = File(unpacked.databases, BirdDBHelper.DB_NAME)
-            val opens = runCatching {
+            // A log of this very shape: this version, the observations table, every column. Any
+            // other SQLite file would be swapped in and then refuse to open at every start.
+            val fits = runCatching {
                 android.database.sqlite.SQLiteDatabase.openDatabase(
                     stagedDb.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY
-                ).use { db -> db.rawQuery("SELECT count(*) FROM sqlite_master", null).use { it.moveToFirst() } }
+                ).use { db ->
+                    BirdDBHelper.fits(db) &&
+                        db.rawQuery("SELECT * FROM ${BirdDBHelper.TABLE_NAME} LIMIT 1", null).use { true }
+                }
             }.getOrDefault(false)
-            if (!opens) return context.getString(R.string.restore_damaged) to false
+            if (!fits) return context.getString(R.string.restore_damaged) to false
 
             // Close the open handle first: moving a database out from under SQLite leaves the
             // process holding a file that no longer exists.
@@ -244,8 +249,17 @@ class SettingsActivity : BaseActivity() {
                 BirdDBHelper.reopen(context)
                 return context.getString(R.string.restore_unreadable) to false
             }
-            previous.deleteRecursively()
             BirdDBHelper.reopen(context)
+            // The log that was there is let go only once the new one has been read for real.
+            val reads = runCatching { BirdDBHelper.getInstance(context).allTimestamps(); true }.getOrDefault(false)
+            if (!reads) {
+                BirdDBHelper.getInstance(context).close()
+                databases.deleteRecursively()
+                if (previous.exists()) previous.renameTo(databases)
+                BirdDBHelper.reopen(context)
+                return context.getString(R.string.restore_damaged) to false
+            }
+            previous.deleteRecursively()
 
             val recordingsDir = WavUtils.recordingsDir(context)
             val sounds = if (recordingsDir == null) 0 else BackupArchive.placeRecordings(unpacked.recordings, recordingsDir)
