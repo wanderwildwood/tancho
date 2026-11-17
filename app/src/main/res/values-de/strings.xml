@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Birding</string>
     <string name="samples_zero">Kein Ton erreicht das Mikrofon</string>
     <string name="error_download">Fehler beim Herunterladen</string>
     <string name="model_damaged_title">Das Modell ist beschädigt</string>
