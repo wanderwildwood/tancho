@@ -240,13 +240,6 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         return lastSpecies == species && Math.abs(millis - lastMillis) <= SAME_RUN_MS;
     }
 
-    /**
-     * Drops the open handle so the file underneath can be replaced, and opens a new one.
-     *
-     * Restoring a backup extracts a different database over this one. Without this the
-     * process would go on holding a handle to a file that no longer exists, and every read
-     * after the restore would still be answering from the log that was replaced.
-     */
     /** The columns a log of this version has, every one of them. */
     static final List<String> COLUMNS = Arrays.asList(
             COLUMN_ID, COLUMN_MILLIS, COLUMN_LATITUDE, COLUMN_LONGITUDE, COLUMN_NAME, COLUMN_SPECIES_ID, COLUMN_PROBABILITY);
@@ -274,6 +267,13 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         return fits(db.getVersion(), columns);
     }
 
+    /**
+     * Drops the open handle so the file underneath can be replaced, and opens a new one.
+     *
+     * Restoring a backup extracts a different database over this one. Without this the
+     * process would go on holding a handle to a file that no longer exists, and every read
+     * after the restore would still be answering from the log that was replaced.
+     */
     public static synchronized void reopen(Context context) {
         if (instance != null) {
             instance.close();
