@@ -28,4 +28,16 @@ class LocationFreshnessTest {
     fun noFixAtAllIsNeverFresh() {
         assertFalse(LocationHelper.fixIsFresh(0, now))
     }
+
+    @Test
+    fun aStaleFixIsNotStampedOnADetection() {
+        assertTrue(LocationHelper.stampable(false, now - 10 * minute, now))
+        assertFalse(LocationHelper.stampable(false, now - 31 * minute, now))
+        assertFalse(LocationHelper.stampable(false, 0, now))
+    }
+
+    @Test
+    fun aTypedInPlaceDoesNotAge() {
+        assertTrue(LocationHelper.stampable(true, 0, now))
+    }
 }

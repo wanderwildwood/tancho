@@ -281,7 +281,15 @@ class SoundClassifier(
 
   /** Told by [LocationHelper], which is the only thing that knows. */
   fun noteLocationKnown(known: Boolean) {
+    // With no place, no place's weights: the last one known would otherwise go on
+    // weighing every answer, and a bird scored 0 there would never be heard here.
+    if (!known) clearMeta()
     state.setPlaceKnown(known)
+  }
+
+  /** Every species weighed alike, as before any place was known. */
+  fun clearMeta() {
+    if (::metaPredictionProbs.isInitialized) metaPredictionProbs.fill(1f)
   }
 
   fun runMetaInterpreter(location: Location) {
@@ -509,6 +517,8 @@ class SoundClassifier(
   }
 
   fun recognizeAndDisplay(buffer: FloatBuffer) {
+    // A fix that ages out while the screen stays in front is let go here.
+    if (LocationHelper.expireIfStale(System.currentTimeMillis())) noteLocationKnown(false)
     val outputBuffer = FloatBuffer.allocate(modelNumClasses)
     val t0 = SystemClock.elapsedRealtimeNanos()
     recognizerWorkingBuffer = buffer.duplicate()

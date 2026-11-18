@@ -13,9 +13,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.preference.PreferenceManager;
 
 public class LocationHelper {
-    private static Location oldLocation;
-    private static long oldLocationTime = 0;
-    private static Location preciseLocation;
+    // Read on the recognizer's thread as well as the main one.
+    private static volatile Location oldLocation;
+    private static volatile long oldLocationTime = 0;
+    private static volatile Location preciseLocation;
+    /** A typed-in place: it does not age, and oldLocationTime stays 0 for it. */
+    private static volatile boolean manualMode = false;
     private static LocationListener locationListenerGPS;
     static {
         preciseLocation = new Location("GPS");
@@ -75,7 +78,8 @@ public class LocationHelper {
     static void requestLocation(Context context, SoundClassifier soundClassifier) {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (sharedPreferences.getBoolean("manual_location", false)){
+        manualMode = sharedPreferences.getBoolean("manual_location", false);
+        if (manualMode){
             preciseLocation = manualLocation(sharedPreferences);
             // A manual location still sitting at its default is no location. Running the
             // meta model on it would weigh every answer towards the Gulf of Guinea while
@@ -202,7 +206,30 @@ public class LocationHelper {
         }
     }
 
+    /**
+     * The place a detection made now is stamped with. A GPS fix older than [FIX_MAX_AGE_MS]
+     * gives nowhere, even while the screen stays in front and no new fix arrives.
+     */
     public static Location getPreciseLocation(){
+        if (!stampable(manualMode, oldLocationTime, System.currentTimeMillis())) return nowhere();
         return preciseLocation;
+    }
+
+    /** Whether the held place may still be used: a typed-in one always, a fix while fresh. */
+    static boolean stampable(boolean manual, long fixTime, long now) {
+        return manual || fixIsFresh(fixTime, now);
+    }
+
+    /**
+     * Forgets a GPS place that has aged out while the screen stayed in front, where
+     * [requestLocation] would not run again. True once, when it did forget one: the caller
+     * then stops weighing answers by that place and says the place is not known.
+     */
+    static synchronized boolean expireIfStale(long now) {
+        if (manualMode || oldLocation == null || fixIsFresh(oldLocationTime, now)) return false;
+        oldLocation = null;
+        oldLocationTime = 0;
+        preciseLocation = nowhere();
+        return true;
     }
 }
