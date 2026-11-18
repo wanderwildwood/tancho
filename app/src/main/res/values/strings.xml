@@ -64,6 +64,7 @@
     <string name="restore_done_counts">Restored. %1$d hearings in the log, %2$d recordings added.</string>
     <string name="restore_failed">That file is not a backup this app wrote. Nothing was changed.</string>
     <string name="restore_damaged">That backup is damaged, so it was not used. Nothing was changed.</string>
+    <string name="restore_no_room">The phone is too full to restore that backup. Free some space and try again. Nothing was changed.</string>
     <string name="restore_unreadable">That file could not be read. Nothing was changed.</string>
     <string name="restore_working">Restoring the backup…</string>
     <string name="backup_working">Saving the backup…</string>

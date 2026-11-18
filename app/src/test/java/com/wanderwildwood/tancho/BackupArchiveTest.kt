@@ -99,6 +99,14 @@ class BackupArchiveTest {
     }
 
     @Test
+    fun aFullPhoneIsSaidSoNotCalledADamagedBackup() {
+        val good = zipOf("databases/$db" to "the log")
+        refusedAs(BackupArchive.Refused.Kind.NO_ROOM) {
+            BackupArchive.unpack(ByteArrayInputStream(good), tmp.newFolder("s"), db, free = 10L * 1024 * 1024)
+        }
+    }
+
+    @Test
     fun aBrokenOffBackupIsRefused() {
         val noise = java.util.Random(7).let { r -> String(CharArray(20_000) { 'a' + r.nextInt(26) }) }
         val whole = zipOf("databases/$db" to noise, SETTINGS_ENTRY to "write_wav=true")

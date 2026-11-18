@@ -216,7 +216,11 @@ class SettingsActivity : BaseActivity() {
                 } ?: return context.getString(R.string.restore_unreadable) to false
             } catch (e: BackupArchive.Refused) {
                 return context.getString(
-                    if (e.kind == BackupArchive.Refused.Kind.NOT_A_BACKUP) R.string.restore_failed else R.string.restore_damaged
+                    when (e.kind) {
+                        BackupArchive.Refused.Kind.NOT_A_BACKUP -> R.string.restore_failed
+                        BackupArchive.Refused.Kind.NO_ROOM -> R.string.restore_no_room
+                        BackupArchive.Refused.Kind.DAMAGED -> R.string.restore_damaged
+                    }
                 ) to false
             } catch (e: java.io.IOException) {
                 return context.getString(R.string.restore_unreadable) to false

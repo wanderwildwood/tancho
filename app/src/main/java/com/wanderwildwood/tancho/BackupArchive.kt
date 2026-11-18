@@ -57,7 +57,8 @@ object BackupArchive {
     )
 
     class Refused(val kind: Kind) : Exception(kind.name) {
-        enum class Kind { NOT_A_BACKUP, DAMAGED }
+        /** NO_ROOM: a sound backup, but the phone has too little space left to unpack it. */
+        enum class Kind { NOT_A_BACKUP, DAMAGED, NO_ROOM }
     }
 
     /** A backup unpacked into staging: the databases folder, its recordings, and its settings if it had any. */
@@ -142,7 +143,7 @@ object BackupArchive {
      * could climb out of the folder, is skipped. Throws [Refused] for a file that is not a
      * backup (no log in it) or that breaks off part way.
      */
-    fun unpack(input: InputStream, staging: File, dbName: String): Unpacked {
+    fun unpack(input: InputStream, staging: File, dbName: String, free: Long = staging.usableSpace): Unpacked {
         staging.deleteRecursively()
         val dbDir = File(staging, "databases").apply { mkdirs() }
         val recDir = File(staging, "Recordings").apply { mkdirs() }
@@ -150,14 +151,14 @@ object BackupArchive {
         val recordings = mutableListOf<File>()
         // A backup cannot be bigger than the room the phone has for it: one that claims more
         // is refused before it fills the storage.
-        var room = staging.usableSpace - SPARE_BYTES
+        var room = free - SPARE_BYTES
         fun copyCapped(from: InputStream, to: File) = to.outputStream().use { out ->
             val buf = ByteArray(64 * 1024)
             while (true) {
                 val n = from.read(buf)
                 if (n < 0) break
                 room -= n
-                if (room < 0) throw Refused(Refused.Kind.DAMAGED)
+                if (room < 0) throw Refused(Refused.Kind.NO_ROOM)
                 out.write(buf, 0, n)
             }
         }
