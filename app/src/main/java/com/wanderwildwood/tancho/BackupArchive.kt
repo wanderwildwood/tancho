@@ -143,15 +143,16 @@ object BackupArchive {
      * could climb out of the folder, is skipped. Throws [Refused] for a file that is not a
      * backup (no log in it) or that breaks off part way.
      */
-    fun unpack(input: InputStream, staging: File, dbName: String, free: Long = staging.usableSpace): Unpacked {
+    fun unpack(input: InputStream, staging: File, dbName: String, free: Long? = null): Unpacked {
         staging.deleteRecursively()
         val dbDir = File(staging, "databases").apply { mkdirs() }
         val recDir = File(staging, "Recordings").apply { mkdirs() }
         var settings: Map<String, Any>? = null
         val recordings = mutableListOf<File>()
         // A backup cannot be bigger than the room the phone has for it: one that claims more
-        // is refused before it fills the storage.
-        var room = free - SPARE_BYTES
+        // is refused before it fills the storage. The room is read only now that the folder
+        // exists: a path that is not there reports none.
+        var room = (free ?: staging.usableSpace) - SPARE_BYTES
         fun copyCapped(from: InputStream, to: File) = to.outputStream().use { out ->
             val buf = ByteArray(64 * 1024)
             while (true) {

@@ -107,6 +107,14 @@ class BackupArchiveTest {
     }
 
     @Test
+    fun aStagingFolderThatIsNotThereYetStillHasRoom() {
+        val staging = File(tmp.root, "absent")
+        assertFalse(staging.exists())
+        val back = BackupArchive.unpack(ByteArrayInputStream(zipOf("databases/$db" to "the log")), staging, db)
+        assertEquals("the log", File(back.databases, db).readText())
+    }
+
+    @Test
     fun aBrokenOffBackupIsRefused() {
         val noise = java.util.Random(7).let { r -> String(CharArray(20_000) { 'a' + r.nextInt(26) }) }
         val whole = zipOf("databases/$db" to noise, SETTINGS_ENTRY to "write_wav=true")
