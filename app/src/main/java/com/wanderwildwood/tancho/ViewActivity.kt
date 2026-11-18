@@ -214,7 +214,11 @@ class ViewActivity : BaseActivity() {
         database = BirdDBHelper.getInstance(this)
         val sharedPref = PreferenceManager.getDefaultSharedPreferences(this)
         val isDetailedFilterActive = sharedPref.getBoolean("view_detailed", false)
-        birdObservations = ArrayList(database.getAllBirdObservations(isDetailedFilterActive).sortedByDescending { it.millis } )  //Conversion between Java ArrayList and Kotlin ArrayList
+        // A line naming a bird this list has no name for (a log restored before the restore
+        // checked for it) is left off the screen rather than failing it at every visit.
+        birdObservations = ArrayList(database.getAllBirdObservations(isDetailedFilterActive)
+            .filter { it.speciesId in labelList.indices }
+            .sortedByDescending { it.millis } )  //Conversion between Java ArrayList and Kotlin ArrayList
 
         //replace names with values from current language
         for (birdObservation in birdObservations){

@@ -268,6 +268,18 @@ public class BirdDBHelper extends SQLiteOpenHelper {
     }
 
     /**
+     * Whether every line names a bird among the first [species] in the list. A log from
+     * another build of the model, or a damaged one, can name a bird this app has no name for,
+     * and the log screen would fail on it at every visit.
+     */
+    static boolean speciesFit(SQLiteDatabase db, int species) {
+        try (Cursor c = db.rawQuery("SELECT COUNT(*) FROM " + TABLE_NAME + " WHERE " + COLUMN_SPECIES_ID
+                + " < 0 OR " + COLUMN_SPECIES_ID + " >= " + species, null)) {
+            return c.moveToFirst() && c.getLong(0) == 0;
+        }
+    }
+
+    /**
      * Drops the open handle so the file underneath can be replaced, and opens a new one.
      *
      * Restoring a backup extracts a different database over this one. Without this the

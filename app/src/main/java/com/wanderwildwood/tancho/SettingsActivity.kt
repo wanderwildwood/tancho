@@ -234,7 +234,8 @@ class SettingsActivity : BaseActivity() {
                     stagedDb.path, null, android.database.sqlite.SQLiteDatabase.OPEN_READONLY
                 ).use { db ->
                     BirdDBHelper.fits(db) &&
-                        db.rawQuery("SELECT * FROM ${BirdDBHelper.TABLE_NAME} LIMIT 1", null).use { true }
+                        db.rawQuery("SELECT * FROM ${BirdDBHelper.TABLE_NAME} LIMIT 1", null).use { true } &&
+                        BirdDBHelper.speciesFit(db, BirdNames.load(context).size)
                 }
             }.getOrDefault(false)
             if (!fits) return context.getString(R.string.restore_damaged) to false
