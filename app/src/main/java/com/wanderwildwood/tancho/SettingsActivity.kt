@@ -157,7 +157,7 @@ class SettingsActivity : BaseActivity() {
     private fun settleLog() {
         logGone.value = false
         if (undoLogWindow.release() == null) return
-        WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
+        WavUtils.sweepOrphans(this, System.currentTimeMillis(), BirdDBHelper.getInstance(this).allTimestamps())
     }
 
     override fun onStop() {

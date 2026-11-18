@@ -98,7 +98,7 @@ class MainActivity : BaseActivity() {
         if (gone > 0) Log.i("MainActivity", "Cleared $gone recordings from the last session")
       } else {
         // And whatever an earlier deletion left behind.
-        val gone = WavUtils.sweepOrphans(this, BirdDBHelper.getInstance(this).allTimestamps())
+        val gone = WavUtils.sweepOrphans(this, System.currentTimeMillis(), BirdDBHelper.getInstance(this).allTimestamps())
         if (gone > 0) Log.i("MainActivity", "Removed $gone recordings no longer in the log")
       }
     }.start()

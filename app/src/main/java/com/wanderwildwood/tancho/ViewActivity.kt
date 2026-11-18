@@ -151,7 +151,7 @@ class ViewActivity : BaseActivity() {
     private fun settleDelete() {
         undoText.value = null
         if (undo.release() == null) return
-        Thread { WavUtils.sweepOrphans(this, database.allTimestamps()) }.start()
+        Thread { WavUtils.sweepOrphans(this, System.currentTimeMillis(), database.allTimestamps()) }.start()
     }
 
     private fun undoDelete() {
@@ -271,7 +271,7 @@ class ViewActivity : BaseActivity() {
                                             val gone = database.rowsById(row.coveredIds)
                                             database.removeEntries(row.coveredIds)
                                             if (undo.hold(gone) != null) {
-                                                Thread { WavUtils.sweepOrphans(this@ViewActivity, database.allTimestamps() + gone.map { it.millis }) }.start()
+                                                Thread { WavUtils.sweepOrphans(this@ViewActivity, System.currentTimeMillis(), database.allTimestamps() + gone.map { it.millis }) }.start()
                                             }
                                             undoText.value = getString(R.string.deleted_observation, row.name)
                                             clearPhoto()

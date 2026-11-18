@@ -45,25 +45,44 @@ public class WavUtils {
      * deleting the whole log, or restoring an older one each left clips behind that nothing
      * would ever show again, at a few hundred kilobytes each.
      *
+     * The recognizer may be writing while this runs. [since] is the clock read before [logged]
+     * was: the log's line is written before its recording, so a recording written after that
+     * moment may have a line the snapshot missed, and is left for the next sweep.
+     *
      * @return how many went.
      */
-    public static int sweepOrphans(Context context, java.util.Set<Long> logged) {
+    public static int sweepOrphans(Context context, long since, java.util.Set<Long> logged) {
         File[] files = recordings(context);
         if (files == null) return 0;
         int gone = 0;
         for (File f : files) {
-            String name = f.getName();
-            if (!name.endsWith(".wav")) continue;
-            long at;
-            try {
-                at = Long.parseLong(name.substring(0, name.length() - 4));
-            } catch (NumberFormatException e) {
-                continue;  // not one of ours by name; left alone
-            }
-            if (!logged.contains(at) && f.delete()) gone++;
+            if (isOrphan(f.getName(), f.lastModified(), since, logged) && f.delete()) gone++;
         }
         return gone;
     }
+
+    /** File times can be coarse; a recording this close to [since] is counted as after it. */
+    static final long SWEEP_MARGIN_MS = 2000L;
+
+    /**
+     * Whether a file in the recordings folder may go: a recording no line names, or a write
+     * that was cut short, either of them older than the snapshot it is judged against.
+     */
+    static boolean isOrphan(String name, long lastModified, long since, java.util.Set<Long> logged) {
+        if (lastModified >= since - SWEEP_MARGIN_MS) return false;  // may be being written now
+        if (name.endsWith(PART)) return true;  // a write that never finished
+        if (!name.endsWith(".wav")) return false;
+        long at;
+        try {
+            at = Long.parseLong(name.substring(0, name.length() - 4));
+        } catch (NumberFormatException e) {
+            return false;  // not one of ours by name; left alone
+        }
+        return !logged.contains(at);
+    }
+
+    /** A recording being written: renamed to its .wav only once the whole of it is down. */
+    static final String PART = ".wav.part";
 
     public static File recordingsDir(Context context) {
         File files = context.getExternalFilesDir(null);
@@ -201,26 +220,37 @@ public class WavUtils {
                 Log.d(TAG, ".wav exists already");
                 return; //in case this is the second detection in this file
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-            fileOutputStream.write("RIFF".getBytes(StandardCharsets.UTF_8)); // Write the "RIFF" chunk descriptor
-            fileOutputStream.write(intToByteArray(36 + dataSize), 0, 4); // Total file size - 8 bytes
-            fileOutputStream.write("WAVE".getBytes(StandardCharsets.UTF_8)); // Write the "WAVE" format
-            fileOutputStream.write("fmt ".getBytes(StandardCharsets.UTF_8)); // Write the "fmt " sub-chunk
-            fileOutputStream.write(intToByteArray(16), 0, 4); // Sub-chunk size (16 for PCM)
-            fileOutputStream.write(shortToByteArray((short) audioFormat), 0, 2); // Audio format (1 for PCM)
-            fileOutputStream.write(shortToByteArray((short) numChannels), 0, 2); // Number of channels
-            fileOutputStream.write(intToByteArray(sampleRate), 0, 4); // Sample rate
-            fileOutputStream.write(intToByteArray(sampleRate * numChannels * bytesPerSample), 0, 4); // Byte rate
-            fileOutputStream.write(shortToByteArray((short) (numChannels * bytesPerSample)), 0, 2); // Block align
-            fileOutputStream.write(shortToByteArray((short) (bytesPerSample * 8)), 0, 2); // Bits per sample
-            fileOutputStream.write("data".getBytes(StandardCharsets.UTF_8)); // Write the "data" sub-chunk
-            fileOutputStream.write(intToByteArray(dataSize), 0, 4); // Data size
+            // Written beside it and renamed when whole, so a full phone or a killed process
+            // leaves no .wav whose header promises more sound than it holds.
+            File partFile = new File(filePath.substring(0, filePath.length() - 4) + PART);
+            boolean written = false;
+            try {
+                try (FileOutputStream fileOutputStream = new FileOutputStream(partFile)) {
+                    fileOutputStream.write("RIFF".getBytes(StandardCharsets.UTF_8)); // Write the "RIFF" chunk descriptor
+                    fileOutputStream.write(intToByteArray(36 + dataSize), 0, 4); // Total file size - 8 bytes
+                    fileOutputStream.write("WAVE".getBytes(StandardCharsets.UTF_8)); // Write the "WAVE" format
+                    fileOutputStream.write("fmt ".getBytes(StandardCharsets.UTF_8)); // Write the "fmt " sub-chunk
+                    fileOutputStream.write(intToByteArray(16), 0, 4); // Sub-chunk size (16 for PCM)
+                    fileOutputStream.write(shortToByteArray((short) audioFormat), 0, 2); // Audio format (1 for PCM)
+                    fileOutputStream.write(shortToByteArray((short) numChannels), 0, 2); // Number of channels
+                    fileOutputStream.write(intToByteArray(sampleRate), 0, 4); // Sample rate
+                    fileOutputStream.write(intToByteArray(sampleRate * numChannels * bytesPerSample), 0, 4); // Byte rate
+                    fileOutputStream.write(shortToByteArray((short) (numChannels * bytesPerSample)), 0, 2); // Block align
+                    fileOutputStream.write(shortToByteArray((short) (bytesPerSample * 8)), 0, 2); // Bits per sample
+                    fileOutputStream.write("data".getBytes(StandardCharsets.UTF_8)); // Write the "data" sub-chunk
+                    fileOutputStream.write(intToByteArray(dataSize), 0, 4); // Data size
 
-            // Write audio samples
-            fileOutputStream.write(samples);
-
-            // Close the file output stream
-            fileOutputStream.close();
+                    // Write audio samples
+                    fileOutputStream.write(samples);
+                }
+                written = true;  // closed as well as written: nothing left to fail
+            } finally {
+                if (!written || !partFile.renameTo(outFile)) {
+                    if (written) Log.e(TAG, "Could not rename " + partFile.getName());
+                    //noinspection ResultOfMethodCallIgnored
+                    partFile.delete();
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
             Log.e(TAG, "Error...", e);
