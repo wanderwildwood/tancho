@@ -88,14 +88,19 @@ class MainActivity : BaseActivity() {
     val storedInfluence = sharedPref.getFloat("meta_model_influence", 60.0f) / 100.0f
     state.metaInfluence.value = storedInfluence
 
+    // "Cleared after closing" is done on the way in rather than on the way out. An app
+    // is not always given a chance to run anything when it goes: the process can simply
+    // be killed. Clearing at the start of the next session is the same promise kept in
+    // the one place it can actually be relied on. Once per process: a screen rebuilt for a
+    // changed font size, language or dark mode is the same session, and its recordings stay.
+    val newSession = !sessionCleared
+    sessionCleared = true
     Thread {
-      // "Cleared after closing" is done on the way in rather than on the way out. An app
-      // is not always given a chance to run anything when it goes: the process can simply
-      // be killed. Clearing at the start of the next session is the same promise kept in
-      // the one place it can actually be relied on.
       if (sharedPref.getBoolean("clear_recordings", false)) {
-        val gone = WavUtils.clearRecordings(this)
-        if (gone > 0) Log.i("MainActivity", "Cleared $gone recordings from the last session")
+        if (newSession) {
+          val gone = WavUtils.clearRecordings(this)
+          if (gone > 0) Log.i("MainActivity", "Cleared $gone recordings from the last session")
+        }
       } else {
         // And whatever an earlier deletion left behind.
         val gone = WavUtils.sweepOrphans(this, System.currentTimeMillis(), BirdDBHelper.getInstance(this).allTimestamps())
@@ -379,6 +384,8 @@ class MainActivity : BaseActivity() {
     }
 
   companion object {
+    /** Whether this process has already begun a session, and so had its clear. */
+    @Volatile private var sessionCleared = false
     private const val REQUEST_MICROPHONE = 1337
     private const val REQUEST_LOCATION = 1338
   }
