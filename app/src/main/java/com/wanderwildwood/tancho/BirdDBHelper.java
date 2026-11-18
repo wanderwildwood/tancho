@@ -282,7 +282,8 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         getInstance(context);
     }
 
-    public static BirdDBHelper getInstance(Context context) {
+    // Synchronized with reopen, so two threads at a cold start share one helper.
+    public static synchronized BirdDBHelper getInstance(Context context) {
         if (instance == null && context != null) {
             instance = new BirdDBHelper(context.getApplicationContext());
         }

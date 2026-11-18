@@ -27,7 +27,6 @@ import androidx.compose.ui.Modifier
 class BirdInfoActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBirdInfoBinding
-    private lateinit var database: BirdDBHelper
     private lateinit var assetList: List<String>
     private lateinit var labelList: List<String>
     private lateinit var eBirdList: List<String>
@@ -47,7 +46,6 @@ class BirdInfoActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityBirdInfoBinding.inflate(layoutInflater)
-        database = BirdDBHelper.getInstance(this)
         mContext = this
         setContentView(binding.root)
         DarkMode.keep(binding.photo)

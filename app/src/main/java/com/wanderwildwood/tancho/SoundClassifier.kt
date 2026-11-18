@@ -55,10 +55,8 @@ class SoundClassifier(
   private val options: Options = Options()
 ) {
   internal var mContext: Context
-  private var database: BirdDBHelper? = null
   init {
     this.mContext = context.applicationContext
-    this.database = BirdDBHelper.getInstance(mContext)
   }
   class Options(
     /** Path of the converted .tflite file, relative to the assets/ directory.  */
@@ -561,7 +559,9 @@ class SoundClassifier(
     if (latinName in NOT_BIRDS && sharedPref.getBoolean("ignore_non_birds", true)) return
 
     val currentLocation = LocationHelper.getPreciseLocation()
-    database?.addEntry(
+    // Fetched at each write, never kept: a restore replaces the helper, and one kept from
+    // before would go on writing into the log that was set aside and deleted.
+    BirdDBHelper.getInstance(mContext)?.addEntry(
       commonName,
       currentLocation.latitude.toFloat(),
       currentLocation.longitude.toFloat(),
