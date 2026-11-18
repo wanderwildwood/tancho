@@ -118,7 +118,11 @@ class SoundClassifier(
 
   /** Used to hold the real-time probabilities predicted by the model for the output classes.  */
   private lateinit var predictionProbs: FloatArray
-  private lateinit var metaPredictionProbs: FloatArray
+  /**
+   * Read on the timer thread at every inference, replaced on the main thread when the place
+   * changes: always swapped whole, never written into, so a pass reads one place's weights.
+   */
+  @Volatile private lateinit var metaPredictionProbs: FloatArray
   private lateinit var metaPredictionProbsMax: FloatArray
 
   /** Latest prediction latency in milliseconds.  */
@@ -289,7 +293,7 @@ class SoundClassifier(
 
   /** Every species weighed alike, as before any place was known. */
   fun clearMeta() {
-    if (::metaPredictionProbs.isInitialized) metaPredictionProbs.fill(1f)
+    if (::metaPredictionProbs.isInitialized) metaPredictionProbs = FloatArray(metaModelNumClasses) { 1f }
   }
 
   fun runMetaInterpreter(location: Location) {
@@ -305,7 +309,8 @@ class SoundClassifier(
     // control over the same thing as the listening screen's "Place and date", in different
     // words, and the cost it guarded against is 48 runs of a small model when the location
     // changes - not per detection. It was on by default, so this is what it always did.
-    metaPredictionProbsMax = FloatArray(metaModelNumClasses) { 0f }
+    val weekMax = FloatArray(metaModelNumClasses) { 0f }
+    metaPredictionProbsMax = weekMax
     for (weekindex in 1..48) {
       val weekMeta = cos(Math.toRadians(weekindex * 7.5)) + 1.0
 
@@ -322,8 +327,8 @@ class SoundClassifier(
       // Update max values
       for (i in 0 until metaModelNumClasses) {
         val value = metaOutputBuffer.get(i)
-        if (value > metaPredictionProbsMax[i]) {
-          metaPredictionProbsMax[i] = value
+        if (value > weekMax[i]) {
+          weekMax[i] = value
         }
       }
     }
@@ -338,14 +343,16 @@ class SoundClassifier(
     metaOutputBuffer.clear()
     meta_interpreter.run(metaInputBuffer, metaOutputBuffer)
     metaOutputBuffer.rewind()
-    metaOutputBuffer.get(metaPredictionProbs)
+    val thisWeek = FloatArray(metaModelNumClasses)
+    metaOutputBuffer.get(thisWeek)
 
     // Blend this week against the best any week manages, so a bird that is here but out of
-    // season is still allowed to be the answer.
-    for (i in metaPredictionProbs.indices) {
-      metaPredictionProbs[i] = 0.5f * applyMetaThreshold(metaPredictionProbs[i]) +
-              0.5f * applyMetaThreshold(metaPredictionProbsMax[i])
+    // season is still allowed to be the answer. Worked out aside and handed over in one step:
+    // the recognizer reads these weights on its own thread while this runs.
+    val blended = FloatArray(metaModelNumClasses) { i ->
+      0.5f * applyMetaThreshold(thisWeek[i]) + 0.5f * applyMetaThreshold(weekMax[i])
     }
+    metaPredictionProbs = blended
   }
 
   private fun applyMetaThreshold(prob: Float): Float {
@@ -550,10 +557,11 @@ class SoundClassifier(
 
     val metaInfluence = state.metaInfluence.value
 
+    val meta = metaPredictionProbs // one place's weights for the whole pass
     val probList = mutableListOf<Float>()
     for (i in predictionProbs.indices) {
       val modelProb = 1 / (1 + exp(-predictionProbs[i])) //apply sigmoid
-      probList.add(modelProb*(1-metaInfluence + metaInfluence* metaPredictionProbs[i]))
+      probList.add(modelProb*(1-metaInfluence + metaInfluence* meta[i]))
     }
 
     probList.withIndex().also {
