@@ -370,8 +370,13 @@ class SoundClassifier(
   private fun startAudioRecord() {
     if (isRecording) return
     // A recorder Android will not make (the microphone held elsewhere, a source this phone
-    // does not have) leaves the app not listening, rather than closing it.
-    if (!runCatching { setupAudioRecord() }.getOrDefault(false)) return
+    // does not have) leaves the app not listening, rather than closing it, and the screen
+    // says so: a chip reading Listening over a recognizer that never started is untrue.
+    if (!runCatching { setupAudioRecord() }.getOrDefault(false)) {
+      state.setListening(false)
+      FootNotice.say(mContext, mContext.resources.getString(R.string.microphone_unavailable))
+      return
+    }
     isClosed = false
     isRecording = true
   }
@@ -412,16 +417,30 @@ class SoundClassifier(
       )
       .setBufferSizeInBytes(bufferSize)
 
-    audioRecord = audioRecordBuilder.build()
+    val recorder = audioRecordBuilder.build()
+    audioRecord = recorder
 
-    if (audioRecord.state != AudioRecord.STATE_INITIALIZED) {
+    if (recorder.state != AudioRecord.STATE_INITIALIZED) {
       Log.e(TAG, "AudioRecord failed to initialize")
-      audioRecord.release()
+      recorder.release()
       return false
     }
     Log.i(TAG, "Successfully initialized AudioRecord")
 
-    audioRecord.startRecording()
+    // A recorder that was made but will not start is let go at once, not left to the collector.
+    try {
+      recorder.startRecording()
+    } catch (e: Exception) {
+      Log.e(TAG, "AudioRecord failed to start: ${e.message}")
+      recorder.release()
+      return false
+    }
+    if (recorder.recordingState != AudioRecord.RECORDSTATE_RECORDING) {
+      Log.e(TAG, "AudioRecord did not start recording")
+      runCatching { recorder.stop() }
+      recorder.release()
+      return false
+    }
     Log.i(TAG, "Successfully started AudioRecord recording")
 
     // Start recognition (model inference) thread.

@@ -266,7 +266,12 @@ class MainActivity : BaseActivity() {
     state.flush()
     state.setListening(listening)
     if (listening) {
-      if (checkMicrophonePermission()) soundClassifier.isPaused = false
+      if (checkMicrophonePermission()) {
+        soundClassifier.isPaused = false
+        // After a microphone that would not open, a press to listen tries it again. A no-op
+        // while the recorder is already running.
+        soundClassifier.start()
+      }
     } else {
       soundClassifier.isPaused = true
     }

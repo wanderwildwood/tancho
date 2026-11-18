@@ -2,6 +2,8 @@
 <resources>
     <string name="app_name" translatable="false">Birding</string>
     <string name="samples_zero">No sound is reaching the microphone</string>
+    <!-- Said at the foot of the listening screen when the phone would not open the microphone, which then reads Not listening -->
+    <string name="microphone_unavailable">The microphone could not be opened. Another app may be using it.</string>
     <string name="error_download">Download error</string>
     <string name="model_damaged_title">The model is damaged</string>
     <string name="model_damaged_text">The BirdNET model inside this copy of Birding is not the one it was built with, so it will not be used. Install Birding again from its release page.</string>
