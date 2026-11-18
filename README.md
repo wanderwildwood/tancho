@@ -83,4 +83,5 @@ under that license, and the rest is too.
 - Uses code from the [TensorFlow Lite examples](https://www.tensorflow.org/lite/examples),
   Apache 2.0.
 - Uses [iirj](https://github.com/berndporr/iirj), Apache 2.0.
-- The launcher icon is from a CC0 photograph; see `misc/`.
+- The launcher icon is [whoBIRD](https://github.com/woheller69/whoBIRD)'s icon by woheller69, redrawn in
+  black and white. `misc/` holds the CC0 robin photograph that came with whoBIRD.

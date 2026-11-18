@@ -88,7 +88,7 @@
     <string name="about_terms_title">Bedingungen</string>
     <string name="about_terms">Birding ist freie Software unter der GNU General Public License, nur Version 3. Sie kommt ohne Gewährleistung: Nutzung auf eigene Gefahr. Der Name, den sie einem Vogel gibt, ist die Vermutung eines Modells und kann falsch sein. Das BirdNET-Modell steht unter CC BY-NC-SA 4.0 und darf nicht kommerziell genutzt werden. Eine Spende über „Füttere die Lamas“ ist freiwillig und schaltet nichts frei: Die App ist mit oder ohne Spende dieselbe.</string>
     <string name="about_credits_title">Basiert auf</string>
-    <string name="about_credits">Ein Fork von whoBIRD von woheller69.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl und Holger Klinck, vom Cornell Lab of Ornithology und der Technischen Universität Chemnitz.\n\nFotos \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
+    <string name="about_credits">Ein Fork von whoBIRD von woheller69.\n\nApp-Symbol \u2014 das Symbol von whoBIRD, in Schwarz-Weiß neu gezeichnet.\n\nBirdNET \u2014 Stefan Kahl, Connor Wood, Maximilian Eibl und Holger Klinck, vom Cornell Lab of Ornithology und der Technischen Universität Chemnitz.\n\nFotos \u2014 Macaulay Library, Cornell Lab of Ornithology.</string>
     <string name="share_place">Ort beim Teilen mitgeben</string>
     <string name="summary_share_place">Hängt Breiten- und Längengrad an einen aus dem Protokoll geteilten Eintrag. Aus sagt er, was und wann, aber nicht, wo du standst.</string>
     <string name="no_microphone">Kein Mikrofon</string>
