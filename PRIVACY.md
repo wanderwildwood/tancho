@@ -63,6 +63,9 @@ built into it and will not use one that does not match.
 2. **eBird and Wikipedia, only if you tap them.** The eBird and Wikipedia buttons on a bird's photograph
    open its `ebird.org` page, and its Wikipedia page in the language the bird names are
    set to, in your own browser. The app itself fetches neither.
+3. **The donation page, only if you press it.** "Feed the llamas" in About opens a donation
+   page (`square.link`) in your own browser. The app sends nothing there; if you give, the
+   payment is handled on that page by Square, not by this app.
 
 There is no analytics, no crash reporting and no update check. The HTTP library the app
 carried but never called has been removed.
@@ -107,7 +110,7 @@ database can be exported, backed up, restored or deleted from inside the app, un
 <!-- shared-about privacy section -->
 ## Who we are
 
-Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. What you put in Birding stays on your phone. The only thing that goes out is the request described above: a request to the Cornell Lab of Ornithology's image server for a bird's photograph, which names that species. It carries anything you heard, recorded or wrote, or where you were. The developer receives nothing, so the developer holds no data about you.
+Birding is made by wander wildwood, an independent developer: one person, not a company. wander wildwood is the data controller for anything the app itself handles, and that is very little. What you put in Birding stays on your phone. The only thing that goes out is the request described above: a request to the Cornell Lab of Ornithology's image server for a bird's photograph, which names that species. It carries nothing you heard, recorded or wrote, and not where you were. The developer receives nothing, so the developer holds no data about you.
 
 ## How to contact us
 
