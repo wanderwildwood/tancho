@@ -184,6 +184,7 @@ public class BirdDBHelper extends SQLiteOpenHelper {
 
         List<BirdObservation> birdObservations = new ArrayList<>();
         BirdObservation previousEntry = null;
+        long lastMillis = 0;
         if (cursor.moveToFirst()) {
             do {
                 BirdObservation birdObservation = new BirdObservation();
@@ -196,8 +197,13 @@ public class BirdDBHelper extends SQLiteOpenHelper {
                 birdObservation.setProbability(cursor.getFloat(6));
 
                 if (!detailed) {
+                    // A run is one hearing: the same species, each reading within a minute of the
+                    // one before. A gap ends it, so a removal never reaches another day's rows.
+                    boolean inRun = previousEntry != null
+                            && sameRun(previousEntry.getSpeciesId(), lastMillis, birdObservation.getSpeciesId(), birdObservation.getMillis());
+                    lastMillis = birdObservation.getMillis();
                     // Check if the current entry has the same species id as previousEntry and a higher probability value
-                    if ((previousEntry != null && previousEntry.getSpeciesId() == birdObservation.getSpeciesId()) && birdObservation.getProbability() > previousEntry.getProbability()) {
+                    if (inRun && birdObservation.getProbability() > previousEntry.getProbability()) {
                         // Replace the previous entry in List<BirdObservation> birdObservations with this new entry
                         // The run carries forward with it: the rows this one now stands
                         // for are still in the database, and a removal has to take them.
@@ -205,7 +211,7 @@ public class BirdDBHelper extends SQLiteOpenHelper {
                         birdObservations.remove(previousEntry);
                         previousEntry = birdObservation;
                         birdObservations.add(birdObservation);
-                    } else if (previousEntry != null && previousEntry.getSpeciesId() == birdObservation.getSpeciesId() && birdObservation.getProbability() <= previousEntry.getProbability()) {
+                    } else if (inRun) {
                         // Skipped from the list, but remembered, for the same reason.
                         previousEntry.cover(birdObservation.getId());
                     } else {
@@ -221,6 +227,17 @@ public class BirdDBHelper extends SQLiteOpenHelper {
         }
         cursor.close();
         return birdObservations;
+    }
+
+    /** Readings further apart than this are separate hearings in the condensed log. */
+    static final long SAME_RUN_MS = 60_000L;
+
+    /**
+     * Whether a reading of [species] at [millis] continues the run whose last reading was
+     * [lastSpecies] at [lastMillis]: the same species and no more than [SAME_RUN_MS] apart.
+     */
+    static boolean sameRun(int lastSpecies, long lastMillis, int species, long millis) {
+        return lastSpecies == species && Math.abs(millis - lastMillis) <= SAME_RUN_MS;
     }
 
     /**
