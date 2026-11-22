@@ -66,6 +66,8 @@ For updates without doing this by hand, add this repository to
 It will offer each new release as it appears. **The application id is settled** — updates
 install over what you have, keeping your settings and anything the app has stored.
 
+Questions, ideas, or just saying hello: the wander the dev Discord, <https://discord.gg/UMW8yJg7dQ>
+
 ## License
 
 GPL-3.0-only. Upstream whoBIRD is © woheller69; the parts of this app that came from there are still
